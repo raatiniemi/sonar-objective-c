@@ -19,15 +19,17 @@ package org.sonar.plugins.objectivec.complexity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,8 @@ import java.util.Map;
 public class LizardSensor implements Sensor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
+
+    private static final String NAME = "Lizard complexity sensor";
 
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
@@ -98,5 +102,16 @@ public class LizardSensor implements Sensor {
             reportPath = DEFAULT_REPORT_PATH;
         }
         return reportPath;
+    }
+
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
+    }
+
+    @Override
+    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
+        analyse(null, (SensorContext) context);
     }
 }
