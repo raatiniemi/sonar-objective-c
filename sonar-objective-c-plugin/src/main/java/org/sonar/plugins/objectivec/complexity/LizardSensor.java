@@ -25,7 +25,6 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -60,14 +59,13 @@ public class LizardSensor implements Sensor {
 
     /**
      *
-     * @param project
      * @param sensorContext
      */
-    private void analyse(Project project, SensorContext sensorContext) {
+    private void analyse(SensorContext sensorContext) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
         Map<String, List<Measure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
         LOGGER.info("Saving results of complexity analysis");
-        new LizardMeasurePersistor(project, sensorContext, fileSystem).saveMeasures(measures);
+        new LizardMeasurePersistor(sensorContext, fileSystem).saveMeasures(measures);
     }
 
     /**
@@ -103,6 +101,6 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        analyse(null, (SensorContext) context);
+        analyse((SensorContext) context);
     }
 }

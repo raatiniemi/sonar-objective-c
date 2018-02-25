@@ -23,7 +23,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 
 import java.io.File;
@@ -40,12 +39,10 @@ public class LizardMeasurePersistor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
-    private final Project project;
     private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    public LizardMeasurePersistor(final Project project, final SensorContext sensorContext, final FileSystem fileSystem) {
-        this.project = project;
+    public LizardMeasurePersistor(final SensorContext sensorContext, final FileSystem fileSystem) {
         this.sensorContext = sensorContext;
         this.fileSystem = fileSystem;
     }
