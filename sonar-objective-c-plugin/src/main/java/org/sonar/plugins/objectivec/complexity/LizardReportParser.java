@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  * This class parses xml Reports form the tool Lizard in order to extract this measures:
- *      COMPLEXITY, FUNCTIONS, FUNCTION_COMPLEXITY, FUNCTION_COMPLEXITY_DISTRIBUTION,
+ *      COMPLEXITY, FUNCTIONS, FUNCTION_COMPLEXITY_DISTRIBUTION,
  *      FILE_COMPLEXITY, FUNCTION_COMPLEXITY_DISTRIBUTION
  *
  * @author Andres Gil Herrera
@@ -181,7 +181,7 @@ public class LizardReportParser {
      *
      * @param reportMeasures map to save the measures for the different files
      * @param functions list of ObjCFunction to extract the information needed to create
-     *                  FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTION_COMPLEXITY
+     *                  FUNCTION_COMPLEXITY_DISTRIBUTION
      */
     private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<ObjCFunction> functions){
         for (Map.Entry<String, List<Measure>> entry : reportMeasures.entrySet()) {
@@ -197,29 +197,18 @@ public class LizardReportParser {
             }
 
             if (count != 0) {
-                double complex = 0;
-                for (Measure m : entry.getValue()){
-                    if (m.getMetric().getKey().equalsIgnoreCase(CoreMetrics.FILE_COMPLEXITY.getKey())){
-                        complex = m.getValue();
-                        break;
-                    }
-                }
-
-                double complexMean = complex/(double)count;
-                entry.getValue().addAll(buildFunctionMeasuresList(complexMean, complexityDistribution));
+                entry.getValue().addAll(buildFunctionMeasuresList(complexityDistribution));
             }
         }
     }
 
     /**
      *
-     * @param complexMean average complexity per function in a file
      * @param builder Builder ready to build FUNCTION_COMPLEXITY_DISTRIBUTION
-     * @return list of Measures containing FUNCTION_COMPLEXITY_DISTRIBUTION and FUNCTION_COMPLEXITY
+     * @return list of Measures containing FUNCTION_COMPLEXITY_DISTRIBUTION
      */
-    public List<Measure> buildFunctionMeasuresList(double complexMean, RangeDistributionBuilder builder){
+    public List<Measure> buildFunctionMeasuresList(RangeDistributionBuilder builder){
         List<Measure> list = new ArrayList<Measure>();
-        list.add(new Measure(CoreMetrics.FUNCTION_COMPLEXITY, complexMean));
         list.add(builder.build());
         return list;
     }
