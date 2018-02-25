@@ -63,7 +63,7 @@ public class LizardSensor implements Sensor {
      * @param project
      * @param sensorContext
      */
-    public void analyse(Project project, SensorContext sensorContext) {
+    private void analyse(Project project, SensorContext sensorContext) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
         Map<String, List<Measure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
         LOGGER.info("Saving results of complexity analysis");
