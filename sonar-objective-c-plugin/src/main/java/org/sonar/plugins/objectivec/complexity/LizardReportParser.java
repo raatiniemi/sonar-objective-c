@@ -49,13 +49,10 @@ public class LizardReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
 
-    private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
-
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
     private static final String MEASURE_ITEM = "item";
     private static final String FILE_MEASURE = "file";
-    private static final String FUNCTION_MEASURE = "Function";
     private static final String NAME = "name";
     private static final String VALUE = "value";
     private static final int CYCLOMATIC_COMPLEXITY_INDEX = 2;
@@ -94,7 +91,6 @@ public class LizardReportParser {
      */
     private Map<String, List<Measure>> parseFile(Document document) {
         final Map<String, List<Measure>> reportMeasures = new HashMap<String, List<Measure>>();
-        final List<ObjCFunction> functions = new ArrayList<ObjCFunction>();
 
         NodeList nodeList = document.getElementsByTagName(MEASURE);
 
@@ -106,14 +102,9 @@ public class LizardReportParser {
                 if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE)) {
                     NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
                     addComplexityFileMeasures(itemList, reportMeasures);
-                } else if(element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FUNCTION_MEASURE)) {
-                    NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
-                    collectFunctions(itemList, functions);
                 }
             }
         }
-
-        addComplexityFunctionMeasures(reportMeasures, functions);
 
         return reportMeasures;
     }
@@ -135,97 +126,12 @@ public class LizardReportParser {
                 int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
                 int numberOfFunctions =  Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
-                reportMeasures.put(fileName, buildMeasureList(complexity, numberOfFunctions));
+                List<Measure> list = new ArrayList<Measure>();
+                list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
+                list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
+
+                reportMeasures.put(fileName, list);
             }
         }
-    }
-
-    /**
-     *
-     * @param complexity overall complexity of the file
-     * @param numberOfFunctions number of functions in the file
-     * @return returns a list of tree measures COMPLEXITY, FUNCTIONS with the values specified
-     */
-    private List<Measure> buildMeasureList(int complexity, int numberOfFunctions){
-        List<Measure> list = new ArrayList<Measure>();
-        list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
-        list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
-
-        return list;
-    }
-
-    /**
-     *
-     * @param itemList NodeList of all items in a <measure type=function> tag
-     * @param functions list to save the functions in the NodeList as ObjCFunction objects.
-     */
-    private void collectFunctions(NodeList itemList, List<ObjCFunction> functions) {
-        for (int i = 0; i < itemList.getLength(); i++) {
-            Node item = itemList.item(i);
-            if (item.getNodeType() == Node.ELEMENT_NODE) {
-                Element itemElement = (Element) item;
-                String name = itemElement.getAttribute(NAME);
-                String measure = itemElement.getElementsByTagName(VALUE).item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent();
-                functions.add(new ObjCFunction(name, Integer.parseInt(measure)));
-            }
-        }
-    }
-
-    /**
-     *
-     * @param reportMeasures map to save the measures for the different files
-     * @param functions list of ObjCFunction to extract the information needed to create
-     *                  FUNCTION_COMPLEXITY_DISTRIBUTION
-     */
-    private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<ObjCFunction> functions){
-        for (Map.Entry<String, List<Measure>> entry : reportMeasures.entrySet()) {
-
-            RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
-            int count = 0;
-
-            for (ObjCFunction func : functions) {
-                if (func.getName().contains(entry.getKey())) {
-                    complexityDistribution.add(func.getCyclomaticComplexity());
-                    count++;
-                }
-            }
-
-            if (count != 0) {
-                entry.getValue().addAll(buildFunctionMeasuresList(complexityDistribution));
-            }
-        }
-    }
-
-    /**
-     *
-     * @param builder Builder ready to build FUNCTION_COMPLEXITY_DISTRIBUTION
-     * @return list of Measures containing FUNCTION_COMPLEXITY_DISTRIBUTION
-     */
-    public List<Measure> buildFunctionMeasuresList(RangeDistributionBuilder builder){
-        List<Measure> list = new ArrayList<Measure>();
-        list.add(builder.build());
-        return list;
-    }
-
-    /**
-     * helper class to process the information the functions contained in a Lizard report
-     */
-    private class ObjCFunction {
-        private String name;
-        private int cyclomaticComplexity;
-
-        public ObjCFunction(String name, int cyclomaticComplexity) {
-            this.name = name;
-            this.cyclomaticComplexity = cyclomaticComplexity;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getCyclomaticComplexity() {
-            return cyclomaticComplexity;
-        }
-
     }
 }

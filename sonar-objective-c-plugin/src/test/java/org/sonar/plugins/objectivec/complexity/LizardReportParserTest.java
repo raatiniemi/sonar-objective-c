@@ -183,7 +183,7 @@ public class LizardReportParserTest {
         Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
 
         List<Measure> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
-        Assert.assertEquals(3, list2.size());
+        Assert.assertEquals(2, list2.size());
         for (Measure measure : list2) {
             String s = measure.getMetric().getKey();
 
