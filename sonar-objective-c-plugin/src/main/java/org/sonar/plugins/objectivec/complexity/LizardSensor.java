@@ -61,15 +61,6 @@ public class LizardSensor implements Sensor {
     /**
      *
      * @param project
-     * @return true if the project is root the root project and uses Objective-C
-     */
-    public boolean shouldExecuteOnProject(Project project) {
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
-    }
-
-    /**
-     *
-     * @param project
      * @param sensorContext
      */
     public void analyse(Project project, SensorContext sensorContext) {
