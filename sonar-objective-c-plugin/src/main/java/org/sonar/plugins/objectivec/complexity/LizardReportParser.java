@@ -50,7 +50,6 @@ public class LizardReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
 
     private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
-    private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
@@ -134,10 +133,9 @@ public class LizardReportParser {
                 String fileName = itemElement.getAttribute(NAME);
                 NodeList values = itemElement.getElementsByTagName(VALUE);
                 int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-                double fileComplexity = Double.parseDouble(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
                 int numberOfFunctions =  Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
-                reportMeasures.put(fileName, buildMeasureList(complexity, fileComplexity, numberOfFunctions));
+                reportMeasures.put(fileName, buildMeasureList(complexity, numberOfFunctions));
             }
         }
     }
@@ -145,18 +143,14 @@ public class LizardReportParser {
     /**
      *
      * @param complexity overall complexity of the file
-     * @param fileComplexity file complexity
      * @param numberOfFunctions number of functions in the file
-     * @return returns a list of tree measures COMPLEXITY, FUNCTIONS, FILE_COMPLEXITY with the values specified
+     * @return returns a list of tree measures COMPLEXITY, FUNCTIONS with the values specified
      */
-    private List<Measure> buildMeasureList(int complexity, double fileComplexity, int numberOfFunctions){
+    private List<Measure> buildMeasureList(int complexity, int numberOfFunctions){
         List<Measure> list = new ArrayList<Measure>();
         list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
         list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
-        list.add(new Measure(CoreMetrics.FILE_COMPLEXITY, fileComplexity));
-        RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
-        complexityDistribution.add(fileComplexity);
-        list.add(complexityDistribution.build());
+
         return list;
     }
 
