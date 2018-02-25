@@ -179,8 +179,6 @@ public class LizardReportParserTest {
                 Assert.assertEquals("Header Complexity has a wrong value", 0, measure.getIntValue().intValue());
             } else if (s.equals(CoreMetrics.FILE_COMPLEXITY_KEY)) {
                 Assert.assertEquals("Header File Complexity has a wrong value", 0.0d, measure.getValue().doubleValue(), 0.0d);
-            } else if (s.equals(CoreMetrics.COMPLEXITY_IN_FUNCTIONS_KEY)) {
-                Assert.assertEquals("Header Complexity in Functions has a wrong value", 0, measure.getIntValue().intValue());
             } else if (s.equals(CoreMetrics.FUNCTION_COMPLEXITY_KEY)) {
                 Assert.assertEquals("Header Functions Complexity has a wrong value", 0.0d, measure.getValue().doubleValue(), 0.0d);
             }
@@ -189,7 +187,7 @@ public class LizardReportParserTest {
         Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
 
         List<Measure> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
-        Assert.assertEquals(7, list2.size());
+        Assert.assertEquals(6, list2.size());
         for (Measure measure : list2) {
             String s = measure.getMetric().getKey();
 
@@ -199,8 +197,6 @@ public class LizardReportParserTest {
                 Assert.assertEquals("MFile Complexity has a wrong value", 6, measure.getIntValue().intValue());
             } else if (s.equals(CoreMetrics.FILE_COMPLEXITY_KEY)) {
                 Assert.assertEquals("MFile File Complexity has a wrong value", 6.0d, measure.getValue().doubleValue(), 0.0d);
-            } else if (s.equals(CoreMetrics.COMPLEXITY_IN_FUNCTIONS_KEY)) {
-                Assert.assertEquals("MFile Complexity in Functions has a wrong value", 6, measure.getIntValue().intValue());
             } else if (s.equals(CoreMetrics.FUNCTION_COMPLEXITY_KEY)) {
                 Assert.assertEquals("MFile Functions Complexity has a wrong value", 3.0d, measure.getValue().doubleValue(), 0.0d);
             }

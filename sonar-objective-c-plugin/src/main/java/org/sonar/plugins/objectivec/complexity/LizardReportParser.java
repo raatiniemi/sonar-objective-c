@@ -40,7 +40,7 @@ import java.util.Map;
 /**
  * This class parses xml Reports form the tool Lizard in order to extract this measures:
  *      COMPLEXITY, FUNCTIONS, FUNCTION_COMPLEXITY, FUNCTION_COMPLEXITY_DISTRIBUTION,
- *      FILE_COMPLEXITY, FUNCTION_COMPLEXITY_DISTRIBUTION, COMPLEXITY_IN_FUNCTIONS
+ *      FILE_COMPLEXITY, FUNCTION_COMPLEXITY_DISTRIBUTION
  *
  * @author Andres Gil Herrera
  * @since 28/05/15
@@ -181,20 +181,18 @@ public class LizardReportParser {
      *
      * @param reportMeasures map to save the measures for the different files
      * @param functions list of ObjCFunction to extract the information needed to create
-     *                  FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTION_COMPLEXITY, COMPLEXITY_IN_FUNCTIONS
+     *                  FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTION_COMPLEXITY
      */
     private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<ObjCFunction> functions){
         for (Map.Entry<String, List<Measure>> entry : reportMeasures.entrySet()) {
 
             RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
             int count = 0;
-            int complexityInFunctions = 0;
 
             for (ObjCFunction func : functions) {
                 if (func.getName().contains(entry.getKey())) {
                     complexityDistribution.add(func.getCyclomaticComplexity());
                     count++;
-                    complexityInFunctions += func.getCyclomaticComplexity();
                 }
             }
 
@@ -208,7 +206,7 @@ public class LizardReportParser {
                 }
 
                 double complexMean = complex/(double)count;
-                entry.getValue().addAll(buildFunctionMeasuresList(complexMean, complexityInFunctions, complexityDistribution));
+                entry.getValue().addAll(buildFunctionMeasuresList(complexMean, complexityDistribution));
             }
         }
     }
@@ -216,14 +214,12 @@ public class LizardReportParser {
     /**
      *
      * @param complexMean average complexity per function in a file
-     * @param complexityInFunctions Entire complexity in functions
      * @param builder Builder ready to build FUNCTION_COMPLEXITY_DISTRIBUTION
-     * @return list of Measures containing FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTION_COMPLEXITY and COMPLEXITY_IN_FUNCTIONS
+     * @return list of Measures containing FUNCTION_COMPLEXITY_DISTRIBUTION and FUNCTION_COMPLEXITY
      */
-    public List<Measure> buildFunctionMeasuresList(double complexMean, int complexityInFunctions, RangeDistributionBuilder builder){
+    public List<Measure> buildFunctionMeasuresList(double complexMean, RangeDistributionBuilder builder){
         List<Measure> list = new ArrayList<Measure>();
         list.add(new Measure(CoreMetrics.FUNCTION_COMPLEXITY, complexMean));
-        list.add(new Measure(CoreMetrics.COMPLEXITY_IN_FUNCTIONS).setIntValue(complexityInFunctions));
         list.add(builder.build());
         return list;
     }
