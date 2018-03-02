@@ -73,11 +73,9 @@ public class LizardReportParser {
             return parseFile(document);
         } catch (final FileNotFoundException e){
             LOGGER.error("Lizard Report not found {}", xmlFile, e);
-        } catch (final IOException e) {
-            LOGGER.error("Error processing file named {}", xmlFile, e);
         } catch (final ParserConfigurationException e) {
             LOGGER.error("Error parsing file named {}", xmlFile, e);
-        } catch (final SAXException e) {
+        } catch (final IOException | SAXException e) {
             LOGGER.error("Error processing file named {}", xmlFile, e);
         }
 
