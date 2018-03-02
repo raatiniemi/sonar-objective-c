@@ -24,12 +24,12 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.measures.Measure;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +63,7 @@ public class LizardSensor implements Sensor {
      */
     private void analyse(SensorContext sensorContext) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        Map<String, List<Measure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
+        Map<String, List<LizardMeasure<Integer>>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
         LOGGER.info("Saving results of complexity analysis");
         new LizardMeasurePersistor(sensorContext, fileSystem).saveMeasures(measures);
     }
@@ -74,7 +74,7 @@ public class LizardSensor implements Sensor {
      * @param parser LizardReportParser to parse the report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    private Map<String, List<Measure>> parseReportsIn(final String baseDir, LizardReportParser parser) {
+    private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReportsIn(final String baseDir, LizardReportParser parser) {
         final StringBuilder reportFileName = new StringBuilder(baseDir);
         reportFileName.append("/").append(reportPath());
         LOGGER.info("Processing complexity report ");

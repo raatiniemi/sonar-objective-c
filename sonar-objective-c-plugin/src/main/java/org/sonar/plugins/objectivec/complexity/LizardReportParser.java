@@ -19,7 +19,7 @@ package org.sonar.plugins.objectivec.complexity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.measures.*;
+import org.sonar.api.measures.CoreMetrics;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,8 +64,8 @@ public class LizardReportParser {
      * @param xmlFile lizard xml report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    public Map<String, List<Measure>> parseReport(final File xmlFile) {
-        Map<String, List<Measure>> result = null;
+    public <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReport(final File xmlFile) {
+        Map<String, List<LizardMeasure<T>>> result = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
@@ -89,8 +90,8 @@ public class LizardReportParser {
      * @param document Document object representing the lizard report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    private Map<String, List<Measure>> parseFile(Document document) {
-        final Map<String, List<Measure>> reportMeasures = new HashMap<String, List<Measure>>();
+    private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseFile(Document document) {
+        final Map<String, List<LizardMeasure<T>>> reportMeasures = new HashMap<>();
 
         NodeList nodeList = document.getElementsByTagName(MEASURE);
 
@@ -115,7 +116,7 @@ public class LizardReportParser {
      * @param itemList list of all items from a <measure type=file>
      * @param reportMeasures map to save the measures for each file
      */
-    private void addComplexityFileMeasures(NodeList itemList, Map<String, List<Measure>> reportMeasures){
+    private <T extends Serializable> void addComplexityFileMeasures(NodeList itemList, Map<String, List<LizardMeasure<T>>> reportMeasures) {
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
 
@@ -126,9 +127,12 @@ public class LizardReportParser {
                 int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
                 int numberOfFunctions =  Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
-                List<Measure> list = new ArrayList<Measure>();
-                list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
-                list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
+                // TODO: Proper handling of unchecked assignment.
+                List<LizardMeasure<T>> list = new ArrayList<>();
+                //noinspection unchecked
+                list.add(LizardMeasure.of(CoreMetrics.COMPLEXITY, complexity));
+                //noinspection unchecked
+                list.add(LizardMeasure.of(CoreMetrics.FUNCTIONS, numberOfFunctions));
 
                 reportMeasures.put(fileName, list);
             }

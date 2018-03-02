@@ -41,8 +41,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
-import org.sonar.plugins.objectivec.complexity.LizardReportParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -50,8 +48,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Andres Gil Herrera
@@ -162,35 +158,35 @@ public class LizardReportParserTest {
 
         Assert.assertNotNull("correct file is null", correctFile);
 
-        Map<String, List<Measure>> report = parser.parseReport(correctFile);
+        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(correctFile);
 
         Assert.assertNotNull("report is null", report);
 
         Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
-        List<Measure> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
+        List<LizardMeasure<Integer>> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
         Assert.assertEquals(2, list1.size());
 
-        for (Measure measure : list1) {
-            String s = measure.getMetric().getKey();
+        for (LizardMeasure measure : list1) {
+            String s = measure.getMetric().key();
 
             if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                Assert.assertEquals("Header Functions has a wrong value", 0, measure.getIntValue().intValue());
+                Assert.assertEquals("Header Functions has a wrong value", 0, measure.getValue());
             } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                Assert.assertEquals("Header Complexity has a wrong value", 0, measure.getIntValue().intValue());
+                Assert.assertEquals("Header Complexity has a wrong value", 0, measure.getValue());
             }
         }
 
         Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
 
-        List<Measure> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
+        List<LizardMeasure<Integer>> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
         Assert.assertEquals(2, list2.size());
-        for (Measure measure : list2) {
-            String s = measure.getMetric().getKey();
+        for (LizardMeasure measure : list2) {
+            String s = measure.getMetric().key();
 
             if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                Assert.assertEquals("MFile Functions has a wrong value", 2, measure.getIntValue().intValue());
+                Assert.assertEquals("MFile Functions has a wrong value", 2, measure.getValue());
             } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                Assert.assertEquals("MFile Complexity has a wrong value", 6, measure.getIntValue().intValue());
+                Assert.assertEquals("MFile Complexity has a wrong value", 6, measure.getValue());
             }
         }
     }
@@ -204,7 +200,7 @@ public class LizardReportParserTest {
 
         Assert.assertNotNull("correct file is null", incorrectFile);
 
-        Map<String, List<Measure>> report = parser.parseReport(incorrectFile);
+        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(incorrectFile);
         Assert.assertNull("report is not null", report);
 
     }
