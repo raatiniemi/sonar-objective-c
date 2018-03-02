@@ -19,10 +19,10 @@ package org.sonar.plugins.objectivec.complexity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
+import org.sonar.api.batch.sensor.SensorContext;
 
 import java.io.File;
 import java.io.Serializable;

@@ -19,9 +19,9 @@ package org.sonar.plugins.objectivec.complexity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
@@ -100,7 +100,7 @@ public class LizardSensor implements Sensor {
     }
 
     @Override
-    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        analyse((SensorContext) context);
+    public void execute(@Nonnull SensorContext context) {
+        analyse(context);
     }
 }
