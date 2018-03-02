@@ -24,6 +24,7 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.SensorContext;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
@@ -51,12 +52,7 @@ public class LizardMeasurePersistor {
      *
      * @param measures Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    public <T extends Serializable> void saveMeasures(final Map<String, List<LizardMeasure<T>>> measures) {
-
-        if (measures == null) {
-            return;
-        }
-
+    public <T extends Serializable> void saveMeasures(@Nonnull final Map<String, List<LizardMeasure<T>>> measures) {
         for (Map.Entry<String, List<LizardMeasure<T>>> entry : measures.entrySet()) {
             File file = new File(fileSystem.baseDir(), entry.getKey());
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));

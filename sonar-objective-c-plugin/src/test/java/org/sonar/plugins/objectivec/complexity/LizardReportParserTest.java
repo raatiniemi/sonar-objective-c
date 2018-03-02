@@ -160,7 +160,7 @@ public class LizardReportParserTest {
 
         Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(correctFile);
 
-        Assert.assertNotNull("report is null", report);
+        Assert.assertFalse("report is empty", report.isEmpty());
 
         Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
         List<LizardMeasure<Integer>> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
@@ -201,7 +201,7 @@ public class LizardReportParserTest {
         Assert.assertNotNull("correct file is null", incorrectFile);
 
         Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(incorrectFile);
-        Assert.assertNull("report is not null", report);
+        Assert.assertTrue("report is not empty", report.isEmpty());
 
     }
 

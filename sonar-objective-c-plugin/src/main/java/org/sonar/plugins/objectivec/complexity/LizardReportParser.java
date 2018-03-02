@@ -26,6 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,10 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class parses xml Reports form the tool Lizard in order to extract this measures:
@@ -64,14 +62,15 @@ public class LizardReportParser {
      * @param xmlFile lizard xml report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
+    @Nonnull
     public <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReport(final File xmlFile) {
-        Map<String, List<LizardMeasure<T>>> result = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(xmlFile);
-            result = parseFile(document);
+
+            return parseFile(document);
         } catch (final FileNotFoundException e){
             LOGGER.error("Lizard Report not found {}", xmlFile, e);
         } catch (final IOException e) {
@@ -82,7 +81,7 @@ public class LizardReportParser {
             LOGGER.error("Error processing file named {}", xmlFile, e);
         }
 
-        return result;
+        return Collections.emptyMap();
     }
 
     /**
