@@ -16,7 +16,6 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,8 +23,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.sensor.Sensor;
-import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.config.MapSettings;
 import org.sonar.api.config.Settings;
@@ -35,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class LizardSensorTest {
@@ -60,8 +58,8 @@ public class LizardSensorTest {
 
         sensor.describe(descriptor);
 
-        Assert.assertEquals("Lizard complexity sensor", descriptor.name());
-        Assert.assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+        assertEquals("Lizard complexity sensor", descriptor.name());
+        assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
     }
 
     @Test
