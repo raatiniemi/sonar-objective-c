@@ -50,6 +50,8 @@ public class LizardSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 
+    private final LizardReportParser parser = new LizardReportParser();
+
     private final Settings conf;
     private final FileSystem fileSystem;
 
@@ -67,7 +69,7 @@ public class LizardSensor implements Sensor {
     @Override
     public void execute(@Nonnull SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        Map<String, List<LizardMeasure<Integer>>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
+        Map<String, List<LizardMeasure<Integer>>> measures = parseReportsIn(projectBaseDir, parser);
         if (measures.isEmpty()) {
             return;
         }
