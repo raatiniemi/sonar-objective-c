@@ -75,22 +75,26 @@ public class LizardSensor implements Sensor {
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
     private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReportsIn(final String baseDir, LizardReportParser parser) {
-        final StringBuilder reportFileName = new StringBuilder(baseDir);
-        reportFileName.append("/").append(reportPath());
+        final String reportFileName = buildReportPath(baseDir);
+
         LOGGER.info("Processing complexity report ");
-        return parser.parseReport(new File(reportFileName.toString()));
+        return parser.parseReport(new File(reportFileName));
     }
 
     /**
-     *
+     * Build path for the report file using the {@code basePath} as prefix
+     * @param basePath Base path for the project.
      * @return the default report path or the one specified in the sonar-project.properties
      */
-    private String reportPath() {
+    String buildReportPath(String basePath) {
         String reportPath = conf.getString(REPORT_PATH_KEY);
+
         if (reportPath == null) {
+            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
             reportPath = DEFAULT_REPORT_PATH;
         }
-        return reportPath;
+
+        return String.format("%s/%s",basePath, reportPath);
     }
 
     @Override

@@ -34,19 +34,22 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(JUnit4.class)
 public class LizardSensorTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    private Sensor sensor;
+    private Settings settings;
+    private LizardSensor sensor;
 
     @Before
     public void prepare() throws IOException {
         File baseDirectory = temporaryFolder.newFolder();
 
         DefaultFileSystem fileSystem = new DefaultFileSystem(baseDirectory.toPath());
-        Settings settings = new MapSettings();
+        settings = new MapSettings();
 
         sensor = new LizardSensor(fileSystem, settings);
     }
@@ -59,5 +62,27 @@ public class LizardSensorTest {
 
         Assert.assertEquals("Lizard complexity sensor", descriptor.name());
         Assert.assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+    }
+
+    @Test
+    public void buildReportPath_withoutConfiguredReportPath() {
+        String basePath = temporaryFolder.getRoot().getPath();
+        String expected = String.format("%s/%s", basePath, LizardSensor.DEFAULT_REPORT_PATH);
+
+        String actual = sensor.buildReportPath(basePath);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void buildReportPath_withConfiguredReportPath() {
+        String basePath = temporaryFolder.getRoot().getPath();
+        String path = "lizard-report.xml";
+        String expected = String.format("%s/%s", basePath, path);
+        settings.setProperty(LizardSensor.REPORT_PATH_KEY, path);
+
+        String actual = sensor.buildReportPath(basePath);
+
+        assertEquals(expected, actual);
     }
 }
