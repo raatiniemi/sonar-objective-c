@@ -66,14 +66,6 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        analyse(context);
-    }
-
-    /**
-     *
-     * @param sensorContext
-     */
-    private void analyse(SensorContext sensorContext) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
         Map<String, List<LizardMeasure<Integer>>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
         if (measures.isEmpty()) {
@@ -81,7 +73,8 @@ public class LizardSensor implements Sensor {
         }
 
         LOGGER.info("Saving results of complexity analysis");
-        new LizardMeasurePersistor(sensorContext, fileSystem).saveMeasures(measures);
+        new LizardMeasurePersistor(context, fileSystem)
+                .saveMeasures(measures);
     }
 
     /**
