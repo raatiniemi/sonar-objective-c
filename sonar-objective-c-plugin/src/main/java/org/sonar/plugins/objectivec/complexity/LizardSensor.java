@@ -58,6 +58,17 @@ public class LizardSensor implements Sensor {
         this.fileSystem = moduleFileSystem;
     }
 
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
+    }
+
+    @Override
+    public void execute(@Nonnull SensorContext context) {
+        analyse(context);
+    }
+
     /**
      *
      * @param sensorContext
@@ -105,16 +116,5 @@ public class LizardSensor implements Sensor {
         }
 
         return String.format("%s/%s",basePath, reportPath);
-    }
-
-    @Override
-    public void describe(@Nonnull SensorDescriptor descriptor) {
-        descriptor.name(NAME);
-        descriptor.onlyOnLanguage(ObjectiveC.KEY);
-    }
-
-    @Override
-    public void execute(@Nonnull SensorContext context) {
-        analyse(context);
     }
 }
