@@ -20,7 +20,7 @@ import org.sonar.api.batch.measure.Metric;
 
 import java.io.Serializable;
 
-class LizardMeasure<T extends Serializable> {
+final class LizardMeasure<T extends Serializable> {
     private final Metric<T> metric;
     private final T value;
 
