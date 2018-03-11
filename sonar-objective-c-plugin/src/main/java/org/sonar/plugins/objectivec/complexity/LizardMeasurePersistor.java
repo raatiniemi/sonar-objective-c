@@ -45,7 +45,7 @@ final class LizardMeasurePersistor {
     private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    LizardMeasurePersistor(final SensorContext sensorContext, final FileSystem fileSystem) {
+    LizardMeasurePersistor(@Nonnull final SensorContext sensorContext, @Nonnull final FileSystem fileSystem) {
         this.sensorContext = sensorContext;
         this.fileSystem = fileSystem;
     }
