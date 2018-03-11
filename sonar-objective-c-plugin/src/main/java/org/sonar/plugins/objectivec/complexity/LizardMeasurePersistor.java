@@ -19,6 +19,7 @@ package org.sonar.plugins.objectivec.complexity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * This class is used to save the measures created by the lizardReportParser in the sonar database
@@ -54,19 +56,25 @@ final class LizardMeasurePersistor {
      */
     <T extends Serializable> void saveMeasures(@Nonnull final Map<String, List<LizardMeasure<T>>> measures) {
         for (Map.Entry<String, List<LizardMeasure<T>>> entry : measures.entrySet()) {
-            File file = new File(fileSystem.baseDir(), entry.getKey());
-            InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
-
-            if (inputFile == null) {
-                LOGGER.warn("file not included in sonar {}", entry.getKey());
+            Optional<InputFile> value = buildInputFile(entry.getKey());
+            if (value.isPresent()) {
+                entry.getValue().forEach(measure -> saveMeasure(value.get(), measure));
                 continue;
             }
 
-            entry.getValue().forEach(measure -> saveMeasure(inputFile, measure));
+            LOGGER.warn("File not included {}", entry.getKey());
         }
     }
 
-    private <T extends Serializable> void saveMeasure(InputFile inputFile, LizardMeasure<T> measure) {
+    @Nonnull
+    private Optional<InputFile> buildInputFile(@Nonnull String relativeFilePath) {
+        File file = new File(fileSystem.baseDir(), relativeFilePath);
+        FilePredicate predicate = fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath());
+
+        return Optional.ofNullable(fileSystem.inputFile(predicate));
+    }
+
+    private <T extends Serializable> void saveMeasure(@Nonnull InputFile inputFile, @Nonnull LizardMeasure<T> measure) {
         Metric<T> metric = measure.getMetric();
 
         try {
