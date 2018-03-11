@@ -42,7 +42,7 @@ import java.util.*;
  * @author Andres Gil Herrera
  * @since 28/05/15
  */
-public class LizardReportParser {
+class LizardReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
 
@@ -61,7 +61,7 @@ public class LizardReportParser {
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
     @Nonnull
-    public <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReport(final File xmlFile) {
+    <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReport(final File xmlFile) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
