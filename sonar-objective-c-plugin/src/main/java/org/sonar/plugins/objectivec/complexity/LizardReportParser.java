@@ -42,7 +42,7 @@ import java.util.*;
  * @author Andres Gil Herrera
  * @since 28/05/15
  */
-class LizardReportParser {
+final class LizardReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
 
