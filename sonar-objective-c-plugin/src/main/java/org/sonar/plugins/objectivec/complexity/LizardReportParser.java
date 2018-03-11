@@ -121,18 +121,23 @@ public class LizardReportParser {
                 Element itemElement = (Element) item;
                 String fileName = itemElement.getAttribute(NAME);
                 NodeList values = itemElement.getElementsByTagName(VALUE);
-                int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-                int numberOfFunctions =  Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
-                // TODO: Proper handling of unchecked assignment.
-                List<LizardMeasure<T>> list = new ArrayList<>();
-                //noinspection unchecked
-                list.add(LizardMeasure.of(CoreMetrics.COMPLEXITY, complexity));
-                //noinspection unchecked
-                list.add(LizardMeasure.of(CoreMetrics.FUNCTIONS, numberOfFunctions));
-
-                reportMeasures.put(fileName, list);
+                reportMeasures.put(fileName, buildMeasuresFromValues(values));
             }
         }
+    }
+
+    private <T extends Serializable> List<LizardMeasure<T>> buildMeasuresFromValues(NodeList values) {
+        int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
+        int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
+
+        // TODO: Proper handling of unchecked assignment.
+        List<LizardMeasure<T>> measures = new ArrayList<>();
+        //noinspection unchecked
+        measures.add(LizardMeasure.of(CoreMetrics.COMPLEXITY, complexity));
+        //noinspection unchecked
+        measures.add(LizardMeasure.of(CoreMetrics.FUNCTIONS, numberOfFunctions));
+
+        return measures;
     }
 }
