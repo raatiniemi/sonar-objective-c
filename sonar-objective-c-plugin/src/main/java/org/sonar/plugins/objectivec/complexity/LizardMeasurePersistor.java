@@ -36,7 +36,7 @@ import java.util.Map;
  * @author Andres Gil Herrera
  * @since 28/05/15.
  */
-class LizardMeasurePersistor {
+final class LizardMeasurePersistor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
