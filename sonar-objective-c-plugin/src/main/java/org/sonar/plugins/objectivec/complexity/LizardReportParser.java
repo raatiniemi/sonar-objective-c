@@ -61,7 +61,7 @@ final class LizardReportParser {
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
     @Nonnull
-    <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReport(final File xmlFile) {
+    <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReport(@Nonnull final File xmlFile) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
@@ -85,7 +85,8 @@ final class LizardReportParser {
      * @param document Document object representing the lizard report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseFile(Document document) {
+    @Nonnull
+    private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseFile(@Nonnull Document document) {
         final Map<String, List<LizardMeasure<T>>> reportMeasures = new HashMap<>();
 
         NodeList nodeList = document.getElementsByTagName(MEASURE);
@@ -107,7 +108,10 @@ final class LizardReportParser {
         return reportMeasures;
     }
 
-    private <T extends Serializable> void addComplexityFileMeasures(NodeList itemList, Map<String, List<LizardMeasure<T>>> reportMeasures) {
+    private <T extends Serializable> void addComplexityFileMeasures(
+            @Nonnull NodeList itemList,
+            @Nonnull Map<String, List<LizardMeasure<T>>> reportMeasures
+    ) {
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
             if (item.getNodeType() != Node.ELEMENT_NODE) {
@@ -122,7 +126,8 @@ final class LizardReportParser {
         }
     }
 
-    private <T extends Serializable> List<LizardMeasure<T>> buildMeasuresFromValues(NodeList values) {
+    @Nonnull
+    private <T extends Serializable> List<LizardMeasure<T>> buildMeasuresFromValues(@Nonnull NodeList values) {
         int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
         int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
