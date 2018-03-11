@@ -37,9 +37,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * This class parses xml Reports form the tool Lizard in order to extract this measures:
- *      COMPLEXITY, FUNCTIONS, FUNCTION_COMPLEXITY_DISTRIBUTION,
- *      FILE_COMPLEXITY, FUNCTION_COMPLEXITY_DISTRIBUTION
+ * This class parses xml Reports form the tool Lizard in order to extract this measures: COMPLEXITY, FUNCTIONS
  *
  * @author Andres Gil Herrera
  * @since 28/05/15
@@ -109,12 +107,6 @@ public class LizardReportParser {
         return reportMeasures;
     }
 
-    /**
-     * This method extracts the values for COMPLEXITY, FUNCTIONS, FILE_COMPLEXITY
-     *
-     * @param itemList list of all items from a <measure type=file>
-     * @param reportMeasures map to save the measures for each file
-     */
     private <T extends Serializable> void addComplexityFileMeasures(NodeList itemList, Map<String, List<LizardMeasure<T>>> reportMeasures) {
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
