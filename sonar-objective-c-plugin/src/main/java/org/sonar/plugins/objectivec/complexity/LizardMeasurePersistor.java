@@ -62,9 +62,7 @@ final class LizardMeasurePersistor {
                 continue;
             }
 
-            for (LizardMeasure<T> measure : entry.getValue()) {
-                saveMeasure(inputFile, measure);
-            }
+            entry.getValue().forEach(measure -> saveMeasure(inputFile, measure));
         }
     }
 
