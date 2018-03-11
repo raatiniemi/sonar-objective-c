@@ -94,13 +94,15 @@ public class LizardReportParser {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
 
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE)) {
-                    NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
-                    addComplexityFileMeasures(itemList, reportMeasures);
-                }
+            Element element = (Element) node;
+
+            if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE)) {
+                NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
+                addComplexityFileMeasures(itemList, reportMeasures);
             }
         }
 
@@ -116,14 +118,15 @@ public class LizardReportParser {
     private <T extends Serializable> void addComplexityFileMeasures(NodeList itemList, Map<String, List<LizardMeasure<T>>> reportMeasures) {
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
-
-            if (item.getNodeType() == Node.ELEMENT_NODE) {
-                Element itemElement = (Element) item;
-                String fileName = itemElement.getAttribute(NAME);
-                NodeList values = itemElement.getElementsByTagName(VALUE);
-
-                reportMeasures.put(fileName, buildMeasuresFromValues(values));
+            if (item.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
             }
+
+            Element itemElement = (Element) item;
+            String fileName = itemElement.getAttribute(NAME);
+            NodeList values = itemElement.getElementsByTagName(VALUE);
+
+            reportMeasures.put(fileName, buildMeasuresFromValues(values));
         }
     }
 
