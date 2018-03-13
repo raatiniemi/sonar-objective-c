@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,8 @@
 package org.sonar.plugins.objectivec.violations.oclint;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,7 @@ public final class OCLintSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
 
+    private final OCLintReportParser parser = new OCLintReportParser();
     private final Settings conf;
     private final FileSystem fileSystem;
     private final ResourcePerspectives resourcePerspectives;
@@ -52,13 +55,12 @@ public final class OCLintSensor implements Sensor {
 
     public void analyse(final Project project, final SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        final OCLintParser parser = new OCLintParser(project, context, resourcePerspectives, fileSystem);
 
-        parseReportIn(projectBaseDir, parser);
+        parseReportIn(projectBaseDir, OCLintViolationPersistor.create(context));
 
     }
 
-    private void parseReportIn(final String baseDir, final OCLintParser parser) {
+    private void parseReportIn(final String baseDir, OCLintViolationPersistor persistor) {
 
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{reportPath()});
@@ -67,10 +69,15 @@ public final class OCLintSensor implements Sensor {
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
 
+        List<Violation> violations = new ArrayList<>();
+
         for(String filename : files) {
             LoggerFactory.getLogger(getClass()).info("Processing OCLint report {}", filename);
-            parser.parseReport(new File(filename));
+
+            violations.addAll(parser.parse(new File(filename)));
         }
+
+        persistor.saveViolations(violations);
     }
 
     private String reportPath() {
