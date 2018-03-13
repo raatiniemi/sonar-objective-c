@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
@@ -39,12 +38,10 @@ public final class OCLintSensor implements Sensor {
     private final OCLintReportParser parser = new OCLintReportParser();
     private final Settings conf;
     private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
 
-    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public OCLintSensor(final FileSystem fileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
     }
 
     public boolean shouldExecuteOnProject(final Project project) {
