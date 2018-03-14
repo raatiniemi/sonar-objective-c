@@ -52,7 +52,7 @@ public final class OCLintSensor implements Sensor {
     private void parseReportIn(final String baseDir, OCLintViolationPersistor persistor) {
 
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{reportPath()});
+        scanner.setIncludes(new String[]{buildReportPath()});
         scanner.setBasedir(baseDir);
         scanner.setCaseSensitive(false);
         scanner.scan();
@@ -69,11 +69,13 @@ public final class OCLintSensor implements Sensor {
         persistor.saveViolations(violations);
     }
 
-    private String reportPath() {
+    private String buildReportPath() {
         String reportPath = conf.getString(REPORT_PATH_KEY);
+
         if (reportPath == null) {
             reportPath = DEFAULT_REPORT_PATH;
         }
+
         return reportPath;
     }
 
