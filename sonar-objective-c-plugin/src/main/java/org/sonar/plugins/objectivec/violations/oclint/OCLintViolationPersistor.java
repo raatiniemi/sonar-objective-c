@@ -40,6 +40,7 @@ final class OCLintViolationPersistor {
         this.fileSystem = fileSystem;
     }
 
+    @Nonnull
     static OCLintViolationPersistor create(@Nonnull final SensorContext context) {
         return new OCLintViolationPersistor(context, context.fileSystem());
     }
