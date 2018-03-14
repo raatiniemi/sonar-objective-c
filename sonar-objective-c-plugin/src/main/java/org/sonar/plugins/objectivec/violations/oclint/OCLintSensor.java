@@ -73,6 +73,7 @@ public final class OCLintSensor implements Sensor {
         String reportPath = conf.getString(REPORT_PATH_KEY);
 
         if (reportPath == null) {
+            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
             reportPath = DEFAULT_REPORT_PATH;
         }
 
