@@ -23,17 +23,22 @@ import java.util.List;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
+import javax.annotation.Nonnull;
+
 public final class OCLintSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
+
+    private static final String NAME = "OCLint violation sensor";
 
     private final OCLintReportParser parser = new OCLintReportParser();
     private final Settings conf;
@@ -83,5 +88,16 @@ public final class OCLintSensor implements Sensor {
             reportPath = DEFAULT_REPORT_PATH;
         }
         return reportPath;
+    }
+
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
+    }
+
+    @Override
+    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
+        analyse(null, (SensorContext) context);
     }
 }
