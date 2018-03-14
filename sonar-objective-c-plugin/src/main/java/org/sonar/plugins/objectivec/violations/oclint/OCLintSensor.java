@@ -49,8 +49,20 @@ public final class OCLintSensor implements Sensor {
         this.fileSystem = fileSystem;
     }
 
-    private void parseReportIn(final String baseDir, OCLintViolationPersistor persistor) {
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
+    }
 
+    @Override
+    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+
+        parseReportIn(projectBaseDir, OCLintViolationPersistor.create(context));
+    }
+
+    private void parseReportIn(final String baseDir, OCLintViolationPersistor persistor) {
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{buildReportPath()});
         scanner.setBasedir(baseDir);
@@ -78,18 +90,5 @@ public final class OCLintSensor implements Sensor {
         }
 
         return reportPath;
-    }
-
-    @Override
-    public void describe(@Nonnull SensorDescriptor descriptor) {
-        descriptor.name(NAME);
-        descriptor.onlyOnLanguage(ObjectiveC.KEY);
-    }
-
-    @Override
-    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-
-        parseReportIn(projectBaseDir, OCLintViolationPersistor.create(context));
     }
 }
