@@ -49,12 +49,6 @@ public final class OCLintSensor implements Sensor {
         this.fileSystem = fileSystem;
     }
 
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
-
-    }
-
     public void analyse(final Project project, final SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
 
