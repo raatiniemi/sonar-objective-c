@@ -23,12 +23,10 @@ import java.util.List;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -47,13 +45,6 @@ public final class OCLintSensor implements Sensor {
     public OCLintSensor(final FileSystem fileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = fileSystem;
-    }
-
-    public void analyse(final Project project, final SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-
-        parseReportIn(projectBaseDir, OCLintViolationPersistor.create(context));
-
     }
 
     private void parseReportIn(final String baseDir, OCLintViolationPersistor persistor) {
@@ -92,6 +83,8 @@ public final class OCLintSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        analyse(null, (SensorContext) context);
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+
+        parseReportIn(projectBaseDir, OCLintViolationPersistor.create(context));
     }
 }
