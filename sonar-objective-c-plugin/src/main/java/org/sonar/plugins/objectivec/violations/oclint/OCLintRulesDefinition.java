@@ -87,7 +87,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 // Remove the rule name from the description of the previous
                 // rule
                 if (rule.get("description") != null) {
-                    String description = rule.get("description").toString();
+                    String description = rule.get("description");
                     final int index = description.lastIndexOf(previousLine);
                     if (index > 0) {
                         rule.put("description", description.substring(0, index));
@@ -108,10 +108,10 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 inDescription = true;
 
                 // Create rule when last filed found
-                RulesDefinition.NewRule newRule = repository.createRule(rule.get("key").toString());
-                newRule.setName(rule.get("name").toString());
-                newRule.setSeverity(rule.get("severity").toString());
-                newRule.setHtmlDescription(rule.get("description").toString());
+                RulesDefinition.NewRule newRule = repository.createRule(rule.get("key"));
+                newRule.setName(rule.get("name"));
+                newRule.setSeverity(rule.get("severity"));
+                newRule.setHtmlDescription(rule.get("description"));
 
             } else if (line.matches("Severity:.*")) {
                 inDescription = false;
@@ -120,7 +120,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
             } else {
                 if (inDescription) {
                     line = ruleDescriptionLink(line);
-                    String description = (String)rule.get("description");
+                    String description = rule.get("description");
                     rule.put("description", description + "<br>" + line);
                 }
             }
