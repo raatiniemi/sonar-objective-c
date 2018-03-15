@@ -74,7 +74,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
         final List<String> listLines = IOUtils.readLines(reader);
 
         String previousLine = null;
-        Map<String, String> rule = new HashMap<String, String>();
+        Map<String, String> rule = new HashMap<>();
         boolean inDescription = false;
         for (String line : listLines) {
 
