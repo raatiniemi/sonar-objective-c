@@ -26,6 +26,7 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,7 +48,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
     private static final String RULES_FILE = "/org/sonar/plugins/oclint/rules.txt";
 
     @Override
-    public void define(Context context) {
+    public void define(@Nonnull Context context) {
 
         NewRepository repository = context
                 .createRepository(REPOSITORY_KEY, ObjectiveC.KEY)
