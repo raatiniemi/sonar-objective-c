@@ -1,7 +1,7 @@
 SonarQube Plugin for Objective-C
 ================================
 
-This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/octo-technology/sonar-objective-c). It provides modifications and extra features needed for our internal use.
+This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
 A SonarQube 5.0 dashboard of the iOS open source project [GreatReader](https://github.com/semweb/GreatReader):
 <p align="center">
@@ -139,7 +139,7 @@ If you still have *run-sonar.sh* file in each of your project (not recommended),
 
 ### Contributing
 
-Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/octo-technology/sonar-objective-c).
+Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
 
 ### License
 
