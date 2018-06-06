@@ -95,6 +95,12 @@
             <name>Mete Balci</name>
             <url>https://github.com/metebalci</url>
         </developer>
+        <developer>
+            <id>raatiniemi</id>
+            <name>Tobias Raatiniemi</name>
+            <email>raatiniemi@gmail.com</email>
+            <url>https://gitlab.com/raatiniemi</url>
+        </developer>
     </developers>
     <scm>
         <connection>scm:git:git@gitlab.com:raatiniemi/sonar-objective-c.git</connection>
