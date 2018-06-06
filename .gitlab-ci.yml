@@ -22,3 +22,5 @@ analyse:
   stage: test
   script:
     - mvn sonar:sonar
+  only:
+    - tags
