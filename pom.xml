@@ -281,7 +281,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <pluginClass>org.sonar.plugins.objectivec.ObjectiveCPlugin</pluginClass>
-                    <pluginName>ObjectiveC (Backelite)</pluginName>
+                    <pluginName>ObjectiveC</pluginName>
                 </configuration>
             </plugin>
             <plugin>
