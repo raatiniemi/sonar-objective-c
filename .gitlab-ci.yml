@@ -7,7 +7,7 @@ stages:
 build:
   stage: build
   script:
-    - mvn install
+    - mvn clean install
   artifacts:
     paths:
       - sonar-objective-c-plugin/target/*.jar
