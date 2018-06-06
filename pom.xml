@@ -328,4 +328,17 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.login>${env.SONAR_LOGIN}</sonar.login>
+                <sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
+            </properties>
+        </profile>
+     </profiles>
+
 </project>
