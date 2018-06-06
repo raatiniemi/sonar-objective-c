@@ -109,10 +109,6 @@
     </scm>
 
     <properties>
-        <license.owner>OCTO Technology, Backelite</license.owner>
-        <license.email>contact@backelite.com</license.email>
-        <license.title>Sonar Objective-C Plugin</license.title>
-
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
 
         <sonarQubeMinVersion>5.6</sonarQubeMinVersion>
@@ -289,38 +285,6 @@
                     <pluginClass>org.sonar.plugins.objectivec.ObjectiveCPlugin</pluginClass>
                     <pluginName>ObjectiveC</pluginName>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <header>com/mycila/maven/plugin/license/templates/LGPL-3.txt</header>
-                    <properties>
-                        <owner>${license.owner}</owner>
-                        <title>${license.email}</title>
-                        <title>${license.title}</title>
-                    </properties>
-                    <excludes>
-                        <exclude>**/README</exclude>
-                        <exclude>**/*/sh</exclude>
-                        <exclude>src/test/resources/**</exclude>
-                        <exclude>src/test/shell/**</exclude>
-                        <exclude>src/main/resources/**</exclude>
-                        <exclude>*.groovy</exclude>
-                        <exclude>*.sh</exclude>
-                        <exclude>**/*.properties</exclude>
-                        <exclude>**/pom.xml</exclude>
-                        <exclude>.gitlab-ci.yml</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
