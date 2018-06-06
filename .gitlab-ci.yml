@@ -10,10 +10,15 @@ build:
     - mvn clean install
   artifacts:
     paths:
-      - sonar-objective-c-plugin/target/*.jar
+      - sonar-objective-c-plugin/target
     expire_in: 1 day
 
 test:
   stage: test
   script:
     - mvn test
+
+analyse:
+  stage: test
+  script:
+    - mvn sonar:sonar
