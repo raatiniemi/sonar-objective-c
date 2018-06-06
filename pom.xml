@@ -97,9 +97,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git@github.com:Backelite/sonar-objective-c.git</connection>
-        <developerConnection>scm:git:git@github.com:Backelite/sonar-objective-c.git</developerConnection>
-        <url>https://github.com/Backelite/sonar-objective-c</url>
+        <connection>scm:git:git@gitlab.com:raatiniemi/sonar-objective-c.git</connection>
+        <developerConnection>scm:git:git@gitlab.com:raatiniemi/sonar-objective-c.git</developerConnection>
+        <url>https://gitlab.com/raatiniemi/sonar-objective-c</url>
     </scm>
 
     <properties>
