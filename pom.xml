@@ -102,11 +102,6 @@
         <url>https://github.com/Backelite/sonar-objective-c</url>
     </scm>
 
-    <ciManagement>
-        <system>Cloudbees</system>
-        <url>https://rfelden.ci.cloudbees.com/job/sonar-objective-c/</url>
-    </ciManagement>
-
     <properties>
         <license.owner>OCTO Technology, Backelite</license.owner>
         <license.email>contact@backelite.com</license.email>
@@ -310,6 +305,7 @@
                         <exclude>*.sh</exclude>
                         <exclude>**/*.properties</exclude>
                         <exclude>**/pom.xml</exclude>
+                        <exclude>.gitlab-ci.yml</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -331,5 +327,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.login>${env.SONAR_LOGIN}</sonar.login>
+                <sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
+            </properties>
+        </profile>
+     </profiles>
 
 </project>
