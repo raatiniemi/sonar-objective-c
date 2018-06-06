@@ -102,11 +102,6 @@
         <url>https://github.com/Backelite/sonar-objective-c</url>
     </scm>
 
-    <ciManagement>
-        <system>Cloudbees</system>
-        <url>https://rfelden.ci.cloudbees.com/job/sonar-objective-c/</url>
-    </ciManagement>
-
     <properties>
         <license.owner>OCTO Technology, Backelite</license.owner>
         <license.email>contact@backelite.com</license.email>
