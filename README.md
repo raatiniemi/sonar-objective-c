@@ -44,49 +44,6 @@ Binary packages are available in the release section.
 ### 0.6.3 (detached from backelite project)
 - Detached from backelite project (no active maintainers)
 
-### 0.6.2
-- SonarQube 6.7 support
-- FauxPas 1.7.2 support (4 new rules added)
-- OCLint 0.13 support (1 new rule added)
-- Update run-sonar.sh : xcodebuild optimization (see https://github.com/Backelite/sonar-objective-c/pull/26 thanks to [davidy4ng](https://github.com/davidy4ng)).
-- Fix for properties with space (see https://github.com/Backelite/sonar-objective-c/pull/29 thanks to [Branlute](https://github.com/Branlute))
-
-
-### 0.6.1
-- Replaced oclint-xcodebuild by xcpretty (see https://github.com/Backelite/sonar-objective-c/pull/25 thanks to [davidy4ng](https://github.com/davidy4ng)).
-- Added -nounittests and -usesonarscanner parameters to run-sonar.sh script (see https://github.com/Backelite/sonar-objective-c/pull/23 thanks to [davidy4ng](https://github.com/davidy4ng)).
-- Sonar 6 fix for Faux Pas (see https://github.com/Backelite/sonar-objective-c/pull/20 thanks to [macostea](https://github.com/macostea)).
-
-### 0.6.0
-- SonarQube 6 support. Important : will work with SonarQube 5.x and above only. Will not work anymore with SonarQube 4.5.x anymore.
-
-### 0.5.2
-- OCLint 0.11.0 support (see https://github.com/Backelite/sonar-objective-c/pull/13)
-- Removed required gcovr check in run-sonar.sh (see https://github.com/Backelite/sonar-objective-c/pull/10)
-- Fixed issued in run-sonar.sh (see https://github.com/Backelite/sonar-objective-c/pull/2)
-- Better test file detection pattern (see https://github.com/Backelite/sonar-objective-c/pull/3/files)
-
-#### 0.5.1
-- Complexity with Lizard !
-
-#### 0.5.0 (detached from octo project)
-- Detached from octo project (to hard to maintain compatibility)
-- Removed deprecated API usages for Sonarube 5.3 support
-
-#### 0.4.0.3 (based on 0.4.0)
-- Xcode 7 coverage support (profdata)
-
-#### 0.4.0.2 (based on 0.4.0)
-- Faux Pas support for release 1.5 and 1.6
-- Support for multiple projects in a same workspace
-
-#### 0.4.0.1 (based on 0.4.0)
-- Faux Pas support
-- Moved OCLint long line threshold to 250
-- Add the `plain` reporter at build step to get more information in case of build failure
-- Capitalized OCLint rule names
-
-
 ### Prerequisites
 
 - a Mac with Xcode
