@@ -18,7 +18,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 
 ### Compatibility
 
-Releases available from this repository are compliant with SonarQube 4.3.x and above.
+Releases available from this repository are compliant with SonarQube 5.6.x and above.
 
 In order not to break compatibility with the original plugin, plugin releases are numbered with 4 digits.
 
