@@ -310,6 +310,7 @@
                         <exclude>*.sh</exclude>
                         <exclude>**/*.properties</exclude>
                         <exclude>**/pom.xml</exclude>
+                        <exclude>.gitlab-ci.yml</exclude>
                     </excludes>
                 </configuration>
                 <executions>
