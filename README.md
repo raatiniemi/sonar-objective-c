@@ -5,17 +5,16 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 
 ### Features
 
-| Feature 		| Supported	| Details	|
-|---------------|----------|:-----------:|
-| Complexity	|YES			| Uses [Lizard](https://github.com/terryyin/lizard)			|
-| Design		|NO			|			|
-| Documentation	|YES		|			|
-| Duplications	|YES		|			|
-| Issues		|YES		| Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules, and [Faux Pas](http://fauxpasapp.com/): 102 rules|
-| Size			|YES		|			|
-| Tests			|YES		| Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon			|
-| Code coverage	|YES		| With [gcovr](http://gcovr.com) for project before Xcode 7, otherwise [slather](https://github.com/venmo/slather)|
-
+| Feature | Supported | Details |
+|---|---|:---:|
+| Complexity | YES | Uses [Lizard](https://github.com/terryyin/lizard) |
+| Design | NO | |
+| Documentation | YES | |
+| Duplications | YES | |
+| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules, and [Faux Pas](http://fauxpasapp.com/): 102 rules |
+| Size | YES | |
+| Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
+| Code coverage | YES | With [gcovr](http://gcovr.com) for project before Xcode 7, otherwise [slather](https://github.com/venmo/slather) |
 
 ### Compatibility
 
