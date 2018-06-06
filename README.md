@@ -1,7 +1,3 @@
-<p align="left">
-  <img src="https://www.backelite.com/wp-content/uploads/2016/09/logo-backelite-square.png" width="100"/>
-</p>
-
 | Branch   |      Status                                                                                                                                |
 |----------|:------------------------------------------------------------------------------------------------------------------------------------------:|
 | master | [![Build Status](https://travis-ci.org/Backelite/sonar-objective-c.svg?branch=master)](https://travis-ci.org/Backelite/sonar-objective-c)  |
