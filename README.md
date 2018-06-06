@@ -1,8 +1,3 @@
-| Branch   |      Status                                                                                                                                |
-|----------|:------------------------------------------------------------------------------------------------------------------------------------------:|
-| master | [![Build Status](https://travis-ci.org/Backelite/sonar-objective-c.svg?branch=master)](https://travis-ci.org/Backelite/sonar-objective-c)  |
-| develop| [![Build Status](https://travis-ci.org/Backelite/sonar-objective-c.svg?branch=develop)](https://travis-ci.org/Backelite/sonar-objective-c) |
-
 SonarQube Plugin for Objective-C
 ================================
 
