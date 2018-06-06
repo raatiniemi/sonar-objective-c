@@ -48,7 +48,7 @@
 
     <name>Objective-C Sonar Plugin</name>
     <description>Enables analysis of Objective-C projects into SonarQube.</description>
-    <url>https://github.com/Backelite/sonar-objective-c</url>
+    <url>https://gitlab.com/raatiniemi/sonar-objective-c</url>
 
 
     <inceptionYear>2012</inceptionYear>
