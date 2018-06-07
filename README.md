@@ -74,7 +74,7 @@ By default this format will be used by the plugin, except if you explicitly forc
 - Restart the SonarQube server.
 
 ### Configuration (once per project)
-- Copy [sonar-project.properties](https://rawgithub.com/Backelite/sonar-objective-c/master/sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
+- Copy [sonar-project.properties](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
 - Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
 
 **The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
