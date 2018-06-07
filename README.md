@@ -1,41 +1,24 @@
-<p align="left">
-  <img src="https://www.backelite.com/wp-content/uploads/2016/09/logo-backelite-square.png" width="100"/>
-</p>
-
-| Branch   |      Status                                                                                                                                |
-|----------|:------------------------------------------------------------------------------------------------------------------------------------------:|
-| master | [![Build Status](https://travis-ci.org/Backelite/sonar-objective-c.svg?branch=master)](https://travis-ci.org/Backelite/sonar-objective-c)  |
-| develop| [![Build Status](https://travis-ci.org/Backelite/sonar-objective-c.svg?branch=develop)](https://travis-ci.org/Backelite/sonar-objective-c) |
-
 SonarQube Plugin for Objective-C
 ================================
 
-This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/octo-technology/sonar-objective-c). It provides modifications and extra features needed for our internal use.
-
-A SonarQube 5.0 dashboard of the iOS open source project [GreatReader](https://github.com/semweb/GreatReader):
-<p align="center">
-  <img src="sample/screen%20shot%20SonarQube%20dashboard.png" alt="Example iOS SonarQube dashboard" width="100%"/>
-</p>
+This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
 ### Features
 
-| Feature 		| Supported	| Details	|
-|---------------|----------|:-----------:|
-| Complexity	|YES			| Uses [Lizard](https://github.com/terryyin/lizard)			|
-| Design		|NO			|			|
-| Documentation	|YES		|			|
-| Duplications	|YES		|			|
-| Issues		|YES		| Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules, and [Faux Pas](http://fauxpasapp.com/): 102 rules|
-| Size			|YES		|			|
-| Tests			|YES		| Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon			|
-| Code coverage	|YES		| With [gcovr](http://gcovr.com) for project before Xcode 7, otherwise [slather](https://github.com/venmo/slather)|
-
+| Feature | Supported | Details |
+|---|---|:---:|
+| Complexity | YES | Uses [Lizard](https://github.com/terryyin/lizard) |
+| Design | NO | |
+| Documentation | YES | |
+| Duplications | YES | |
+| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules, and [Faux Pas](http://fauxpasapp.com/): 102 rules |
+| Size | YES | |
+| Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
+| Code coverage | YES | With [gcovr](http://gcovr.com) for project before Xcode 7, otherwise [slather](https://github.com/venmo/slather) |
 
 ### Compatibility
 
-Releases available from this repository are compliant with SonarQube 4.3.x and above.
-
-In order not to break compatibility with the original plugin, plugin releases are numbered with 4 digits.
+Releases available from this repository are compliant with SonarQube 5.6.x and above.
 
 ### Faux Pas support
 
@@ -50,48 +33,8 @@ Binary packages are available in the release section.
 
 ### Release history
 
-### 0.6.2
-- SonarQube 6.7 support
-- FauxPas 1.7.2 support (4 new rules added)
-- OCLint 0.13 support (1 new rule added)
-- Update run-sonar.sh : xcodebuild optimization (see https://github.com/Backelite/sonar-objective-c/pull/26 thanks to [davidy4ng](https://github.com/davidy4ng)).
-- Fix for properties with space (see https://github.com/Backelite/sonar-objective-c/pull/29 thanks to [Branlute](https://github.com/Branlute))
-
-
-### 0.6.1
-- Replaced oclint-xcodebuild by xcpretty (see https://github.com/Backelite/sonar-objective-c/pull/25 thanks to [davidy4ng](https://github.com/davidy4ng)).
-- Added -nounittests and -usesonarscanner parameters to run-sonar.sh script (see https://github.com/Backelite/sonar-objective-c/pull/23 thanks to [davidy4ng](https://github.com/davidy4ng)).
-- Sonar 6 fix for Faux Pas (see https://github.com/Backelite/sonar-objective-c/pull/20 thanks to [macostea](https://github.com/macostea)).
-
-### 0.6.0
-- SonarQube 6 support. Important : will work with SonarQube 5.x and above only. Will not work anymore with SonarQube 4.5.x anymore.
-
-### 0.5.2
-- OCLint 0.11.0 support (see https://github.com/Backelite/sonar-objective-c/pull/13)
-- Removed required gcovr check in run-sonar.sh (see https://github.com/Backelite/sonar-objective-c/pull/10)
-- Fixed issued in run-sonar.sh (see https://github.com/Backelite/sonar-objective-c/pull/2)
-- Better test file detection pattern (see https://github.com/Backelite/sonar-objective-c/pull/3/files)
-
-#### 0.5.1
-- Complexity with Lizard !
-
-#### 0.5.0 (detached from octo project)
-- Detached from octo project (to hard to maintain compatibility)
-- Removed deprecated API usages for Sonarube 5.3 support
-
-#### 0.4.0.3 (based on 0.4.0)
-- Xcode 7 coverage support (profdata)
-
-#### 0.4.0.2 (based on 0.4.0)
-- Faux Pas support for release 1.5 and 1.6
-- Support for multiple projects in a same workspace
-
-#### 0.4.0.1 (based on 0.4.0)
-- Faux Pas support
-- Moved OCLint long line threshold to 250
-- Add the `plain` reporter at build step to get more information in case of build failure
-- Capitalized OCLint rule names
-
+### 0.6.3 (detached from backelite project)
+- Detached from backelite project (no active maintainers)
 
 ### Prerequisites
 
@@ -127,11 +70,11 @@ By default this format will be used by the plugin, except if you explicitly forc
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Copy [run-sonar.sh](https://rawgithub.com/Backelite/sonar-objective-c/master/src/main/shell/run-sonar.sh) somewhere in your PATH
+- Copy [run-sonar.sh](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sonar-objective-c-plugin/src/main/shell/run-sonar.sh) somewhere in your PATH
 - Restart the SonarQube server.
 
 ### Configuration (once per project)
-- Copy [sonar-project.properties](https://rawgithub.com/Backelite/sonar-objective-c/master/sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
+- Copy [sonar-project.properties](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
 - Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
 
 **The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
@@ -148,7 +91,7 @@ If you still have *run-sonar.sh* file in each of your project (not recommended),
 
 ### Contributing
 
-Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/octo-technology/sonar-objective-c).
+Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
 
 ### License
 
