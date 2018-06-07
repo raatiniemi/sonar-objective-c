@@ -70,7 +70,7 @@ By default this format will be used by the plugin, except if you explicitly forc
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Copy [run-sonar.sh](https://rawgithub.com/Backelite/sonar-objective-c/master/src/main/shell/run-sonar.sh) somewhere in your PATH
+- Copy [run-sonar.sh](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sonar-objective-c-plugin/src/main/shell/run-sonar.sh) somewhere in your PATH
 - Restart the SonarQube server.
 
 ### Configuration (once per project)
