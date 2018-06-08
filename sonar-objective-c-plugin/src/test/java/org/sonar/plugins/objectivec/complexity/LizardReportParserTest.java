@@ -49,11 +49,6 @@ public class LizardReportParserTest {
         incorrectFile = createIncorrectFile();
     }
 
-    /**
-     *
-     * @return dummy lizard xml report to test the parser
-     * @throws IOException
-     */
     public File createCorrectFile() throws IOException {
         File xmlFile = folder.newFile("correctFile.xml");
         BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
@@ -90,11 +85,6 @@ public class LizardReportParserTest {
         return xmlFile;
     }
 
-    /**
-     *
-     * @return corrupted dummy lizard report to test the parser
-     * @throws IOException
-     */
     public File createIncorrectFile() throws IOException {
         File xmlFile = folder.newFile("incorrectFile.xml");
         BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
@@ -131,9 +121,6 @@ public class LizardReportParserTest {
         return xmlFile;
     }
 
-    /**
-     * this test case test that the parser extract all measures right
-     */
     @Test
     public void parseReportShouldReturnMapWhenXMLFileIsCorrect() {
         LizardReportParser parser = new LizardReportParser();
@@ -173,9 +160,6 @@ public class LizardReportParserTest {
         }
     }
 
-    /**
-     * this method test that the parser shoud not return anything if the xml report is corrupted
-     */
     @Test
     public void parseReportShouldReturnNullWhenXMLFileIsIncorrect() {
         LizardReportParser parser = new LizardReportParser();
