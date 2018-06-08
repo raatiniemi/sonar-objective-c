@@ -36,7 +36,6 @@ import java.util.Optional;
  * This class is used to save the measures created by the lizardReportParser in the sonar database
  */
 final class LizardMeasurePersistor {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
     private final SensorContext sensorContext;

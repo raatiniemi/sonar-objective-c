@@ -39,7 +39,6 @@ import java.util.Map;
  * in order to save complexity metrics.
  */
 public class LizardSensor implements Sensor {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
 
     private static final String NAME = "Lizard complexity sensor";

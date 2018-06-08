@@ -37,7 +37,6 @@ import static org.junit.Assert.*;
  * @since 03/06/15.
  */
 public class LizardReportParserTest {
-
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 

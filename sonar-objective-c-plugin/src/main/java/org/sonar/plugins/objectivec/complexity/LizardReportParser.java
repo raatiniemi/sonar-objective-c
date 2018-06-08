@@ -40,7 +40,6 @@ import java.util.*;
  * This class parses xml Reports form the tool Lizard in order to extract this measures: COMPLEXITY, FUNCTIONS
  */
 final class LizardReportParser {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
 
     private static final String MEASURE = "measure";
