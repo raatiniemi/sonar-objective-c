@@ -35,6 +35,11 @@ Binary packages are available in the release section.
 
 ### 0.6.3 (detached from backelite project)
 - Detached from backelite project (no active maintainers)
+- Ensure compatibility with SonarQube 7.0
+- Update Lizard complexity report parsing to use new API
+- Remove use of deprecated metrics from Lizard complexity reports
+- Warn instead of throwing uncatched exception if Lizard complexity report XML
+  file is not available
 
 ### Prerequisites
 
