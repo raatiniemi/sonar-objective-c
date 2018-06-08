@@ -51,6 +51,7 @@ public class LizardSensor implements Sensor {
     private final Settings conf;
     private final FileSystem fileSystem;
 
+    @SuppressWarnings("WeakerAccess")
     public LizardSensor(final FileSystem moduleFileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = moduleFileSystem;
