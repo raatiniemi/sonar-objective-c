@@ -40,6 +40,7 @@ Binary packages are available in the release section.
 - Remove use of deprecated metrics from Lizard complexity reports
 - Warn instead of throwing uncatched exception if Lizard complexity report XML
   file is not available
+- Ensure OCLint violation reports are properly parsed and sent to SonarQube
 
 ### Prerequisites
 
