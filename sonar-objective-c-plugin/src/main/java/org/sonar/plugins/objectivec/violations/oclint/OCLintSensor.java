@@ -60,10 +60,10 @@ public final class OCLintSensor implements Sensor {
     public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
 
-        parseReportIn(projectBaseDir, OCLintViolationPersistor.create(context));
+        parseReportIn(projectBaseDir, ViolationPersistor.create(context));
     }
 
-    private void parseReportIn(final String baseDir, OCLintViolationPersistor persistor) {
+    private void parseReportIn(final String baseDir, ViolationPersistor persistor) {
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{buildReportPath()});
         scanner.setBasedir(baseDir);

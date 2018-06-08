@@ -31,18 +31,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-final class OCLintViolationPersistor {
+final class ViolationPersistor {
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private OCLintViolationPersistor(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
+    private ViolationPersistor(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
         this.context = context;
         this.fileSystem = fileSystem;
     }
 
     @Nonnull
-    static OCLintViolationPersistor create(@Nonnull final SensorContext context) {
-        return new OCLintViolationPersistor(context, context.fileSystem());
+    static ViolationPersistor create(@Nonnull final SensorContext context) {
+        return new ViolationPersistor(context, context.fileSystem());
     }
 
     void saveViolations(@Nonnull List<Violation> violations) {
