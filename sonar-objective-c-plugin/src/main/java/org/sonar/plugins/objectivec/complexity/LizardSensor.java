@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,60 +19,61 @@ package org.sonar.plugins.objectivec.complexity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
+import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
  * This sensor searches for the report generated from the tool Lizard
  * in order to save complexity metrics.
- *
- * @author Andres Gil Herrera
- * @since 28/05/15
  */
 public class LizardSensor implements Sensor {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
+
+    private static final String NAME = "Lizard complexity sensor";
 
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 
+    private final LizardReportParser parser = new LizardReportParser();
+
     private final Settings conf;
     private final FileSystem fileSystem;
 
+    @SuppressWarnings("WeakerAccess")
     public LizardSensor(final FileSystem moduleFileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = moduleFileSystem;
     }
 
-    /**
-     *
-     * @param project
-     * @return true if the project is root the root project and uses Objective-C
-     */
-    public boolean shouldExecuteOnProject(Project project) {
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
     }
 
-    /**
-     *
-     * @param project
-     * @param sensorContext
-     */
-    public void analyse(Project project, SensorContext sensorContext) {
+    @Override
+    public void execute(@Nonnull SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        Map<String, List<Measure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
+        Map<String, List<LizardMeasure<Integer>>> measures = parseReportsIn(projectBaseDir, parser);
+        if (measures.isEmpty()) {
+            return;
+        }
+
         LOGGER.info("Saving results of complexity analysis");
-        new LizardMeasurePersistor(project, sensorContext, fileSystem).saveMeasures(measures);
+        new LizardMeasurePersistor(context, fileSystem)
+                .saveMeasures(measures);
     }
 
     /**
@@ -81,22 +82,31 @@ public class LizardSensor implements Sensor {
      * @param parser LizardReportParser to parse the report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    private Map<String, List<Measure>> parseReportsIn(final String baseDir, LizardReportParser parser) {
-        final StringBuilder reportFileName = new StringBuilder(baseDir);
-        reportFileName.append("/").append(reportPath());
-        LOGGER.info("Processing complexity report ");
-        return parser.parseReport(new File(reportFileName.toString()));
+    private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReportsIn(final String baseDir, LizardReportParser parser) {
+        final String reportFileName = buildReportPath(baseDir);
+        final File reportFile = new File(reportFileName);
+        if (reportFile.exists() && reportFile.isFile()) {
+            LOGGER.info("Processing complexity report");
+            return parser.parseReport(new File(reportFileName));
+        }
+
+        LOGGER.warn("No complexity report is available for parsing");
+        return Collections.emptyMap();
     }
 
     /**
-     *
+     * Build path for the report file using the {@code basePath} as prefix
+     * @param basePath Base path for the project.
      * @return the default report path or the one specified in the sonar-project.properties
      */
-    private String reportPath() {
+    String buildReportPath(String basePath) {
         String reportPath = conf.getString(REPORT_PATH_KEY);
+
         if (reportPath == null) {
+            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
             reportPath = DEFAULT_REPORT_PATH;
         }
-        return reportPath;
+
+        return String.format("%s/%s",basePath, reportPath);
     }
 }

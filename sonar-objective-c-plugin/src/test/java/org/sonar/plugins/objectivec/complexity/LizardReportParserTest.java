@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,34 +15,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.objectivec.complexity;/*
- * Sonar Objective-C Plugin
- * Copyright (C) 2012 OCTO Technology, Backelite
- * dev@sonar.codehaus.org
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
- */
+package org.sonar.plugins.objectivec.complexity;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
-import org.sonar.plugins.objectivec.complexity.LizardReportParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -58,7 +37,6 @@ import static org.junit.Assert.*;
  * @since 03/06/15.
  */
 public class LizardReportParserTest {
-
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
@@ -71,11 +49,6 @@ public class LizardReportParserTest {
         incorrectFile = createIncorrectFile();
     }
 
-    /**
-     *
-     * @return dummy lizard xml report to test the parser
-     * @throws IOException
-     */
     public File createCorrectFile() throws IOException {
         File xmlFile = folder.newFile("correctFile.xml");
         BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
@@ -112,11 +85,6 @@ public class LizardReportParserTest {
         return xmlFile;
     }
 
-    /**
-     *
-     * @return corrupted dummy lizard report to test the parser
-     * @throws IOException
-     */
     public File createIncorrectFile() throws IOException {
         File xmlFile = folder.newFile("incorrectFile.xml");
         BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
@@ -153,72 +121,53 @@ public class LizardReportParserTest {
         return xmlFile;
     }
 
-    /**
-     * this test case test that the parser extract all measures right
-     */
     @Test
     public void parseReportShouldReturnMapWhenXMLFileIsCorrect() {
         LizardReportParser parser = new LizardReportParser();
 
-        Assert.assertNotNull("correct file is null", correctFile);
+        assertNotNull("correct file is null", correctFile);
 
-        Map<String, List<Measure>> report = parser.parseReport(correctFile);
+        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(correctFile);
 
-        Assert.assertNotNull("report is null", report);
+        assertFalse("report is empty", report.isEmpty());
 
-        Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
-        List<Measure> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
-        Assert.assertEquals(4, list1.size());
+        assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
+        List<LizardMeasure<Integer>> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
+        assertEquals(2, list1.size());
 
-        for (Measure measure : list1) {
-            String s = measure.getMetric().getKey();
+        for (LizardMeasure measure : list1) {
+            String s = measure.getMetric().key();
 
             if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                Assert.assertEquals("Header Functions has a wrong value", 0, measure.getIntValue().intValue());
+                assertEquals("Header Functions has a wrong value", 0, measure.getValue());
             } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                Assert.assertEquals("Header Complexity has a wrong value", 0, measure.getIntValue().intValue());
-            } else if (s.equals(CoreMetrics.FILE_COMPLEXITY_KEY)) {
-                Assert.assertEquals("Header File Complexity has a wrong value", 0.0d, measure.getValue().doubleValue(), 0.0d);
-            } else if (s.equals(CoreMetrics.COMPLEXITY_IN_FUNCTIONS_KEY)) {
-                Assert.assertEquals("Header Complexity in Functions has a wrong value", 0, measure.getIntValue().intValue());
-            } else if (s.equals(CoreMetrics.FUNCTION_COMPLEXITY_KEY)) {
-                Assert.assertEquals("Header Functions Complexity has a wrong value", 0.0d, measure.getValue().doubleValue(), 0.0d);
+                assertEquals("Header Complexity has a wrong value", 0, measure.getValue());
             }
         }
 
-        Assert.assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
+        assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
 
-        List<Measure> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
-        Assert.assertEquals(7, list2.size());
-        for (Measure measure : list2) {
-            String s = measure.getMetric().getKey();
+        List<LizardMeasure<Integer>> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
+        assertEquals(2, list2.size());
+        for (LizardMeasure measure : list2) {
+            String s = measure.getMetric().key();
 
             if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                Assert.assertEquals("MFile Functions has a wrong value", 2, measure.getIntValue().intValue());
+                assertEquals("MFile Functions has a wrong value", 2, measure.getValue());
             } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                Assert.assertEquals("MFile Complexity has a wrong value", 6, measure.getIntValue().intValue());
-            } else if (s.equals(CoreMetrics.FILE_COMPLEXITY_KEY)) {
-                Assert.assertEquals("MFile File Complexity has a wrong value", 6.0d, measure.getValue().doubleValue(), 0.0d);
-            } else if (s.equals(CoreMetrics.COMPLEXITY_IN_FUNCTIONS_KEY)) {
-                Assert.assertEquals("MFile Complexity in Functions has a wrong value", 6, measure.getIntValue().intValue());
-            } else if (s.equals(CoreMetrics.FUNCTION_COMPLEXITY_KEY)) {
-                Assert.assertEquals("MFile Functions Complexity has a wrong value", 3.0d, measure.getValue().doubleValue(), 0.0d);
+                assertEquals("MFile Complexity has a wrong value", 6, measure.getValue());
             }
         }
     }
 
-    /**
-     * this method test that the parser shoud not return anything if the xml report is corrupted
-     */
     @Test
     public void parseReportShouldReturnNullWhenXMLFileIsIncorrect() {
         LizardReportParser parser = new LizardReportParser();
 
-        Assert.assertNotNull("correct file is null", incorrectFile);
+        assertNotNull("correct file is null", incorrectFile);
 
-        Map<String, List<Measure>> report = parser.parseReport(incorrectFile);
-        Assert.assertNull("report is not null", report);
+        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(incorrectFile);
+        assertTrue("report is not empty", report.isEmpty());
 
     }
-
 }
