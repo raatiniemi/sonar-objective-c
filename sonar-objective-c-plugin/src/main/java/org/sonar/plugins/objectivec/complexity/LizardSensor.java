@@ -37,9 +37,6 @@ import java.util.Map;
 /**
  * This sensor searches for the report generated from the tool Lizard
  * in order to save complexity metrics.
- *
- * @author Andres Gil Herrera
- * @since 28/05/15
  */
 public class LizardSensor implements Sensor {
 

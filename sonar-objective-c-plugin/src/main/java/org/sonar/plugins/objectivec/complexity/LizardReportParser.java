@@ -38,9 +38,6 @@ import java.util.*;
 
 /**
  * This class parses xml Reports form the tool Lizard in order to extract this measures: COMPLEXITY, FUNCTIONS
- *
- * @author Andres Gil Herrera
- * @since 28/05/15
  */
 final class LizardReportParser {
 

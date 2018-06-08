@@ -34,9 +34,6 @@ import java.util.Optional;
 
 /**
  * This class is used to save the measures created by the lizardReportParser in the sonar database
- *
- * @author Andres Gil Herrera
- * @since 28/05/15.
  */
 final class LizardMeasurePersistor {
 
