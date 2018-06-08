@@ -187,5 +187,4 @@ public class LizardReportParserTest {
         assertTrue("report is not empty", report.isEmpty());
 
     }
-
 }

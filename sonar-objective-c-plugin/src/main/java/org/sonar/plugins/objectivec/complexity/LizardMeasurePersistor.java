@@ -88,5 +88,4 @@ final class LizardMeasurePersistor {
             LOGGER.error(" Exception -> {} -> {}", inputFile.relativePath(), metric.key(), e);
         }
     }
-
 }
