@@ -44,6 +44,7 @@ public final class OCLintSensor implements Sensor {
     private final Settings conf;
     private final FileSystem fileSystem;
 
+    @SuppressWarnings("WeakerAccess")
     public OCLintSensor(final FileSystem fileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = fileSystem;
