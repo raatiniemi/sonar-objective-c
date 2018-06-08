@@ -33,11 +33,11 @@ final class LizardMeasure<T extends Serializable> {
         return new LizardMeasure<>(metric, value);
     }
 
-    public Metric<T> getMetric() {
+    Metric<T> getMetric() {
         return metric;
     }
 
-    public T getValue() {
+    T getValue() {
         return value;
     }
 }
