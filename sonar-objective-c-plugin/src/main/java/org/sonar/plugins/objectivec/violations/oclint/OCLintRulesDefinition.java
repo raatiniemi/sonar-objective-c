@@ -1,5 +1,4 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,11 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by gillesgrousset on 18/02/2016.
- */
 public class OCLintRulesDefinition implements RulesDefinition {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
 
     public static final String REPOSITORY_KEY = "OCLint";
@@ -49,7 +44,6 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
     @Override
     public void define(@Nonnull Context context) {
-
         NewRepository repository = context
                 .createRepository(REPOSITORY_KEY, ObjectiveC.KEY)
                 .setName(REPOSITORY_NAME);
@@ -63,11 +57,9 @@ public class OCLintRulesDefinition implements RulesDefinition {
         SqaleXmlLoader.load(repository, "/com/sonar/sqale/oclint-model.xml");
 
         repository.done();
-
     }
 
     private void loadRules(NewRepository repository) throws IOException {
-
         Reader reader = new BufferedReader(new InputStreamReader(getClass()
                 .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
 
@@ -77,10 +69,8 @@ public class OCLintRulesDefinition implements RulesDefinition {
         Map<String, String> rule = new HashMap<>();
         boolean inDescription = false;
         for (String line : listLines) {
-
             if (isLineIgnored(line)) {
                 inDescription = false;
-
             } else if (line.matches("[\\-]{4,}.*")) {
                 LOGGER.debug("Rule found : {}", previousLine);
 
@@ -127,7 +117,6 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
             previousLine = line;
         }
-
     }
 
     private boolean isLineIgnored(String line) {
