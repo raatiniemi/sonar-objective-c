@@ -43,9 +43,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
     @Override
     public void define(@Nonnull Context context) {
-        NewRepository repository = context
-                .createRepository(REPOSITORY_KEY, ObjectiveC.KEY)
-                .setName(REPOSITORY_NAME);
+        NewRepository repository = createRepository(context);
 
         try {
             loadRules(repository);
@@ -56,6 +54,12 @@ public class OCLintRulesDefinition implements RulesDefinition {
         SqaleXmlLoader.load(repository, "/com/sonar/sqale/oclint-model.xml");
 
         repository.done();
+    }
+
+    @Nonnull
+    NewRepository createRepository(@Nonnull Context context) {
+        return context.createRepository(REPOSITORY_KEY, ObjectiveC.KEY)
+                .setName(REPOSITORY_NAME);
     }
 
     private void loadRules(NewRepository repository) throws IOException {
