@@ -35,11 +35,10 @@ import java.util.List;
 import java.util.Map;
 
 public class OCLintRulesDefinition implements RulesDefinition {
+    static final String REPOSITORY_KEY = "OCLint";
+    static final String REPOSITORY_NAME = REPOSITORY_KEY;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
-
-    public static final String REPOSITORY_KEY = "OCLint";
-    public static final String REPOSITORY_NAME = REPOSITORY_KEY;
-
     private static final String RULES_FILE = "/org/sonar/plugins/oclint/rules.txt";
 
     @Override
