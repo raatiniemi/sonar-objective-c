@@ -17,9 +17,6 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-/**
- * Created by gillesgrousset on 18/02/2016.
- */
 public enum OCLintRuleSeverity {
     INFO,
     MINOR,
