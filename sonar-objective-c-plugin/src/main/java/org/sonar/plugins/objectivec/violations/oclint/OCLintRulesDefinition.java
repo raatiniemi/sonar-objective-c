@@ -68,6 +68,10 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
         final List<String> listLines = IOUtils.readLines(reader);
 
+        populateRepositoryWithRulesFromLines(repository, listLines);
+    }
+
+    void populateRepositoryWithRulesFromLines(@Nonnull NewRepository repository, @Nonnull List<String> listLines) {
         String previousLine = null;
         Map<String, String> rule = new HashMap<>();
         boolean inDescription = false;

@@ -24,10 +24,20 @@ import org.junit.runners.JUnit4;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.NewRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(JUnit4.class)
 public class OCLintRulesDefinitionTest {
+    private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
+
     private RulesDefinition.Context context;
     private OCLintRulesDefinition rulesDefinition;
 
@@ -42,5 +52,19 @@ public class OCLintRulesDefinitionTest {
         NewRepository actual = rulesDefinition.createRepository(context);
 
         assertEquals(OCLintRulesDefinition.REPOSITORY_KEY, actual.key());
+    }
+
+    @Test
+    public void populateRepositoryWithRulesFromLines() throws IOException {
+        NewRepository repository = rulesDefinition.createRepository(context);
+        Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");
+        List<String> lines = Files.lines(rulesPath)
+                .collect(Collectors.toList());
+
+        rulesDefinition.populateRepositoryWithRulesFromLines(repository, lines);
+
+        assertEquals(2, repository.rules().size());
+        assertNotNull(repository.rule("avoid branching statement as last in loop"));
+        assertNotNull(repository.rule("bitwise operator in conditional"));
     }
 }
