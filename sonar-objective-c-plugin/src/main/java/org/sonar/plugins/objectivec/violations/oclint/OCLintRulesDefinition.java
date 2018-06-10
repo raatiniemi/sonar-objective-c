@@ -78,7 +78,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
         for (String line : listLines) {
             if (isLineIgnored(line)) {
                 inDescription = false;
-            } else if (line.matches("[\\-]{4,}.*")) {
+            } else if (isLineSeparator(line)) {
                 LOGGER.debug("Rule found : {}", previousLine);
 
                 // Remove the rule name from the description of the previous
@@ -98,10 +98,10 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 rule.put("key", previousLine);
 
 
-            } else if (line.matches("Summary:.*")) {
+            } else if (isSummary(line)) {
                 inDescription = true;
                 rule.put("description", line.substring(line.indexOf(':') + 1));
-            } else if (line.matches("Category:.*")) {
+            } else if (isCategory(line)) {
                 inDescription = true;
 
                 // Create rule when last filed found
@@ -110,7 +110,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 newRule.setSeverity(rule.get("severity"));
                 newRule.setHtmlDescription(rule.get("description"));
 
-            } else if (line.matches("Severity:.*")) {
+            } else if (isSeverity(line)) {
                 inDescription = false;
                 final String severity = line.substring("Severity: ".length());
                 rule.put("severity", OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
@@ -128,6 +128,22 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
     private boolean isLineIgnored(String line) {
         return line.matches("\\=.*") || line.matches("Priority:.*");
+    }
+
+    private boolean isLineSeparator(String line) {
+        return line.matches("[\\-]{4,}.*");
+    }
+
+    private boolean isSummary(String line) {
+        return line.matches("Summary:.*");
+    }
+
+    private boolean isCategory(String line) {
+        return line.matches("Category:.*");
+    }
+
+    private boolean isSeverity(String line) {
+        return line.matches("Severity:.*");
     }
 
     private String ruleDescriptionLink(final String line) {
