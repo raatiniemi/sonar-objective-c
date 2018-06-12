@@ -80,18 +80,6 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 inDescription = false;
             } else if (isLineSeparator(line)) {
                 LOGGER.debug("Rule found : {}", previousLine);
-
-                // Remove the rule name from the description of the previous
-                // rule
-                if (rule.get("description") != null) {
-                    String description = rule.get("description");
-                    final int index = description.lastIndexOf(previousLine);
-                    if (index > 0) {
-                        rule.put("description", description.substring(0, index));
-                    }
-
-                }
-
                 rule.clear();
 
                 rule.put("name", StringUtils.capitalize(previousLine));
