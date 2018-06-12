@@ -75,6 +75,16 @@ final class RuleDefinition {
         return Objects.hash(key, name, description, severity);
     }
 
+    @Override
+    public String toString() {
+        return "RuleDefinition{" +
+                "key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", severity='" + severity + '\'' +
+                '}';
+    }
+
     static class Builder {
         private String key = "";
         private String name = "";
