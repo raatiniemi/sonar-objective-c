@@ -30,8 +30,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class OCLintRulesDefinition implements RulesDefinition {
     static final String REPOSITORY_KEY = "OCLint";
@@ -71,6 +73,18 @@ public class OCLintRulesDefinition implements RulesDefinition {
     }
 
     void populateRepositoryWithRulesFromLines(@Nonnull NewRepository repository, @Nonnull List<String> listLines) {
+        parseRuleDefinitionsFromLines(listLines)
+                .forEach(ruleDefinition -> {
+                    RulesDefinition.NewRule newRule = repository.createRule(ruleDefinition.getKey());
+                    newRule.setName(ruleDefinition.getName());
+                    newRule.setSeverity(ruleDefinition.getSeverity());
+                    newRule.setHtmlDescription(ruleDefinition.getDescription());
+                });
+    }
+
+    Set<RuleDefinition> parseRuleDefinitionsFromLines(@Nonnull List<String> listLines) {
+        Set<RuleDefinition> rulesDefinitions = new LinkedHashSet<>();
+
         String previousLine = null;
         boolean inDescription = false;
         RuleDefinition.Builder builder = RuleDefinition.builder();
@@ -90,14 +104,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
             } else if (isCategory(line)) {
                 inDescription = true;
 
-                RuleDefinition ruleDefinition = builder.build();
-
-                // Create ruleDefinition when last filed found
-                RulesDefinition.NewRule newRule = repository.createRule(ruleDefinition.getKey());
-                newRule.setName(ruleDefinition.getName());
-                newRule.setSeverity(ruleDefinition.getSeverity());
-                newRule.setHtmlDescription(ruleDefinition.getDescription());
-
+                rulesDefinitions.add(builder.build());
             } else if (isSeverity(line)) {
                 inDescription = false;
                 final String severity = line.substring("Severity: ".length());
@@ -112,6 +119,8 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
             previousLine = line;
         }
+
+        return rulesDefinitions;
     }
 
     private boolean isLineIgnored(String line) {

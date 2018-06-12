@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -66,5 +68,33 @@ public class OCLintRulesDefinitionTest {
         assertEquals(2, repository.rules().size());
         assertNotNull(repository.rule("avoid branching statement as last in loop"));
         assertNotNull(repository.rule("bitwise operator in conditional"));
+    }
+
+    @Test
+    public void parseRuleDefinitionsFromLines() throws IOException {
+        Set<RuleDefinition> expected = new LinkedHashSet<>();
+        expected.add(
+                RuleDefinition.builder()
+                        .setKey("avoid branching statement as last in loop")
+                        .setName("Avoid branching statement as last in loop")
+                        .setSeverity("MAJOR")
+                        .setDescription(" Name: avoid branching statement as last in loop<br>")
+                        .build()
+        );
+        expected.add(
+                RuleDefinition.builder()
+                        .setKey("bitwise operator in conditional")
+                        .setName("Bitwise operator in conditional")
+                        .setSeverity("CRITICAL")
+                        .setDescription(" Name: bitwise operator in conditional<br>")
+                        .build()
+        );
+        Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");
+        List<String> lines = Files.lines(rulesPath)
+                .collect(Collectors.toList());
+
+        Set<RuleDefinition> actual = rulesDefinition.parseRuleDefinitionsFromLines(lines);
+
+        assertEquals(expected, actual);
     }
 }
