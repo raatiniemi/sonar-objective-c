@@ -30,9 +30,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class OCLintRulesDefinition implements RulesDefinition {
     static final String REPOSITORY_KEY = "OCLint";
@@ -73,40 +72,41 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
     void populateRepositoryWithRulesFromLines(@Nonnull NewRepository repository, @Nonnull List<String> listLines) {
         String previousLine = null;
-        Map<String, String> rule = new HashMap<>();
         boolean inDescription = false;
+        RuleDefinition.Builder builder = RuleDefinition.builder();
         for (String line : listLines) {
             if (isLineIgnored(line)) {
                 inDescription = false;
             } else if (isLineSeparator(line)) {
-                LOGGER.debug("Rule found : {}", previousLine);
-                rule.clear();
+                LOGGER.debug("RuleDefinition found : {}", previousLine);
 
-                rule.put("name", StringUtils.capitalize(previousLine));
-                rule.put("key", previousLine);
-
-
+                builder = RuleDefinition.builder();
+                builder.setKey(Objects.requireNonNull(previousLine));
+                String name = StringUtils.capitalize(previousLine);
+                builder.setName(Objects.requireNonNull(name));
             } else if (isSummary(line)) {
                 inDescription = true;
-                rule.put("description", line.substring(line.indexOf(':') + 1));
+                builder.setDescription(line.substring(line.indexOf(':') + 1));
             } else if (isCategory(line)) {
                 inDescription = true;
 
-                // Create rule when last filed found
-                RulesDefinition.NewRule newRule = repository.createRule(rule.get("key"));
-                newRule.setName(rule.get("name"));
-                newRule.setSeverity(rule.get("severity"));
-                newRule.setHtmlDescription(rule.get("description"));
+                RuleDefinition ruleDefinition = builder.build();
+
+                // Create ruleDefinition when last filed found
+                RulesDefinition.NewRule newRule = repository.createRule(ruleDefinition.getKey());
+                newRule.setName(ruleDefinition.getName());
+                newRule.setSeverity(ruleDefinition.getSeverity());
+                newRule.setHtmlDescription(ruleDefinition.getDescription());
 
             } else if (isSeverity(line)) {
                 inDescription = false;
                 final String severity = line.substring("Severity: ".length());
-                rule.put("severity", OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
+                builder.setSeverity(OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
             } else {
                 if (inDescription) {
                     line = ruleDescriptionLink(line);
-                    String description = rule.get("description");
-                    rule.put("description", description + "<br>" + line);
+                    String description = builder.getDescription();
+                    builder.setDescription(description + "<br>" + line);
                 }
             }
 
