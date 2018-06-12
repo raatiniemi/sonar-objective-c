@@ -91,32 +91,52 @@ public class OCLintRulesDefinition implements RulesDefinition {
         for (String line : listLines) {
             if (isLineIgnored(line)) {
                 inDescription = false;
-            } else if (isLineSeparator(line)) {
+
+                previousLine = line;
+                continue;
+            }
+
+            if (isLineSeparator(line)) {
                 LOGGER.debug("RuleDefinition found : {}", previousLine);
 
                 builder = RuleDefinition.builder();
                 builder.setKey(Objects.requireNonNull(previousLine));
                 String name = StringUtils.capitalize(previousLine);
                 builder.setName(Objects.requireNonNull(name));
-            } else if (isSummary(line)) {
+                previousLine = line;
+                continue;
+            }
+
+            if (isSummary(line)) {
                 inDescription = true;
+
                 builder.setDescription(line.substring(line.indexOf(':') + 1));
-            } else if (isCategory(line)) {
+                previousLine = line;
+                continue;
+            }
+
+            if (isCategory(line)) {
                 inDescription = true;
 
                 rulesDefinitions.add(builder.build());
-            } else if (isSeverity(line)) {
-                inDescription = false;
-                final String severity = line.substring("Severity: ".length());
-                builder.setSeverity(OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
-            } else {
-                if (inDescription) {
-                    line = ruleDescriptionLink(line);
-                    String description = builder.getDescription();
-                    builder.setDescription(description + "<br>" + line);
-                }
+                previousLine = line;
+                continue;
             }
 
+            if (isSeverity(line)) {
+                inDescription = false;
+
+                final String severity = line.substring("Severity: ".length());
+                builder.setSeverity(OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
+                previousLine = line;
+                continue;
+            }
+
+            if (inDescription) {
+                line = ruleDescriptionLink(line);
+                String description = builder.getDescription();
+                builder.setDescription(description + "<br>" + line);
+            }
             previousLine = line;
         }
 
