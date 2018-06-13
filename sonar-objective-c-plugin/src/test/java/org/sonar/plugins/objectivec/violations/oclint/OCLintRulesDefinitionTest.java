@@ -97,4 +97,24 @@ public class OCLintRulesDefinitionTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void parseRuleDefinitionsFromLines_withoutSummary() throws IOException {
+        Set<RuleDefinition> expected = new LinkedHashSet<>();
+        expected.add(
+                RuleDefinition.builder()
+                        .setKey("unused method parameter")
+                        .setName("Unused method parameter")
+                        .setSeverity("INFO")
+                        .setDescription("<br>")
+                        .build()
+        );
+        Path rulesPath = Paths.get(resourcePath.toString(), "rules-without-summary.txt");
+        List<String> lines = Files.lines(rulesPath)
+                .collect(Collectors.toList());
+
+        Set<RuleDefinition> actual = rulesDefinition.parseRuleDefinitionsFromLines(lines);
+
+        assertEquals(expected, actual);
+    }
 }
