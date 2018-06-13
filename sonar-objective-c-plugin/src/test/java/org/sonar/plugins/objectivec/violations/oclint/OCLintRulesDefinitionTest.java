@@ -57,6 +57,15 @@ public class OCLintRulesDefinitionTest {
     }
 
     @Test
+    public void loadRules() throws IOException {
+        NewRepository repository = rulesDefinition.createRepository(context);
+
+        rulesDefinition.loadRules(repository);
+
+        assertEquals(70, repository.rules().size());
+    }
+
+    @Test
     public void populateRepositoryWithRulesFromLines() throws IOException {
         NewRepository repository = rulesDefinition.createRepository(context);
         Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");

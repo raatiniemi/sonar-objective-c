@@ -63,7 +63,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 .setName(REPOSITORY_NAME);
     }
 
-    private void loadRules(NewRepository repository) throws IOException {
+    void loadRules(NewRepository repository) throws IOException {
         Reader reader = new BufferedReader(new InputStreamReader(getClass()
                 .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
 
