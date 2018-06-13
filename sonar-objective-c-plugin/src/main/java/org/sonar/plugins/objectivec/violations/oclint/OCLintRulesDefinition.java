@@ -133,7 +133,6 @@ public class OCLintRulesDefinition implements RulesDefinition {
             }
 
             if (inDescription) {
-                line = ruleDescriptionLink(line);
                 String description = builder.getDescription();
                 builder.setDescription(description + "<br>" + line);
             }
@@ -161,20 +160,5 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
     private boolean isSeverity(String line) {
         return line.matches("Severity:.*");
-    }
-
-    private String ruleDescriptionLink(final String line) {
-        String result = line;
-        final int indexOfLink = line.indexOf("http://");
-        if (0 <= indexOfLink) {
-            final String link = line.substring(indexOfLink);
-            final StringBuilder htmlText = new StringBuilder("<a href=\"");
-            htmlText.append(link);
-            htmlText.append("\" target=\"_blank\">");
-            htmlText.append(link);
-            htmlText.append("</a>");
-            result = htmlText.toString();
-        }
-        return result;
     }
 }
