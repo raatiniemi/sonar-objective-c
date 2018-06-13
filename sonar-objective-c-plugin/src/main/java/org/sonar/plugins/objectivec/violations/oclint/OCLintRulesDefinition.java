@@ -16,8 +16,6 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +24,16 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class OCLintRulesDefinition implements RulesDefinition {
     static final String REPOSITORY_KEY = "OCLint";
@@ -48,7 +48,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
         try {
             loadRules(repository);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             LOGGER.error("Failed to load OCLint rules", e);
         }
 
@@ -63,11 +63,10 @@ public class OCLintRulesDefinition implements RulesDefinition {
                 .setName(REPOSITORY_NAME);
     }
 
-    void loadRules(NewRepository repository) throws IOException {
-        Reader reader = new BufferedReader(new InputStreamReader(getClass()
-                .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
-
-        final List<String> listLines = IOUtils.readLines(reader);
+    void loadRules(NewRepository repository) throws IOException, URISyntaxException {
+        final URI rulesUri = getClass().getResource(RULES_FILE).toURI();
+        final List<String> listLines = Files.lines(Paths.get(rulesUri))
+                .collect(Collectors.toList());
 
         populateRepositoryWithRulesFromLines(repository, listLines);
     }
