@@ -16,7 +16,6 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
@@ -29,10 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class OCLintRulesDefinition implements RulesDefinition {
@@ -41,6 +37,8 @@ public class OCLintRulesDefinition implements RulesDefinition {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/oclint/rules.txt";
+
+    private static final RuleDefinitionParser parser = new RuleDefinitionParser();
 
     @Override
     public void define(@Nonnull Context context) {
@@ -72,80 +70,12 @@ public class OCLintRulesDefinition implements RulesDefinition {
     }
 
     void populateRepositoryWithRulesFromLines(@Nonnull NewRepository repository, @Nonnull List<String> listLines) {
-        parseRuleDefinitionsFromLines(listLines)
+        parser.parseRuleDefinitionsFromLines(listLines)
                 .forEach(ruleDefinition -> {
                     RulesDefinition.NewRule newRule = repository.createRule(ruleDefinition.getKey());
                     newRule.setName(ruleDefinition.getName());
                     newRule.setSeverity(ruleDefinition.getSeverity());
                     newRule.setHtmlDescription(ruleDefinition.getDescription());
                 });
-    }
-
-    Set<RuleDefinition> parseRuleDefinitionsFromLines(@Nonnull List<String> listLines) {
-        Set<RuleDefinition> rulesDefinitions = new LinkedHashSet<>();
-
-        String previousLine = null;
-
-        RuleDefinition.Builder builder = RuleDefinition.builder();
-        for (String line : listLines) {
-            if (isLineIgnored(line)) {
-                previousLine = line;
-                continue;
-            }
-
-            if (isLineSeparator(line)) {
-                LOGGER.debug("RuleDefinition found : {}", previousLine);
-
-                builder = RuleDefinition.builder();
-                builder.setKey(Objects.requireNonNull(previousLine));
-                String name = StringUtils.capitalize(previousLine);
-                builder.setName(Objects.requireNonNull(name));
-                previousLine = line;
-                continue;
-            }
-
-            if (isSummary(line)) {
-                builder.setDescription(line.substring(line.indexOf(':') + 1));
-                previousLine = line;
-                continue;
-            }
-
-            if (isCategory(line)) {
-                rulesDefinitions.add(builder.build());
-                previousLine = line;
-                continue;
-            }
-
-            if (isSeverity(line)) {
-                final String severity = line.substring("Severity: ".length());
-                builder.setSeverity(OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
-                previousLine = line;
-                continue;
-            }
-
-            previousLine = line;
-        }
-
-        return rulesDefinitions;
-    }
-
-    private boolean isLineIgnored(String line) {
-        return line.matches("\\=.*") || line.matches("Priority:.*");
-    }
-
-    private boolean isLineSeparator(String line) {
-        return line.matches("[\\-]{4,}.*");
-    }
-
-    private boolean isSummary(String line) {
-        return line.matches("Summary:.*");
-    }
-
-    private boolean isCategory(String line) {
-        return line.matches("Category:.*");
-    }
-
-    private boolean isSeverity(String line) {
-        return line.matches("Severity:.*");
     }
 }
