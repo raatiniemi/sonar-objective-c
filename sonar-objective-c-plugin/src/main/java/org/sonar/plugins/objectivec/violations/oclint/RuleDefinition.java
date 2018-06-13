@@ -109,11 +109,6 @@ final class RuleDefinition {
         }
 
         @Nonnull
-        String getDescription() {
-            return description;
-        }
-
-        @Nonnull
         Builder setDescription(@Nonnull String description) {
             this.description = description;
 

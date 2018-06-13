@@ -86,12 +86,10 @@ public class OCLintRulesDefinition implements RulesDefinition {
         Set<RuleDefinition> rulesDefinitions = new LinkedHashSet<>();
 
         String previousLine = null;
-        boolean inDescription = false;
+
         RuleDefinition.Builder builder = RuleDefinition.builder();
         for (String line : listLines) {
             if (isLineIgnored(line)) {
-                inDescription = false;
-
                 previousLine = line;
                 continue;
             }
@@ -108,34 +106,24 @@ public class OCLintRulesDefinition implements RulesDefinition {
             }
 
             if (isSummary(line)) {
-                inDescription = true;
-
                 builder.setDescription(line.substring(line.indexOf(':') + 1));
                 previousLine = line;
                 continue;
             }
 
             if (isCategory(line)) {
-                inDescription = true;
-
                 rulesDefinitions.add(builder.build());
                 previousLine = line;
                 continue;
             }
 
             if (isSeverity(line)) {
-                inDescription = false;
-
                 final String severity = line.substring("Severity: ".length());
                 builder.setSeverity(OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
                 previousLine = line;
                 continue;
             }
 
-            if (inDescription) {
-                String description = builder.getDescription();
-                builder.setDescription(description + "<br>" + line);
-            }
             previousLine = line;
         }
 

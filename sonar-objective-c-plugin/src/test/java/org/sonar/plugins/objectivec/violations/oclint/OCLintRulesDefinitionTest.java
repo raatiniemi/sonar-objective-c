@@ -78,7 +78,7 @@ public class OCLintRulesDefinitionTest {
                         .setKey("avoid branching statement as last in loop")
                         .setName("Avoid branching statement as last in loop")
                         .setSeverity("MAJOR")
-                        .setDescription(" Name: avoid branching statement as last in loop<br>")
+                        .setDescription(" Name: avoid branching statement as last in loop")
                         .build()
         );
         expected.add(
@@ -86,7 +86,7 @@ public class OCLintRulesDefinitionTest {
                         .setKey("bitwise operator in conditional")
                         .setName("Bitwise operator in conditional")
                         .setSeverity("CRITICAL")
-                        .setDescription(" Name: bitwise operator in conditional<br>")
+                        .setDescription(" Name: bitwise operator in conditional")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");
@@ -106,7 +106,7 @@ public class OCLintRulesDefinitionTest {
                         .setKey("unused method parameter")
                         .setName("Unused method parameter")
                         .setSeverity("INFO")
-                        .setDescription("<br>")
+                        .setDescription("")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules-without-summary.txt");
