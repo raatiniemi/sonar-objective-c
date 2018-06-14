@@ -17,14 +17,14 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-enum OCLintRuleSeverity {
+enum RuleSeverity {
     INFO,
     MINOR,
     MAJOR,
     CRITICAL,
     BLOCKER;
 
-    static OCLintRuleSeverity valueOfInt(int ordinal) {
+    static RuleSeverity valueOfInt(int ordinal) {
         return values()[ordinal];
     }
 }

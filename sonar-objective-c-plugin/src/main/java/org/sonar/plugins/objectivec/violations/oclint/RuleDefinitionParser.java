@@ -90,7 +90,7 @@ class RuleDefinitionParser {
 
             if (isSeverity(line)) {
                 final String severity = line.substring("Severity: ".length());
-                builder.setSeverity(OCLintRuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
+                builder.setSeverity(RuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
                 previousLine = line;
                 continue;
             }

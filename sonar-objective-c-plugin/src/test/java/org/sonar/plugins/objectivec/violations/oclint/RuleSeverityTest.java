@@ -24,39 +24,39 @@ import org.junit.runners.JUnit4;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class OCLintRuleSeverityTest {
+public class RuleSeverityTest {
     @Test
     public void valueOfInt_withInfo() {
-        OCLintRuleSeverity severity = OCLintRuleSeverity.valueOfInt(0);
+        RuleSeverity severity = RuleSeverity.valueOfInt(0);
 
-        assertEquals(OCLintRuleSeverity.INFO, severity);
+        assertEquals(RuleSeverity.INFO, severity);
     }
 
     @Test
     public void valueOfInt_withMinor() {
-        OCLintRuleSeverity severity = OCLintRuleSeverity.valueOfInt(1);
+        RuleSeverity severity = RuleSeverity.valueOfInt(1);
 
-        assertEquals(OCLintRuleSeverity.MINOR, severity);
+        assertEquals(RuleSeverity.MINOR, severity);
     }
 
     @Test
     public void valueOfInt_withMajor() {
-        OCLintRuleSeverity severity = OCLintRuleSeverity.valueOfInt(2);
+        RuleSeverity severity = RuleSeverity.valueOfInt(2);
 
-        assertEquals(OCLintRuleSeverity.MAJOR, severity);
+        assertEquals(RuleSeverity.MAJOR, severity);
     }
 
     @Test
     public void valueOfInt_withCritical() {
-        OCLintRuleSeverity severity = OCLintRuleSeverity.valueOfInt(3);
+        RuleSeverity severity = RuleSeverity.valueOfInt(3);
 
-        assertEquals(OCLintRuleSeverity.CRITICAL, severity);
+        assertEquals(RuleSeverity.CRITICAL, severity);
     }
 
     @Test
     public void valueOfInt_withBlocker() {
-        OCLintRuleSeverity severity = OCLintRuleSeverity.valueOfInt(4);
+        RuleSeverity severity = RuleSeverity.valueOfInt(4);
 
-        assertEquals(OCLintRuleSeverity.BLOCKER, severity);
+        assertEquals(RuleSeverity.BLOCKER, severity);
     }
 }
