@@ -36,18 +36,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
-public class OCLintReportParserTest {
+public class ReportParserTest {
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
 
     private DocumentBuilder builder;
-    private OCLintReportParser parser;
+    private ReportParser parser;
 
     @Before
     public void setUp() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         builder = factory.newDocumentBuilder();
 
-        parser = new OCLintReportParser();
+        parser = new ReportParser();
     }
 
     @Test

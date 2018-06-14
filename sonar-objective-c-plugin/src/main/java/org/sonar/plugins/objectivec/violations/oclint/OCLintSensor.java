@@ -40,7 +40,7 @@ public final class OCLintSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintSensor.class);
     private static final String NAME = "OCLint violation sensor";
 
-    private final OCLintReportParser parser = new OCLintReportParser();
+    private final ReportParser parser = new ReportParser();
     private final Settings conf;
     private final FileSystem fileSystem;
 

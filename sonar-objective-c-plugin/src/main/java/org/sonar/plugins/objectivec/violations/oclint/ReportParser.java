@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-final class OCLintReportParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintReportParser.class);
+final class ReportParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
 
     private static final String VIOLATION = "violation";
     private static final String PATH = "path";
