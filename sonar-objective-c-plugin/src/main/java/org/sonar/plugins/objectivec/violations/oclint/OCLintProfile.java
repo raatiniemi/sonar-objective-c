@@ -1,5 +1,4 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -30,7 +30,6 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 import com.google.common.io.Closeables;
 
 public final class OCLintProfile extends ProfileDefinition {
-
     public static final String PROFILE_PATH = "/org/sonar/plugins/oclint/profile-oclint.xml";
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintProfile.class);
 
@@ -46,11 +45,11 @@ public final class OCLintProfile extends ProfileDefinition {
         Reader config = null;
 
         try {
-            config = new InputStreamReader(getClass().getResourceAsStream(
-                    PROFILE_PATH));
-            final RulesProfile profile = profileImporter.importProfile(config,
-                    messages);
-            profile.setName(OCLintRulesDefinition.REPOSITORY_KEY);
+            final InputStream resourceAsStream = getClass().getResourceAsStream(PROFILE_PATH);
+            config = new InputStreamReader(resourceAsStream);
+
+            final RulesProfile profile = profileImporter.importProfile(config, messages);
+            profile.setName(OCLintRulesDefinition.REPOSITORY_NAME);
             profile.setLanguage(ObjectiveC.KEY);
 
             return profile;

@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,21 +17,17 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-/**
- * Created by gillesgrousset on 18/02/2016.
- */
-public enum OCLintRuleSeverity {
+import javax.annotation.Nonnull;
 
-    // Rules are priority
-    // INFO = 0, MINOR = 1, MAJOR = 2, CRITICAL = 3, BLOCKER = 4
-
+enum RuleSeverity {
     INFO,
     MINOR,
     MAJOR,
     CRITICAL,
     BLOCKER;
 
-    public static OCLintRuleSeverity valueOfInt(int ordinal) {
+    @Nonnull
+    static RuleSeverity valueOfInt(int ordinal) {
         return values()[ordinal];
     }
 }

@@ -1,0 +1,20 @@
+Available issues:
+
+OCLint
+======
+
+avoid branching statement as last in loop
+----------
+
+Summary: Name: avoid branching statement as last in loop
+
+Severity: 2
+Category: OCLint
+
+bitwise operator in conditional
+----------
+
+Summary: Name: bitwise operator in conditional
+
+Severity: 3
+Category: OCLint
