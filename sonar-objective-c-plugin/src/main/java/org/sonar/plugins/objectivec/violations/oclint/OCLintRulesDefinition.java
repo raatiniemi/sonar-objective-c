@@ -31,7 +31,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OCLintRulesDefinition implements RulesDefinition {
+public final class OCLintRulesDefinition implements RulesDefinition {
     static final String REPOSITORY_KEY = "OCLint";
     static final String REPOSITORY_NAME = REPOSITORY_KEY;
 

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-class RuleDefinitionParser {
+final class RuleDefinitionParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
 
     private static boolean isLineIgnored(@Nonnull String line) {
