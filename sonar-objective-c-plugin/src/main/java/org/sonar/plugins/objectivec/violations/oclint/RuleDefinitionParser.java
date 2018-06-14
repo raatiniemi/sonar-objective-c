@@ -30,29 +30,30 @@ import java.util.Set;
 class RuleDefinitionParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
 
-    private static boolean isLineIgnored(String line) {
+    private static boolean isLineIgnored(@Nonnull String line) {
         return line.matches("\\=.*") || line.matches("Priority:.*");
     }
 
-    private static boolean isLineSeparator(String line) {
+    private static boolean isLineSeparator(@Nonnull String line) {
         return line.matches("[\\-]{4,}.*");
     }
 
-    private static boolean isSummary(String line) {
+    private static boolean isSummary(@Nonnull String line) {
         return line.matches("Summary:.*");
     }
 
-    private static boolean isCategory(String line) {
+    private static boolean isCategory(@Nonnull String line) {
         return line.matches("Category:.*");
     }
 
-    private static boolean isSeverity(String line) {
+    private static boolean isSeverity(@Nonnull String line) {
         return line.matches("Severity:.*");
     }
 
     RuleDefinitionParser() {
     }
 
+    @Nonnull
     Set<RuleDefinition> parseRuleDefinitionsFromLines(@Nonnull List<String> listLines) {
         Set<RuleDefinition> rulesDefinitions = new LinkedHashSet<>();
 

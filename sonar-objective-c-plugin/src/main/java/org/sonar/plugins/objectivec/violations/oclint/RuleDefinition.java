@@ -26,29 +26,34 @@ final class RuleDefinition {
     private final String description;
     private final String severity;
 
-    private RuleDefinition(Builder builder) {
+    private RuleDefinition(@Nonnull Builder builder) {
         key = builder.key;
         name = builder.name;
         description = builder.description;
         severity = builder.severity;
     }
 
+    @Nonnull
     static Builder builder() {
         return new Builder();
     }
 
+    @Nonnull
     String getKey() {
         return key;
     }
 
+    @Nonnull
     String getName() {
         return name;
     }
 
+    @Nonnull
     String getDescription() {
         return description;
     }
 
+    @Nonnull
     String getSeverity() {
         return severity;
     }
@@ -75,6 +80,7 @@ final class RuleDefinition {
         return Objects.hash(key, name, description, severity);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RuleDefinition{" +

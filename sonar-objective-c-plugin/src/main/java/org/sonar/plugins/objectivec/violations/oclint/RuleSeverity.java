@@ -17,6 +17,8 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
+import javax.annotation.Nonnull;
+
 enum RuleSeverity {
     INFO,
     MINOR,
@@ -24,6 +26,7 @@ enum RuleSeverity {
     CRITICAL,
     BLOCKER;
 
+    @Nonnull
     static RuleSeverity valueOfInt(int ordinal) {
         return values()[ordinal];
     }
