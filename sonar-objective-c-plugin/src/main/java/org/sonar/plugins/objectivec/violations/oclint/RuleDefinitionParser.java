@@ -78,7 +78,8 @@ final class RuleDefinitionParser {
             }
 
             if (isSummary(line)) {
-                builder.setDescription(line.substring(line.indexOf(':') + 1));
+                String summary = line.substring(line.indexOf(':') + 1);
+                builder.setDescription(summary + "<br>");
                 previousLine = line;
                 continue;
             }
