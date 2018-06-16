@@ -25,7 +25,6 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.NewRepository;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,7 +55,7 @@ public class OCLintRulesDefinitionTest {
     }
 
     @Test
-    public void loadRules() throws IOException, URISyntaxException {
+    public void loadRules() throws IOException {
         NewRepository repository = rulesDefinition.createRepository(context);
 
         rulesDefinition.loadRules(repository);
