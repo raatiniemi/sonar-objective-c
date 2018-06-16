@@ -46,7 +46,7 @@ public class RuleDefinitionParserTest {
                         .setKey("avoid branching statement as last in loop")
                         .setName("Avoid branching statement as last in loop")
                         .setSeverity("MAJOR")
-                        .setDescription(" Name: avoid branching statement as last in loop")
+                        .setDescription(" Name: avoid branching statement as last in loop<br>")
                         .build()
         );
         expected.add(
@@ -54,7 +54,7 @@ public class RuleDefinitionParserTest {
                         .setKey("bitwise operator in conditional")
                         .setName("Bitwise operator in conditional")
                         .setSeverity("CRITICAL")
-                        .setDescription(" Name: bitwise operator in conditional")
+                        .setDescription(" Name: bitwise operator in conditional<br>")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");
@@ -74,7 +74,7 @@ public class RuleDefinitionParserTest {
                         .setKey("unused method parameter")
                         .setName("Unused method parameter")
                         .setSeverity("INFO")
-                        .setDescription("")
+                        .setDescription("<br>")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules-without-summary.txt");
