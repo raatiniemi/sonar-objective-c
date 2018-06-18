@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 private const val baseUrl = "http://docs.oclint.org/en/stable/rules"
-private val availableRuleSetWithSeverity = mapOf(
+private val availableRuleCategoriesWithSeverity = mapOf(
         "Basic" to 3,
         "Cocoa" to 1,
         "Convention" to 2,
@@ -38,15 +38,15 @@ private val availableRuleSetWithSeverity = mapOf(
 fun main(args: Array<String>) {
     FuelManager.instance.basePath = baseUrl
 
-    listRuleSetsWithMissingSeverity(nameForAvailableRuleSets())
+    listRuleCategoriesWithMissingSeverity(nameForAvailableRuleCategories())
 }
 
-private fun listRuleSetsWithMissingSeverity(availableRuleSets: List<String>) {
-    (availableRuleSets - availableRuleSetWithSeverity.keys)
+private fun listRuleCategoriesWithMissingSeverity(availableRuleCategories: List<String>) {
+    (availableRuleCategories - availableRuleCategoriesWithSeverity.keys)
             .forEach { println("Rule \"$it\" is missing severity") }
 }
 
-private fun nameForAvailableRuleSets(): List<String> {
+private fun nameForAvailableRuleCategories(): List<String> {
     return fetch("index.html")
             .select(".toctree-l1 > a")
             .map { it.text() }
