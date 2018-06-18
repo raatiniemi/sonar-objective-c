@@ -22,17 +22,34 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 private const val baseUrl = "http://docs.oclint.org/en/stable/rules"
+private val availableRuleSetWithSeverity = mapOf(
+        "Basic" to 3,
+        "Cocoa" to 1,
+        "Convention" to 2,
+        "Design" to 2,
+        "Empty" to 3,
+        "Migration" to 1,
+        "Naming" to 2,
+        "Redundant" to 1,
+        "Size" to 3,
+        "Unused" to 0
+)
 
 fun main(args: Array<String>) {
     FuelManager.instance.basePath = baseUrl
 
-    pathForAvailableRuleSets().forEach { println(it) }
+    listRuleSetsWithMissingSeverity(nameForAvailableRuleSets())
 }
 
-private fun pathForAvailableRuleSets(): List<String> {
+private fun listRuleSetsWithMissingSeverity(availableRuleSets: List<String>) {
+    (availableRuleSets - availableRuleSetWithSeverity.keys)
+            .forEach { println("Rule \"$it\" is missing severity") }
+}
+
+private fun nameForAvailableRuleSets(): List<String> {
     return fetch("index.html")
             .select(".toctree-l1 > a")
-            .map { it.attr("href") }
+            .map { it.text() }
 }
 
 private fun fetch(path: String): Document {
