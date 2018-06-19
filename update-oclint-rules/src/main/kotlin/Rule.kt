@@ -18,7 +18,7 @@
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-data class Rule(
+internal data class Rule(
         val name: String,
         val category: String,
         val severity: Int

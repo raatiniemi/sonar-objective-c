@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-data class RuleCategory(val name: String, val severity: Int)
+internal data class RuleCategory(val name: String, val severity: Int)
 
-fun basenamePath(category: RuleCategory): String {
+internal fun basenamePath(category: RuleCategory): String {
     return "${category.name.toLowerCase()}.html"
 }
