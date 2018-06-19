@@ -39,6 +39,10 @@ fun main(args: Array<String>) {
     FuelManager.instance.basePath = baseUrl
 
     listRuleCategoriesWithMissingSeverity(nameForAvailableRuleCategories())
+
+    availableRuleCategoriesWithSeverity
+            .map { RuleCategory(name = it.key, severity = it.value) }
+            .forEach { fetchRulesFor(category = it) }
 }
 
 private fun listRuleCategoriesWithMissingSeverity(availableRuleCategories: List<String>) {
@@ -50,6 +54,13 @@ private fun nameForAvailableRuleCategories(): List<String> {
     return fetch("index.html")
             .select(".toctree-l1 > a")
             .map { it.text() }
+}
+
+private fun fetchRulesFor(category: RuleCategory) {
+    fetch(basenamePath(category))
+            .select(".section > .section")
+            .map { Rule.from(category, html = it) }
+            .forEach { println(it) }
 }
 
 private fun fetch(path: String): Document {
