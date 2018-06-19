@@ -20,6 +20,9 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.io.File
+
+private const val pathToRules = "sonar-objective-c-plugin/src/main/resources/org/sonar/plugins/oclint/rules.txt"
 
 private const val baseUrl = "http://docs.oclint.org/en/stable/rules"
 private val availableRuleCategoriesWithSeverity = mapOf(
@@ -40,11 +43,24 @@ fun main(args: Array<String>) {
 
     listRuleCategoriesWithMissingSeverity(nameForAvailableRuleCategories())
 
-    availableRuleCategoriesWithSeverity
+    val rules = availableRuleCategoriesWithSeverity
             .map { RuleCategory(name = it.key, severity = it.value) }
             .flatMap { fetchRulesFor(it) }
             .sortedBy { it.name }
-            .forEach { println(it) }
+
+    println("Found ${rules.count()} rules.")
+    writeRulesToFile(rules)
+}
+
+private fun writeRulesToFile(rules: List<Rule>) {
+    File(pathToRules).printWriter()
+            .use { out ->
+                out.println(headerTemplate())
+
+                rules.forEach {
+                    out.println(ruleTemplate(it))
+                }
+            }
 }
 
 private fun listRuleCategoriesWithMissingSeverity(availableRuleCategories: List<String>) {
