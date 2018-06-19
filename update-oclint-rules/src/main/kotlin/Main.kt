@@ -42,7 +42,9 @@ fun main(args: Array<String>) {
 
     availableRuleCategoriesWithSeverity
             .map { RuleCategory(name = it.key, severity = it.value) }
-            .forEach { fetchRulesFor(category = it) }
+            .flatMap { fetchRulesFor(it) }
+            .sortedBy { it.name }
+            .forEach { println(it) }
 }
 
 private fun listRuleCategoriesWithMissingSeverity(availableRuleCategories: List<String>) {
@@ -56,11 +58,10 @@ private fun nameForAvailableRuleCategories(): List<String> {
             .map { it.text() }
 }
 
-private fun fetchRulesFor(category: RuleCategory) {
-    fetch(basenamePath(category))
+private fun fetchRulesFor(category: RuleCategory): List<Rule> {
+    return fetch(basenamePath(category))
             .select(".section > .section")
             .map { Rule.from(category, html = it) }
-            .forEach { println(it) }
 }
 
 private fun fetch(path: String): Document {
