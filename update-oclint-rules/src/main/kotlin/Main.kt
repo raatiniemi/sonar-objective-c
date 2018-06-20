@@ -85,7 +85,12 @@ private fun writeProfileToFile(profile: Profile) {
 
     val mapper = XmlMapper(module)
     mapper.enable(SerializationFeature.INDENT_OUTPUT)
-    mapper.writeValue(File(pathToProfile), profile)
+
+    File(pathToProfile).printWriter()
+            .use { out ->
+                out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>")
+                out.println(mapper.writeValueAsString(profile))
+            }
 }
 
 private fun listRuleCategoriesWithMissingSeverity(availableRuleCategories: List<String>) {
