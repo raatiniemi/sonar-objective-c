@@ -11,10 +11,42 @@ Summary: Name: avoid branching statement as last in loop
 Severity: 2
 Category: OCLint
 
+avoid default arguments on virtual methods
+----------
+
+Summary: Name: avoid default arguments on virtual methods
+
+Severity: 2
+Category: OCLint
+
+avoid private static members
+----------
+
+Summary: Name: avoid private static members
+
+Severity: 2
+Category: OCLint
+
+base class destructor should be virtual or protected
+----------
+
+Summary: Name: base class destructor should be virtual or protected
+
+Severity: 2
+Category: OCLint
+
 bitwise operator in conditional
 ----------
 
 Summary: Name: bitwise operator in conditional
+
+Severity: 3
+Category: OCLint
+
+broken nil check
+----------
+
+Summary: Name: broken nil check
 
 Severity: 3
 Category: OCLint
@@ -27,20 +59,28 @@ Summary: Name: broken null check
 Severity: 3
 Category: OCLint
 
-broken nil check
-----------
-
-Summary: 
-
-Severity: 4
-Category: OCLint
-
 broken oddness check
 ----------
 
 Summary: Name: broken oddness check
 
 Severity: 3
+Category: OCLint
+
+calling prohibited method
+----------
+
+Summary: Name: calling prohibited method
+
+Severity: 1
+Category: OCLint
+
+calling protected method
+----------
+
+Summary: Name: calling protected method
+
+Severity: 1
 Category: OCLint
 
 collapsible if statements
@@ -67,20 +107,28 @@ Summary: Name: constant if expression
 Severity: 3
 Category: OCLint
 
-high cyclomatic complexity
-----------
-
-Summary: 
-
-Severity: 2
-Category: OCLint
-
 dead code
 ----------
 
 Summary: Name: dead code
 
 Severity: 3
+Category: OCLint
+
+deep nested block
+----------
+
+Summary: Name: deep nested block
+
+Severity: 3
+Category: OCLint
+
+destructor of virtual class
+----------
+
+Summary: Name: destructor of virtual class
+
+Severity: 2
 Category: OCLint
 
 double negative
@@ -158,15 +206,7 @@ Category: OCLint
 empty while statement
 ----------
 
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-feature envy
-----------
-
-Summary: 
+Summary: Name: empty while statement
 
 Severity: 3
 Category: OCLint
@@ -182,15 +222,55 @@ Category: OCLint
 goto statement
 ----------
 
-Summary: 
+Summary: Name: goto statement
 
 Severity: 3
+Category: OCLint
+
+high cyclomatic complexity
+----------
+
+Summary: Name: high cyclomatic complexity
+
+Severity: 3
+Category: OCLint
+
+high ncss method
+----------
+
+Summary: Name: high ncss method
+
+Severity: 3
+Category: OCLint
+
+high npath complexity
+----------
+
+Summary: Name: high npath complexity
+
+Severity: 3
+Category: OCLint
+
+ill-placed default label in switch statement
+----------
+
+Summary: Name: ill-placed default label in switch statement
+
+Severity: 2
 Category: OCLint
 
 inverted logic
 ----------
 
 Summary: Name: inverted logic
+
+Severity: 2
+Category: OCLint
+
+ivar assignment outside accessors or init
+----------
+
+Summary: Name: ivar assignment outside accessors or init
 
 Severity: 2
 Category: OCLint
@@ -235,6 +315,14 @@ Summary: Name: long variable name
 Severity: 2
 Category: OCLint
 
+misplaced nil check
+----------
+
+Summary: Name: misplaced nil check
+
+Severity: 3
+Category: OCLint
+
 misplaced null check
 ----------
 
@@ -243,12 +331,12 @@ Summary: Name: misplaced null check
 Severity: 3
 Category: OCLint
 
-misplaced nil check
+missing abstract method implementation
 ----------
 
-Summary: 
+Summary: Name: missing abstract method implementation
 
-Severity: 4
+Severity: 1
 Category: OCLint
 
 missing break in switch statement
@@ -259,34 +347,34 @@ Summary: Name: missing break in switch statement
 Severity: 2
 Category: OCLint
 
-multiple unary operator
+missing call to base method
 ----------
 
-Summary: Name: multiple unary operator
-
-Severity: 3
-Category: OCLint
-
-must override hash with isEqual
-----------
-
-Summary: 
+Summary: Name: missing call to base method
 
 Severity: 1
 Category: OCLint
 
-high ncss method
+missing default in switch statements
 ----------
 
-Summary: Name: high ncss method
+Summary: Name: missing default in switch statements
 
-Severity: 3
+Severity: 2
 Category: OCLint
 
-deep nested block
+missing hash method
 ----------
 
-Summary: Name: deep nested block
+Summary: Name: missing hash method
+
+Severity: 1
+Category: OCLint
+
+multiple unary operator
+----------
+
+Summary: Name: multiple unary operator
 
 Severity: 3
 Category: OCLint
@@ -299,18 +387,18 @@ Summary: Name: non case label in switch statement
 Severity: 2
 Category: OCLint
 
-high npath complexity
-----------
-
-Summary: 
-
-Severity: 2
-Category: OCLint
-
 parameter reassignment
 ----------
 
 Summary: Name: parameter reassignment
+
+Severity: 2
+Category: OCLint
+
+prefer early exits and continue
+----------
+
+Summary: Name: prefer early exits and continue
 
 Severity: 2
 Category: OCLint
@@ -358,23 +446,15 @@ Category: OCLint
 short variable name
 ----------
 
-Summary: 
+Summary: Name: short variable name
 
 Severity: 2
-Category: OCLint
-
-switch statements don't need default when fully covered
-----------
-
-Summary: 
-
-Severity: 3
 Category: OCLint
 
 throw exception from finally block
 ----------
 
-Summary: 
+Summary: Name: throw exception from finally block
 
 Severity: 3
 Category: OCLint
@@ -382,7 +462,7 @@ Category: OCLint
 too few branches in switch statement
 ----------
 
-Summary: 
+Summary: Name: too few branches in switch statement
 
 Severity: 2
 Category: OCLint
@@ -406,15 +486,31 @@ Category: OCLint
 too many parameters
 ----------
 
-Summary: 
+Summary: Name: too many parameters
 
 Severity: 3
+Category: OCLint
+
+unnecessary default statement in covered switch statement
+----------
+
+Summary: Name: unnecessary default statement in covered switch statement
+
+Severity: 2
 Category: OCLint
 
 unnecessary else statement
 ----------
 
 Summary: Name: unnecessary else statement
+
+Severity: 1
+Category: OCLint
+
+unnecessary null check for dealloc
+----------
+
+Summary: Name: unnecessary null check for dealloc
 
 Severity: 1
 Category: OCLint
@@ -430,73 +526,9 @@ Category: OCLint
 unused method parameter
 ----------
 
-Summary: 
+Summary: Name: unused method parameter
 
 Severity: 0
-Category: OCLint
-
-useless parentheses
-----------
-
-Summary: 
-
-Severity: 1
-Category: OCLint
-
-ivar assignment outside accessors or init
-----------
-
-Summary: Name: ivar assignment outside accessors or init
-
-Severity: 2
-Category: OCLint
-
-class
-----------
-
-Summary: Name: destructor of virtual class
-
-Severity: 2
-Category: OCLint
-
-unnecessary null check for dealloc
-----------
-
-Summary: Name: unnecessary null check for dealloc
-
-Severity: 1
-Category: OCLint
-
-unnecessary default statement in covered switch statement
-----------
-
-Summary: Name: unnecessary default statement in covered switch statement
-
-Severity: 2
-Category: OCLint
-
-ill-placed default label in switch statement
-----------
-
-Summary: Name: ill-placed default label in switch statement
-
-Severity: 2
-Category: OCLint
-
-prefer early exits and continue
-----------
-
-Summary: Name: prefer early exits and continue
-
-Severity: 2
-Category: OCLint
-
-missing default in switch statements
-----------
-
-Summary: Name: missing default in switch statements
-
-Severity: 2
 Category: OCLint
 
 use boxed expression
@@ -526,39 +558,15 @@ Category: OCLint
 use object subscripting
 ----------
 
-Summary: 
+Summary: Name: use object subscripting
 
 Severity: 1
 Category: OCLint
 
-missing hash method
+useless parentheses
 ----------
 
-Summary: Name: missing hash method
-
-Severity: 1
-Category: OCLint
-
-missing call to base method
-----------
-
-Summary: Name: missing call to base method
-
-Severity: 1
-Category: OCLint
-
-calling prohibited method
-----------
-
-Summary: Name: calling prohibited method
-
-Severity: 1
-Category: OCLint
-
-missing abstract method implementation
-----------
-
-Summary: Name: missing abstract method implementation
+Summary: Name: useless parentheses
 
 Severity: 1
 Category: OCLint
