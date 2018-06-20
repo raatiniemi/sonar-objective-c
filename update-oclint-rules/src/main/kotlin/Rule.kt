@@ -23,6 +23,8 @@ internal data class Rule(
         val category: String,
         val severity: Int
 ) {
+    val key = name.toLowerCase()
+
     companion object {
         fun from(category: RuleCategory, html: Element): Rule {
             val elements = skipExample(skipVersion(paragraphs(html)))

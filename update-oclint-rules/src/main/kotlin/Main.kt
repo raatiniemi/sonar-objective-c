@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
@@ -23,6 +26,7 @@ import org.jsoup.nodes.Document
 import java.io.File
 
 private const val pathToRules = "sonar-objective-c-plugin/src/main/resources/org/sonar/plugins/oclint/rules.txt"
+private const val pathToProfile = "sonar-objective-c-plugin/src/main/resources/org/sonar/plugins/oclint/profile-oclint.xml"
 
 private const val baseUrl = "http://docs.oclint.org/en/stable/rules"
 private val availableRuleCategoriesWithSeverity = mapOf(
@@ -49,7 +53,12 @@ fun main(args: Array<String>) {
             .sortedBy { it.name }
 
     println("Found ${rules.count()} rules.")
+
+    println("Writing available rules to rules.txt")
     writeRulesToFile(rules)
+
+    println("Writing available rules to profile-oclint.xml")
+    writeProfileToFile(buildProfile(rules))
 }
 
 private fun writeRulesToFile(rules: List<Rule>) {
@@ -61,6 +70,22 @@ private fun writeRulesToFile(rules: List<Rule>) {
                     out.println(ruleTemplate(it))
                 }
             }
+}
+
+private fun buildProfile(rules: List<Rule>): Profile {
+    val profileRules = rules.map { ProfileRule(key = it.key) }
+            .toList()
+
+    return Profile(rule = profileRules)
+}
+
+private fun writeProfileToFile(profile: Profile) {
+    val module = JacksonXmlModule()
+    module.setDefaultUseWrapper(false)
+
+    val mapper = XmlMapper(module)
+    mapper.enable(SerializationFeature.INDENT_OUTPUT)
+    mapper.writeValue(File(pathToProfile), profile)
 }
 
 private fun listRuleCategoriesWithMissingSeverity(availableRuleCategories: List<String>) {

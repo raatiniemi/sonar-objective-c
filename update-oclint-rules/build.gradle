@@ -23,6 +23,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile 'com.github.kittinunf.fuel:fuel:1.13.0'
     compile 'org.jsoup:jsoup:1.11.3'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.4'
 }
 
 compileKotlin {
