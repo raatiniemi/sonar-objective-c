@@ -49,7 +49,7 @@ public class LizardReportParserTest {
         incorrectFile = createIncorrectFile();
     }
 
-    public File createCorrectFile() throws IOException {
+    private File createCorrectFile() throws IOException {
         File xmlFile = folder.newFile("correctFile.xml");
         BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
         //header
@@ -85,7 +85,7 @@ public class LizardReportParserTest {
         return xmlFile;
     }
 
-    public File createIncorrectFile() throws IOException {
+    private File createIncorrectFile() throws IOException {
         File xmlFile = folder.newFile("incorrectFile.xml");
         BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
         //header
