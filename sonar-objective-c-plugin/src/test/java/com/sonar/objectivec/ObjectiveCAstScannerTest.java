@@ -35,10 +35,6 @@ package com.sonar.objectivec;/*
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 
 import com.sonar.objectivec.ObjectiveCAstScanner;

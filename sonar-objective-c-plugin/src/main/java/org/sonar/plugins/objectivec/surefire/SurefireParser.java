@@ -18,7 +18,6 @@
 package org.sonar.plugins.objectivec.surefire;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
@@ -28,13 +27,11 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.api.utils.XmlParserException;
 import org.sonar.plugins.objectivec.surefire.data.SurefireStaxHandler;
 import org.sonar.plugins.objectivec.surefire.data.UnitTestClassReport;
 import org.sonar.plugins.objectivec.surefire.data.UnitTestIndex;
@@ -42,13 +39,10 @@ import org.sonar.plugins.objectivec.surefire.data.UnitTestResult;
 
 import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by gillesgrousset on 06/01/15.

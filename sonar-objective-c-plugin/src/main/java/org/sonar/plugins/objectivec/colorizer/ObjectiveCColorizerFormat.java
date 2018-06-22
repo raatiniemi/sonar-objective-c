@@ -22,9 +22,7 @@ import java.util.List;
 
 import org.sonar.api.web.CodeColorizerFormat;
 import org.sonar.colorizer.Tokenizer;
-import com.sonar.objectivec.api.ObjectiveCKeyword;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
-import com.google.common.collect.ImmutableList;
 
 public class ObjectiveCColorizerFormat extends CodeColorizerFormat {
 
