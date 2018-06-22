@@ -40,7 +40,7 @@ public class ObjectiveCColorizerFormat extends CodeColorizerFormat {
                 new JavadocTokenizer("<span class=\"cppd\">", "</span>"),
                 new CppDocTokenizer("<span class=\"cppd\">", "</span>"),
                 new KeywordsTokenizer("<span class=\"k\">", "</span>", ObjectiveCKeyword.keywordValues()));*/
-        return new ArrayList<Tokenizer>();
+        return new ArrayList<>();
     }
 
 }

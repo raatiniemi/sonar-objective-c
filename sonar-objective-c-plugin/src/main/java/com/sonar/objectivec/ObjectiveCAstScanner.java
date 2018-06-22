@@ -59,7 +59,7 @@ public class ObjectiveCAstScanner {
     }
 
     public static AstScanner<ObjectiveCGrammar> create(ObjectiveCConfiguration conf, SquidAstVisitor<ObjectiveCGrammar>... visitors) {
-        final SquidAstVisitorContextImpl<ObjectiveCGrammar> context = new SquidAstVisitorContextImpl<ObjectiveCGrammar>(new SourceProject("Objective-C Project"));
+        final SquidAstVisitorContextImpl<ObjectiveCGrammar> context = new SquidAstVisitorContextImpl<>(new SourceProject("Objective-C Project"));
         final Parser<ObjectiveCGrammar> parser = ObjectiveCParser.create(conf);
 
         AstScanner.Builder<ObjectiveCGrammar> builder = AstScanner.builder(context).setBaseParser(parser);
@@ -90,8 +90,8 @@ public class ObjectiveCAstScanner {
       builder.setFilesMetric(ObjectiveCMetric.FILES);
 
         /* Metrics */
-      	builder.withSquidAstVisitor(new LinesVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES));
-      	builder.withSquidAstVisitor(new LinesOfCodeVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES_OF_CODE));
+	builder.withSquidAstVisitor(new LinesVisitor<>(ObjectiveCMetric.LINES));
+	builder.withSquidAstVisitor(new LinesOfCodeVisitor<>(ObjectiveCMetric.LINES_OF_CODE));
       	builder.withSquidAstVisitor(CommentsVisitor.<ObjectiveCGrammar> builder().withCommentMetric(ObjectiveCMetric.COMMENT_LINES)
       			.withNoSonar(true)
       			.withIgnoreHeaderComment(conf.getIgnoreHeaderComments())

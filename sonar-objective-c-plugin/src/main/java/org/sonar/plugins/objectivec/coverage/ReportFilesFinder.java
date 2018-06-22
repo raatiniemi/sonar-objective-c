@@ -40,7 +40,7 @@ final class ReportFilesFinder {
         final String[] relPaths = filesMathingPattern(baseDirPath,
                 reportPattern());
 
-        final List<File> reports = new ArrayList<File>();
+        final List<File> reports = new ArrayList<>();
         for (final String relPath : relPaths) {
             reports.add(new File(baseDirPath, relPath));
         }
