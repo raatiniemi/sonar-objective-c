@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public final class OCLintRulesDefinition implements RulesDefinition {
@@ -63,7 +64,7 @@ public final class OCLintRulesDefinition implements RulesDefinition {
 
     void loadRules(NewRepository repository) throws IOException {
         Reader reader = new BufferedReader(new InputStreamReader(getClass()
-                .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
+                .getResourceAsStream(RULES_FILE), StandardCharsets.UTF_8));
 
         final List<String> listLines = IOUtils.readLines(reader);
 
