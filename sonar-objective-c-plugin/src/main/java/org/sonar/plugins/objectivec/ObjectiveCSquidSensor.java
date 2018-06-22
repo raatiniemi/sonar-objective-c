@@ -88,7 +88,7 @@ public class ObjectiveCSquidSensor implements Sensor {
         this.project = project;
         this.context = context;
 
-        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.<SquidAstVisitor<ObjectiveCGrammar>>newArrayList(checks.all());
+        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.newArrayList(checks.all());
         AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
 
 

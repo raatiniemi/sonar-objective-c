@@ -62,7 +62,7 @@ public class ObjectiveCAstScanner {
         final SquidAstVisitorContextImpl<ObjectiveCGrammar> context = new SquidAstVisitorContextImpl<ObjectiveCGrammar>(new SourceProject("Objective-C Project"));
         final Parser<ObjectiveCGrammar> parser = ObjectiveCParser.create(conf);
 
-        AstScanner.Builder<ObjectiveCGrammar> builder = AstScanner.<ObjectiveCGrammar> builder(context).setBaseParser(parser);
+        AstScanner.Builder<ObjectiveCGrammar> builder = AstScanner.builder(context).setBaseParser(parser);
 
         /* Metrics */
         builder.withMetrics(ObjectiveCMetric.values());
