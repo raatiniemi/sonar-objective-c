@@ -41,6 +41,8 @@ Binary packages are available in the release section.
 - Warn instead of throwing uncatched exception if Lizard complexity report XML
   file is not available
 - Ensure OCLint violation reports are properly parsed and sent to SonarQube
+- Update available rules for OCLint
+- Include description from OCLint rules
 
 ### Prerequisites
 
