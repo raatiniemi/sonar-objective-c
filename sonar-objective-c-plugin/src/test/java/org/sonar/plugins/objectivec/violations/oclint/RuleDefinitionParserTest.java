@@ -46,7 +46,23 @@ public class RuleDefinitionParserTest {
                         .setKey("avoid branching statement as last in loop")
                         .setName("Avoid branching statement as last in loop")
                         .setSeverity("MAJOR")
-                        .setDescription(" Name: avoid branching statement as last in loop<br>")
+                        .setDescription(
+                                "<p> Name: avoid branching statement as last in loop</p>\n" +
+                                        "<p>Having branching statement as the last statement inside a loop is very confusing, and could largely be forgetting of something and turning into a bug.</p>\n" +
+                                        "<p>This rule is defined by the following class: <a class=\"reference external\" href=\"https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/AvoidBranchingStatementAsLastInLoopRule.cpp\">oclint-rules/rules/convention/AvoidBranchingStatementAsLastInLoopRule.cpp</a></p>\n" +
+                                        "<p><strong>Example:</strong></p>\n" +
+                                        "<pre>void example()\n" +
+                                        "{\n" +
+                                        "    for (int i = 0; i < 10; i++)\n" +
+                                        "    {\n" +
+                                        "        if (foo(i))\n" +
+                                        "        {\n" +
+                                        "            continue;\n" +
+                                        "        }\n" +
+                                        "        break;      // this break is confusing\n" +
+                                        "    }\n" +
+                                        "}</pre>\n"
+                        )
                         .build()
         );
         expected.add(
@@ -54,7 +70,21 @@ public class RuleDefinitionParserTest {
                         .setKey("bitwise operator in conditional")
                         .setName("Bitwise operator in conditional")
                         .setSeverity("CRITICAL")
-                        .setDescription(" Name: bitwise operator in conditional<br>")
+                        .setDescription(
+                                "<p> Name: bitwise operator in conditional</p>\n" +
+                                        "<p>Checks for bitwise operations in conditionals. Although being written on purpose in some rare cases, bitwise operations are considered to be too “smart”. Smart code is not easy to understand.</p>\n" +
+                                        "<p>This rule is defined by the following class: <a class=\"reference external\" href=\"https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/BitwiseOperatorInConditionalRule.cpp\">oclint-rules/rules/basic/BitwiseOperatorInConditionalRule.cpp</a></p>\n" +
+                                        "<p><strong>Example:</strong></p>\n" +
+                                        "<pre>void example(int a, int b)\n" +
+                                        "{\n" +
+                                        "    if (a | b)\n" +
+                                        "    {\n" +
+                                        "    }\n" +
+                                        "    if (a & b)\n" +
+                                        "    {\n" +
+                                        "    }\n" +
+                                        "}</pre>\n"
+                        )
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");
@@ -74,7 +104,7 @@ public class RuleDefinitionParserTest {
                         .setKey("unused method parameter")
                         .setName("Unused method parameter")
                         .setSeverity("INFO")
-                        .setDescription("<br>")
+                        .setDescription("<p></p>\n")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules-without-summary.txt");

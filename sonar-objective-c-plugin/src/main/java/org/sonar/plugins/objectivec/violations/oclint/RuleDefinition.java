@@ -20,6 +20,8 @@ package org.sonar.plugins.objectivec.violations.oclint;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+
 final class RuleDefinition {
     private final String key;
     private final String name;
@@ -29,7 +31,7 @@ final class RuleDefinition {
     private RuleDefinition(@Nonnull Builder builder) {
         key = builder.key;
         name = builder.name;
-        description = builder.description;
+        description = builder.description.toString();
         severity = builder.severity;
     }
 
@@ -86,7 +88,7 @@ final class RuleDefinition {
         return "RuleDefinition{" +
                 "key='" + key + '\'' +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", description='" + escapeHtml(description) + '\'' +
                 ", severity='" + severity + '\'' +
                 '}';
     }
@@ -94,7 +96,7 @@ final class RuleDefinition {
     static class Builder {
         private String key = "";
         private String name = "";
-        private String description = "";
+        private StringBuilder description = new StringBuilder();
         private String severity = "";
 
         private Builder() {
@@ -116,9 +118,14 @@ final class RuleDefinition {
 
         @Nonnull
         Builder setDescription(@Nonnull String description) {
-            this.description = description;
+            this.description.append(description);
 
             return this;
+        }
+
+        void appendToDescription(@Nonnull String description) {
+            this.description.append("\n");
+            this.description.append(description);
         }
 
         @Nonnull

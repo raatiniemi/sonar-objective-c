@@ -60,7 +60,7 @@ public class OCLintRulesDefinitionTest {
 
         rulesDefinition.loadRules(repository);
 
-        assertEquals(70, repository.rules().size());
+        assertEquals(71, repository.rules().size());
     }
 
     @Test
