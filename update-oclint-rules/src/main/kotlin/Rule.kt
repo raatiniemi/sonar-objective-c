@@ -20,6 +20,7 @@ import org.jsoup.select.Elements
 
 internal data class Rule(
         val name: String,
+        val description: String,
         val category: String,
         val severity: Int
 ) {
@@ -27,10 +28,11 @@ internal data class Rule(
 
     companion object {
         fun from(category: RuleCategory, html: Element): Rule {
-            val elements = skipExample(skipVersion(paragraphs(html)))
+            val elements = skipVersion(paragraphs(html))
 
             return Rule(
                     name = readName(elements),
+                    description = readDescription(elements, example = readExample(html)),
                     category = category.name,
                     severity = category.severity
             )
@@ -40,8 +42,6 @@ internal data class Rule(
 
         private fun skipVersion(elements: List<Element>) = elements.drop(1)
 
-        private fun skipExample(elements: List<Element>) = elements.dropLast(1)
-
         private fun readName(elements: List<Element>): String {
             return elements.first()
                     .select("p > strong")
@@ -49,5 +49,17 @@ internal data class Rule(
                     .removePrefix("Name: ")
                     .capitalize()
         }
+
+        private fun readDescription(elements: List<Element>, example: String): String {
+            val description = elements.drop(1)
+                    .map { "<p>${it.html()}</p>" }
+                    .toMutableList()
+
+            description.add(example)
+
+            return description.joinToString(separator = "\n")
+        }
+
+        private fun readExample(html: Element) = "<pre>${html.select("pre").text()}</pre>"
     }
 }

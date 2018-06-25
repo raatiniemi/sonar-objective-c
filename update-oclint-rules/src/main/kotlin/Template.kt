@@ -26,14 +26,5 @@ internal fun headerTemplate(): String {
 }
 
 internal fun ruleTemplate(it: Rule): String {
-    return """
-        ${it.name.toLowerCase()}
-        ----------
-
-        Summary: Name: ${it.name.toLowerCase()}
-
-        Severity: ${it.severity}
-        Category: OCLint
-
-    """.trimIndent()
+    return "${it.name.toLowerCase()}\n----------\n\nSummary: Name: ${it.name.toLowerCase()}\n${it.description}\n\nSeverity: ${it.severity}\nCategory: OCLint\n"
 }
