@@ -58,10 +58,12 @@ final class RuleDefinitionParser {
         Set<RuleDefinition> rulesDefinitions = new LinkedHashSet<>();
 
         String previousLine = null;
+        boolean inDescription = false;
 
         RuleDefinition.Builder builder = RuleDefinition.builder();
         for (String line : listLines) {
             if (isLineIgnored(line)) {
+                inDescription = false;
                 previousLine = line;
                 continue;
             }
@@ -73,19 +75,22 @@ final class RuleDefinitionParser {
                 builder.setKey(Objects.requireNonNull(previousLine));
                 String name = StringUtils.capitalize(previousLine);
                 builder.setName(Objects.requireNonNull(name));
+                inDescription = false;
                 previousLine = line;
                 continue;
             }
 
             if (isSummary(line)) {
                 String summary = line.substring(line.indexOf(':') + 1);
-                builder.setDescription(summary + "<br>");
+                builder.setDescription("<p>" + summary + "</p>");
+                inDescription = true;
                 previousLine = line;
                 continue;
             }
 
             if (isCategory(line)) {
                 rulesDefinitions.add(builder.build());
+                inDescription = false;
                 previousLine = line;
                 continue;
             }
@@ -93,10 +98,14 @@ final class RuleDefinitionParser {
             if (isSeverity(line)) {
                 final String severity = line.substring("Severity: ".length());
                 builder.setSeverity(RuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
+                inDescription = false;
                 previousLine = line;
                 continue;
             }
 
+            if (inDescription) {
+                builder.appendToDescription(line);
+            }
             previousLine = line;
         }
 

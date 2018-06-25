@@ -7,6 +7,20 @@ avoid branching statement as last in loop
 ----------
 
 Summary: Name: avoid branching statement as last in loop
+<p>Having branching statement as the last statement inside a loop is very confusing, and could largely be forgetting of something and turning into a bug.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/AvoidBranchingStatementAsLastInLoopRule.cpp">oclint-rules/rules/convention/AvoidBranchingStatementAsLastInLoopRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (foo(i))
+        {
+            continue;
+        }
+        break;      // this break is confusing
+    }
+}</pre>
 
 Severity: 2
 Category: OCLint
@@ -15,6 +29,18 @@ bitwise operator in conditional
 ----------
 
 Summary: Name: bitwise operator in conditional
+<p>Checks for bitwise operations in conditionals. Although being written on purpose in some rare cases, bitwise operations are considered to be too “smart”. Smart code is not easy to understand.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/BitwiseOperatorInConditionalRule.cpp">oclint-rules/rules/basic/BitwiseOperatorInConditionalRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a, int b)
+{
+    if (a | b)
+    {
+    }
+    if (a & b)
+    {
+    }
+}</pre>
 
 Severity: 3
 Category: OCLint
