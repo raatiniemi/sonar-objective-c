@@ -71,7 +71,7 @@ public class SurefireParser {
         if (xmlFiles.length == 0) {
             insertZeroWhenNoReports();
         } else {
-            parseFiles(xmlFiles);
+            parseFilesAndPersistResult(xmlFiles);
         }
     }
 
@@ -97,7 +97,7 @@ public class SurefireParser {
         context.saveMeasure(CoreMetrics.TESTS, 0.0);
     }
 
-    private void parseFiles(File[] reports) {
+    private void parseFilesAndPersistResult(File[] reports) {
         UnitTestIndex index = new UnitTestIndex();
         parseFiles(reports, index);
         save(index);
