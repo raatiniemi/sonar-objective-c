@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name='TestTarget.xctest' tests='4' failures='0'>
+    <testsuite name='FirstClassNameTest' tests='2' failures='0'>
+        <testcase classname='FirstClassNameTest' name='testMethodName_withCondition' time='0.003'/>
+        <testcase classname='FirstClassNameTest' name='testMethodName' time='0.001'/>
+    </testsuite>
+    <testsuite name='SecondClassNameTest' tests='2' failures='0'>
+        <testcase classname='SecondClassNameTest' name='testMethodName_withCondition' time='0.001'/>
+        <testcase classname='SecondClassNameTest' name='testMethodName' time='0.001'/>
+    </testsuite>
+</testsuites>
