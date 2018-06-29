@@ -24,7 +24,6 @@ import org.sonar.api.batch.DependsUpon;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
@@ -39,12 +38,10 @@ public class SurefireSensor implements Sensor {
 
     private final Settings settings;
     private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
 
-    public SurefireSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public SurefireSensor(final FileSystem fileSystem, final Settings config) {
         this.settings = config;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
     }
 
     @DependsUpon
@@ -80,7 +77,7 @@ public class SurefireSensor implements Sensor {
 
     protected void collect(SensorContext context, File reportsDir) {
         LOG.info("parsing {}", reportsDir);
-        SurefireParser parser = new SurefireParser(fileSystem, resourcePerspectives, context);
+        SurefireParser parser = new SurefireParser(fileSystem, context);
         parser.collect(reportsDir);
     }
 

@@ -48,12 +48,10 @@ final class SurefireParser {
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
     private final FileSystem fileSystem;
-    private final ResourcePerspectives perspectives;
     private final SensorContext context;
 
-    SurefireParser(FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
+    SurefireParser(FileSystem fileSystem, SensorContext context) {
         this.fileSystem = fileSystem;
-        this.perspectives = resourcePerspectives;
         this.context = context;
     }
 
@@ -141,23 +139,6 @@ final class SurefireParser {
         if (testsCount > 0) {
             double percentage = passedTests * 100d / testsCount;
             saveMeasure(resource, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
-        }
-        saveResults(resource, report);
-    }
-
-    private void saveResults(Resource testFile, UnitTestClassReport report) {
-        for (UnitTestResult unitTestResult : report.getResults()) {
-            MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
-            if (testPlan == null) {
-                continue;
-            }
-
-            testPlan.addTestCase(unitTestResult.getName())
-                    .setDurationInMs(Math.max(unitTestResult.getDurationMilliseconds(), 0))
-                    .setStatus(TestCase.Status.of(unitTestResult.getStatus()))
-                    .setMessage(unitTestResult.getMessage())
-                    .setType(TestCase.TYPE_UNIT)
-                    .setStackTrace(unitTestResult.getStackTrace());
         }
     }
 
