@@ -65,7 +65,7 @@ class SurefireParser {
     }
 
     void collect(File baseReportDirectory) {
-        List<File> availableReports = getReports(baseReportDirectory);
+        List<File> availableReports = getAvailableReports(baseReportDirectory);
 
         if (availableReports.isEmpty()) {
             insertZeroWhenNoReports();
@@ -75,7 +75,7 @@ class SurefireParser {
         parseFilesAndPersistResult(availableReports);
     }
 
-    private List<File> getReports(File baseReportDirectory) {
+    private List<File> getAvailableReports(File baseReportDirectory) {
         if (baseReportDirectory == null || !baseReportDirectory.isDirectory() || !baseReportDirectory.exists()) {
             return Collections.emptyList();
         }
