@@ -60,10 +60,10 @@ class SurefireParser {
         this.context = context;
     }
 
-    void collect(File reportsDir) {
+    void collect(File baseReportDirectory) {
 
 
-        File[] xmlFiles = getReports(reportsDir);
+        File[] xmlFiles = getReports(baseReportDirectory);
 
         if (xmlFiles.length == 0) {
             insertZeroWhenNoReports();
@@ -73,12 +73,12 @@ class SurefireParser {
         parseFilesAndPersistResult(xmlFiles);
     }
 
-    private File[] getReports(File dir) {
-        if (dir == null || !dir.isDirectory() || !dir.exists()) {
+    private File[] getReports(File baseReportDirectory) {
+        if (baseReportDirectory == null || !baseReportDirectory.isDirectory() || !baseReportDirectory.exists()) {
             return new File[0];
         }
 
-        return dir.listFiles(new FilenameFilter() {
+        return baseReportDirectory.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.startsWith("TEST") && name.endsWith(".xml");
             }
