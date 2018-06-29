@@ -32,14 +32,14 @@ import org.sonar.plugins.objectivec.surefire.data.SurefireStaxHandler;
 import org.sonar.plugins.objectivec.surefire.data.UnitTestClassReport;
 import org.sonar.plugins.objectivec.surefire.data.UnitTestIndex;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 final class SurefireParser {
 
@@ -50,7 +50,7 @@ final class SurefireParser {
     private final FileSystem fileSystem;
     private final SensorContext context;
 
-    SurefireParser(SensorContext context) {
+    SurefireParser(@Nonnull SensorContext context) {
         fileSystem = context.fileSystem();
         this.context = context;
     }
@@ -66,8 +66,9 @@ final class SurefireParser {
         parseFilesAndPersistResult(availableReports);
     }
 
-    private List<File> getAvailableReports(File baseReportDirectory) {
-        if (baseReportDirectory == null || !baseReportDirectory.isDirectory() || !baseReportDirectory.exists()) {
+    @Nonnull
+    private List<File> getAvailableReports(@Nonnull File baseReportDirectory) {
+        if (!baseReportDirectory.isDirectory() || !baseReportDirectory.exists()) {
             return Collections.emptyList();
         }
 
@@ -83,12 +84,13 @@ final class SurefireParser {
         context.saveMeasure(CoreMetrics.TESTS, 0.0);
     }
 
-    private void parseFilesAndPersistResult(List<File> reports) {
+    private void parseFilesAndPersistResult(@Nonnull List<File> reports) {
         UnitTestIndex index = parseFiles(reports);
         save(index);
     }
 
-    private static UnitTestIndex parseFiles(List<File> reports) {
+    @Nonnull
+    private static UnitTestIndex parseFiles(@Nonnull List<File> reports) {
         UnitTestIndex index = new UnitTestIndex();
 
         SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
@@ -104,7 +106,24 @@ final class SurefireParser {
         return index;
     }
 
-    private void save(UnitTestIndex index) {
+    @Nonnull
+    static List<TestReport> parseFiles(File[] reports) {
+        try {
+            List<TestReport> testReports = new ArrayList<>();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            SurefireReportParser parser = SurefireReportParser.create(factory.newDocumentBuilder());
+            for (File report : reports) {
+                testReports.add(parser.parse(report));
+            }
+
+            return testReports;
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("Unable to create new document builder", e);
+            return Collections.emptyList();
+        }
+    }
+
+    private void save(@Nonnull UnitTestIndex index) {
         long negativeTimeTestNumber = 0;
 
         for (Map.Entry<String, UnitTestClassReport> entry : index.getIndexByClassname().entrySet()) {
@@ -128,7 +147,7 @@ final class SurefireParser {
         }
     }
 
-    private void save(UnitTestClassReport report, Resource resource) {
+    private void save(@Nonnull UnitTestClassReport report, Resource resource) {
         double testsCount = report.getTests() - report.getSkipped();
         saveMeasure(resource, CoreMetrics.SKIPPED_TESTS, report.getSkipped());
         saveMeasure(resource, CoreMetrics.TESTS, testsCount);
@@ -143,7 +162,7 @@ final class SurefireParser {
     }
 
     @Nullable
-    private Resource getUnitTestResource(String classname) {
+    private Resource getUnitTestResource(@Nonnull String classname) {
 
         String fileName = classname.replace('.', '/') + ".m";
 
@@ -172,7 +191,7 @@ final class SurefireParser {
         return inputFile == null ? null : context.getResource(inputFile);
     }
 
-    private void saveMeasure(Resource resource, Metric metric, double value) {
+    private void saveMeasure(Resource resource, @Nonnull Metric metric, double value) {
         if (Double.isNaN(value)) {
             return;
         }
