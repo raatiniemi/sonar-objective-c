@@ -50,6 +50,8 @@ class SurefireParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
 
+    private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
+
     private final FileSystem fileSystem;
     private final ResourcePerspectives perspectives;
     private final SensorContext context;
@@ -76,11 +78,7 @@ class SurefireParser {
             return new File[0];
         }
 
-        return baseReportDirectory.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
-            }
-        });
+        return baseReportDirectory.listFiles(includeReports);
     }
 
     private void insertZeroWhenNoReports() {
