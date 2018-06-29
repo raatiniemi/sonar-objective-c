@@ -77,7 +77,7 @@ public class SurefireSensor implements Sensor {
 
     protected void collect(SensorContext context, File reportsDir) {
         LOG.info("parsing {}", reportsDir);
-        SurefireParser parser = new SurefireParser(fileSystem, context);
+        SurefireParser parser = new SurefireParser(context);
         parser.collect(reportsDir);
     }
 

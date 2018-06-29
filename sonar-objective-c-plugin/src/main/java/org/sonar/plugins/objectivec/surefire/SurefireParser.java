@@ -50,8 +50,8 @@ final class SurefireParser {
     private final FileSystem fileSystem;
     private final SensorContext context;
 
-    SurefireParser(FileSystem fileSystem, SensorContext context) {
-        this.fileSystem = fileSystem;
+    SurefireParser(SensorContext context) {
+        fileSystem = context.fileSystem();
         this.context = context;
     }
 
