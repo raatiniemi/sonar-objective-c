@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * Created by gillesgrousset on 06/01/15.
  */
-public class SurefireParser {
+class SurefireParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
 
@@ -56,14 +56,14 @@ public class SurefireParser {
     private final ResourcePerspectives perspectives;
     private final SensorContext context;
 
-    public SurefireParser(Project project, FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
+    SurefireParser(Project project, FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
         this.project = project;
         this.fileSystem = fileSystem;
         this.perspectives = resourcePerspectives;
         this.context = context;
     }
 
-    public void collect(File reportsDir) {
+    void collect(File reportsDir) {
 
 
         File[] xmlFiles = getReports(reportsDir);
@@ -150,7 +150,7 @@ public class SurefireParser {
         saveResults(resource, report);
     }
 
-    protected void saveResults(Resource testFile, UnitTestClassReport report) {
+    private void saveResults(Resource testFile, UnitTestClassReport report) {
         for (UnitTestResult unitTestResult : report.getResults()) {
             MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
             if (testPlan != null) {
@@ -165,7 +165,7 @@ public class SurefireParser {
     }
 
     @Nullable
-    public Resource getUnitTestResource(String classname) {
+    private Resource getUnitTestResource(String classname) {
 
         String fileName = classname.replace('.', '/') + ".m";
 
