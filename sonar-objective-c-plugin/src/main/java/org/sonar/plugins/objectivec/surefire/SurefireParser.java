@@ -118,16 +118,20 @@ class SurefireParser {
 
         for (Map.Entry<String, UnitTestClassReport> entry : index.getIndexByClassname().entrySet()) {
             UnitTestClassReport report = entry.getValue();
-            if (report.getTests() > 0) {
-                negativeTimeTestNumber += report.getNegativeTimeTestNumber();
-                Resource resource = getUnitTestResource(entry.getKey());
-                if (resource != null) {
-                    save(report, resource);
-                } else {
-                    LOGGER.warn("Resource not found: {}", entry.getKey());
-                }
+            if (report.getTests() == 0) {
+                continue;
             }
+
+            negativeTimeTestNumber += report.getNegativeTimeTestNumber();
+            Resource resource = getUnitTestResource(entry.getKey());
+            if (resource == null) {
+                LOGGER.warn("Resource not found: {}", entry.getKey());
+                continue;
+            }
+
+            save(report, resource);
         }
+
         if (negativeTimeTestNumber > 0) {
             LOGGER.warn("There is {} test(s) reported with negative time by data, total duration may not be accurate.", negativeTimeTestNumber);
         }
@@ -151,14 +155,16 @@ class SurefireParser {
     private void saveResults(Resource testFile, UnitTestClassReport report) {
         for (UnitTestResult unitTestResult : report.getResults()) {
             MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
-            if (testPlan != null) {
-                testPlan.addTestCase(unitTestResult.getName())
-                        .setDurationInMs(Math.max(unitTestResult.getDurationMilliseconds(), 0))
-                        .setStatus(TestCase.Status.of(unitTestResult.getStatus()))
-                        .setMessage(unitTestResult.getMessage())
-                        .setType(TestCase.TYPE_UNIT)
-                        .setStackTrace(unitTestResult.getStackTrace());
+            if (testPlan == null) {
+                continue;
             }
+
+            testPlan.addTestCase(unitTestResult.getName())
+                    .setDurationInMs(Math.max(unitTestResult.getDurationMilliseconds(), 0))
+                    .setStatus(TestCase.Status.of(unitTestResult.getStatus()))
+                    .setMessage(unitTestResult.getMessage())
+                    .setType(TestCase.TYPE_UNIT)
+                    .setStackTrace(unitTestResult.getStackTrace());
         }
     }
 
@@ -193,8 +199,10 @@ class SurefireParser {
     }
 
     private void saveMeasure(Resource resource, Metric metric, double value) {
-        if (!Double.isNaN(value)) {
-            context.saveMeasure(resource, metric, value);
+        if (Double.isNaN(value)) {
+            return;
         }
+
+        context.saveMeasure(resource, metric, value);
     }
 }
