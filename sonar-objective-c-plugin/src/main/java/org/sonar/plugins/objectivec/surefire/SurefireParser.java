@@ -93,12 +93,13 @@ class SurefireParser {
     }
 
     private void parseFilesAndPersistResult(List<File> reports) {
-        UnitTestIndex index = new UnitTestIndex();
-        parseFiles(reports, index);
+        UnitTestIndex index = parseFiles(reports);
         save(index);
     }
 
-    private static void parseFiles(List<File> reports, UnitTestIndex index) {
+    private static UnitTestIndex parseFiles(List<File> reports) {
+        UnitTestIndex index = new UnitTestIndex();
+
         SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
         StaxParser parser = new StaxParser(staxParser, false);
         for (File report : reports) {
@@ -108,6 +109,8 @@ class SurefireParser {
                 throw new IllegalStateException("Fail to parse the Surefire report: " + report, e);
             }
         }
+
+        return index;
     }
 
     private void save(UnitTestIndex index) {
