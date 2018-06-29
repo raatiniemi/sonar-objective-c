@@ -23,18 +23,14 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Resource;
-import org.sonar.api.test.MutableTestPlan;
-import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
 import org.sonar.plugins.objectivec.surefire.data.SurefireStaxHandler;
 import org.sonar.plugins.objectivec.surefire.data.UnitTestClassReport;
 import org.sonar.plugins.objectivec.surefire.data.UnitTestIndex;
-import org.sonar.plugins.objectivec.surefire.data.UnitTestResult;
 
 import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
@@ -45,9 +41,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by gillesgrousset on 06/01/15.
- */
 final class SurefireParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
