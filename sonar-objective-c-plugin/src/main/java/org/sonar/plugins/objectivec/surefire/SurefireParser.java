@@ -40,6 +40,8 @@ import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -63,9 +65,9 @@ class SurefireParser {
     }
 
     void collect(File baseReportDirectory) {
-        File[] availableReports = getReports(baseReportDirectory);
+        List<File> availableReports = getReports(baseReportDirectory);
 
-        if (availableReports.length == 0) {
+        if (availableReports.isEmpty()) {
             insertZeroWhenNoReports();
             return;
         }
@@ -73,25 +75,30 @@ class SurefireParser {
         parseFilesAndPersistResult(availableReports);
     }
 
-    private File[] getReports(File baseReportDirectory) {
+    private List<File> getReports(File baseReportDirectory) {
         if (baseReportDirectory == null || !baseReportDirectory.isDirectory() || !baseReportDirectory.exists()) {
-            return new File[0];
+            return Collections.emptyList();
         }
 
-        return baseReportDirectory.listFiles(includeReports);
+        File[] availableReports = baseReportDirectory.listFiles(includeReports);
+        if (null == availableReports) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.asList(availableReports);
     }
 
     private void insertZeroWhenNoReports() {
         context.saveMeasure(CoreMetrics.TESTS, 0.0);
     }
 
-    private void parseFilesAndPersistResult(File[] reports) {
+    private void parseFilesAndPersistResult(List<File> reports) {
         UnitTestIndex index = new UnitTestIndex();
         parseFiles(reports, index);
         save(index);
     }
 
-    private static void parseFiles(File[] reports, UnitTestIndex index) {
+    private static void parseFiles(List<File> reports, UnitTestIndex index) {
         SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
         StaxParser parser = new StaxParser(staxParser, false);
         for (File report : reports) {
