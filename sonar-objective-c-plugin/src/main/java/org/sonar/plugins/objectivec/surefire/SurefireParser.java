@@ -67,9 +67,10 @@ class SurefireParser {
 
         if (xmlFiles.length == 0) {
             insertZeroWhenNoReports();
-        } else {
-            parseFilesAndPersistResult(xmlFiles);
+            return;
         }
+
+        parseFilesAndPersistResult(xmlFiles);
     }
 
     private File[] getReports(File dir) {
