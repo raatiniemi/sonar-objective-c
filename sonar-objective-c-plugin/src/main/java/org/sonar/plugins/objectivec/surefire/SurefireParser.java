@@ -61,16 +61,14 @@ class SurefireParser {
     }
 
     void collect(File baseReportDirectory) {
+        File[] availableReports = getReports(baseReportDirectory);
 
-
-        File[] xmlFiles = getReports(baseReportDirectory);
-
-        if (xmlFiles.length == 0) {
+        if (availableReports.length == 0) {
             insertZeroWhenNoReports();
             return;
         }
 
-        parseFilesAndPersistResult(xmlFiles);
+        parseFilesAndPersistResult(availableReports);
     }
 
     private File[] getReports(File baseReportDirectory) {
