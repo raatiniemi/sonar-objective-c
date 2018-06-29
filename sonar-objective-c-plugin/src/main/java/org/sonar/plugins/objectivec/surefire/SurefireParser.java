@@ -48,7 +48,7 @@ import java.util.Map;
 /**
  * Created by gillesgrousset on 06/01/15.
  */
-class SurefireParser {
+final class SurefireParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
 
