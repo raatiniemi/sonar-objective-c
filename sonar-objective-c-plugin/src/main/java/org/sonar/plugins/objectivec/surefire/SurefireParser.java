@@ -26,7 +26,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
@@ -51,13 +50,11 @@ class SurefireParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
 
-    private final Project project;
     private final FileSystem fileSystem;
     private final ResourcePerspectives perspectives;
     private final SensorContext context;
 
-    SurefireParser(Project project, FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
-        this.project = project;
+    SurefireParser(FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
         this.fileSystem = fileSystem;
         this.perspectives = resourcePerspectives;
         this.context = context;

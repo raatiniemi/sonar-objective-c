@@ -75,12 +75,12 @@ public class SurefireSensor implements Sensor {
         So the implementation here reaches into the project properties and pulls the path out by itself.
      */
 
-        collect(project, context, new File(reportPath()));
+        collect(context, new File(reportPath()));
     }
 
-    protected void collect(Project project, SensorContext context, File reportsDir) {
+    protected void collect(SensorContext context, File reportsDir) {
         LOG.info("parsing {}", reportsDir);
-        SurefireParser parser = new SurefireParser(project, fileSystem, resourcePerspectives, context);
+        SurefireParser parser = new SurefireParser(fileSystem, resourcePerspectives, context);
         parser.collect(reportsDir);
     }
 
