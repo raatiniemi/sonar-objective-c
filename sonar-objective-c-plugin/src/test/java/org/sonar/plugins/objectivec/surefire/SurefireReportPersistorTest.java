@@ -76,8 +76,8 @@ public class SurefireReportPersistorTest {
         context.fileSystem().add(inputFile);
     }
 
-    private <T extends Serializable> T getMeasure(String componentKey) {
-        Measure<T> measure = context.measure(componentKey, CoreMetrics.TESTS_KEY);
+    private <T extends Serializable> T getMeasure(String componentKey, String testKey) {
+        Measure<T> measure = context.measure(componentKey, testKey);
 
         return measure.value();
     }
@@ -108,7 +108,8 @@ public class SurefireReportPersistorTest {
 
         persistor.saveReports(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m"));
+        assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Long.valueOf(2), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
@@ -128,8 +129,10 @@ public class SurefireReportPersistorTest {
 
         persistor.saveReports(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m"));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m"));
+        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Long.valueOf(4), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Long.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
@@ -148,8 +151,10 @@ public class SurefireReportPersistorTest {
 
         persistor.saveReports(testReports);
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m"));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m"));
+        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Long.valueOf(4), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Long.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
@@ -161,6 +166,7 @@ public class SurefireReportPersistorTest {
 
         persistor.saveReports(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m"));
+        assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Long.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 }

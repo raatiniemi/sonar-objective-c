@@ -50,6 +50,13 @@ final class TestSuite {
                 .size();
     }
 
+    long getDurationInMilliseconds() {
+        return testCases.parallelStream()
+                .filter(TestCase::isSuccess)
+                .map(TestCase::getDurationInMilliseconds)
+                .reduce(0L, (a, b) -> a + b);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

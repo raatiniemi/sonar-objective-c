@@ -68,13 +68,14 @@ final class SurefireReportPersistor {
     }
 
     private void getInputFile(InputFile inputFile, TestSuite testSuite) {
-        saveMeasure(inputFile, testSuite.getNumberOfSuccessfulTests());
+        saveMeasure(inputFile, CoreMetrics.TESTS, testSuite.getNumberOfSuccessfulTests());
+        saveMeasure(inputFile, CoreMetrics.TEST_EXECUTION_TIME, testSuite.getDurationInMilliseconds());
     }
 
-    private void saveMeasure(InputFile inputFile, Serializable value) {
+    private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, Serializable value) {
         //noinspection unchecked
         context.newMeasure()
-                .forMetric((Metric) CoreMetrics.TESTS)
+                .forMetric(metric)
                 .on(inputFile)
                 .withValue(value)
                 .save();

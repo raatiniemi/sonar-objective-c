@@ -60,6 +60,10 @@ final class TestCase {
         return status == Status.SUCCESS;
     }
 
+    long getDurationInMilliseconds() {
+        return (long) (duration * 1000);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

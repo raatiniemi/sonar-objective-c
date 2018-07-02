@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -37,5 +38,26 @@ public class TestCaseTest {
         TestCase testCase = TestCase.failure("TestClass", "TestMethod");
 
         assertFalse(testCase.isSuccess());
+    }
+
+    @Test
+    public void testGetDurationInMilliseconds_withLowestPossibleValue() {
+        TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.001);
+
+        assertEquals(1, testCase.getDurationInMilliseconds());
+    }
+
+    @Test
+    public void testGetDurationInMilliseconds_withLongerTest() {
+        TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.123);
+
+        assertEquals(123, testCase.getDurationInMilliseconds());
+    }
+
+    @Test
+    public void testGetDurationInMilliseconds_withLessThanOneMillisecond() {
+        TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.0001);
+
+        assertEquals(0, testCase.getDurationInMilliseconds());
     }
 }
