@@ -41,8 +41,6 @@ public class SurefireParserTest {
         assertEquals(1, testReports.size());
     }
 
-    // TODO: Add test for skipped test method.
-
     @Test
     public void testParseFiles_withErrorReport() {
         File[] availableReports = {

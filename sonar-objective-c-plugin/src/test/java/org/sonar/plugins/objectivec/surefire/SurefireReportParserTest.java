@@ -93,6 +93,4 @@ public class SurefireReportParserTest {
 
         assertEquals(expected, actual);
     }
-
-    // TODO: Add test for skipped test method.
 }
