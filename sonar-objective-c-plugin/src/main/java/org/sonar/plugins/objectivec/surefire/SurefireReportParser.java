@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 final class SurefireReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireReportParser.class);
@@ -135,23 +136,39 @@ final class SurefireReportParser {
             }
 
             Element element = (Element) node;
-            testCases.add(parseTestCase(element));
+            Optional<TestCase> value = parseTestCase(element);
+            value.ifPresent(testCases::add);
         }
 
         return testCases;
     }
 
     @Nonnull
-    private TestCase parseTestCase(@Nonnull Element element) {
+    private Optional<TestCase> parseTestCase(@Nonnull Element element) {
         String className = element.getAttribute(CLASS_NAME);
         String methodName = element.getAttribute(NAME);
 
-        if (element.hasChildNodes()) {
-            // TODO: Properly handle child nodes, i.e. failure, skipped, etc.
-            return TestCase.failure(className, methodName);
+        if (isSuccessTestCase(element)) {
+            String time = element.getAttribute(TIME);
+            TestCase testCase = TestCase.success(className, methodName, Double.valueOf(time));
+            return Optional.of(testCase);
         }
 
-        String time = element.getAttribute(TIME);
-        return TestCase.success(className, methodName, Double.valueOf(time));
+        if (isFailureTestCase(element)) {
+            TestCase testCase = TestCase.failure(className, methodName);
+            return Optional.of(testCase);
+        }
+
+        LOGGER.error("Unable to parse element: " + element);
+        return Optional.empty();
+    }
+
+    private boolean isSuccessTestCase(@Nonnull Element element) {
+        return !element.hasChildNodes();
+    }
+
+    private boolean isFailureTestCase(Element element) {
+        NodeList failureElements = element.getElementsByTagName("failure");
+        return 1 == failureElements.getLength();
     }
 }
