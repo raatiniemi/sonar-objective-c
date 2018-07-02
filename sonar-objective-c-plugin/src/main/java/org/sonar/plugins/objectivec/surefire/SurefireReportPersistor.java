@@ -59,12 +59,28 @@ final class SurefireReportPersistor {
         }
     }
 
+    @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String className) {
-        // TODO: Handle additional file formats, categories, etc.
-        String filename = className + ".m";
+        String filename = buildFilename(className);
 
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(filename));
         return Optional.ofNullable(inputFile);
+    }
+
+    @Nonnull
+    private String buildFilename(@Nonnull String className) {
+        className = replaceCategorySeparator(className);
+        return appendFileExtension(className);
+    }
+
+    @Nonnull
+    private String replaceCategorySeparator(@Nonnull String className) {
+        return className.replace("_", "+");
+    }
+
+    @Nonnull
+    private String appendFileExtension(@Nonnull String className) {
+        return className + ".m";
     }
 
     private void getInputFile(InputFile inputFile, TestSuite testSuite) {

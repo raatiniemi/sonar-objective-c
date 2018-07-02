@@ -175,4 +175,18 @@ public class SurefireReportPersistorTest {
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
         assertEquals(Long.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
+
+    @Test
+    public void testParseFiles_withClassNameCategory() {
+        TestCase testCase = TestCase.success("BaseClassName_CategoryNameTests", "testMethodName", 0.002);
+        TestSuite testSuite = TestSuite.create("BaseClassName_CategoryNameTests", Collections.singletonList(testCase));
+        TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
+        addFileToFs(createFile("BaseClassName+CategoryNameTests.m"));
+
+        persistor.saveReports(Collections.singletonList(testReport));
+
+        assertEquals(Integer.valueOf(1), getMeasure("projectKey:BaseClassName+CategoryNameTests.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure("projectKey:BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure("projectKey:BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+    }
 }
