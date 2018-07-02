@@ -36,6 +36,11 @@ final class TestReport {
         return new TestReport(targetName, new LinkedHashSet<>(testSuites));
     }
 
+    @Nonnull
+    Set<TestSuite> getTestSuites() {
+        return testSuites;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

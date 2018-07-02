@@ -36,6 +36,15 @@ final class TestSuite {
         return new TestSuite(className, new LinkedHashSet<>(testCases));
     }
 
+    @Nonnull
+    String getClassName() {
+        return className;
+    }
+
+    int getNumberOfTests() {
+        return testCases.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
