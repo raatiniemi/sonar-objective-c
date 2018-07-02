@@ -60,6 +60,10 @@ final class TestCase {
         return status == Status.SUCCESS;
     }
 
+    boolean isFailed() {
+        return status == Status.FAILURE;
+    }
+
     long getDurationInMilliseconds() {
         return (long) (duration * 1000);
     }

@@ -69,6 +69,7 @@ final class SurefireReportPersistor {
 
     private void getInputFile(InputFile inputFile, TestSuite testSuite) {
         saveMeasure(inputFile, CoreMetrics.TESTS, testSuite.getNumberOfTests());
+        saveMeasure(inputFile, CoreMetrics.TEST_FAILURES, testSuite.getNumberOfFailedTests());
         saveMeasure(inputFile, CoreMetrics.TEST_EXECUTION_TIME, testSuite.getDurationInMilliseconds());
     }
 

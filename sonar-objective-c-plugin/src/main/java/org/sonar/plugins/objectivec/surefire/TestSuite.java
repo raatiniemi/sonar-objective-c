@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 final class TestSuite {
     private final String className;
@@ -43,6 +44,13 @@ final class TestSuite {
 
     int getNumberOfTests() {
         return testCases.size();
+    }
+
+    int getNumberOfFailedTests() {
+        return testCases.stream()
+                .filter(TestCase::isFailed)
+                .collect(Collectors.toList())
+                .size();
     }
 
     long getDurationInMilliseconds() {
