@@ -166,7 +166,7 @@ public class SurefireReportPersistorTest {
 
         persistor.saveReports(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Long.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 }

@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
-
 final class TestSuite {
     private final String className;
     private final Set<TestCase> testCases;
@@ -43,11 +41,8 @@ final class TestSuite {
         return className;
     }
 
-    int getNumberOfSuccessfulTests() {
-        return testCases.stream()
-                .filter(TestCase::isSuccess)
-                .collect(toList())
-                .size();
+    int getNumberOfTests() {
+        return testCases.size();
     }
 
     long getDurationInMilliseconds() {
