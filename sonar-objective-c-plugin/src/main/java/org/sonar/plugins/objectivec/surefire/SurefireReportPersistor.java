@@ -68,7 +68,7 @@ final class SurefireReportPersistor {
     }
 
     private void getInputFile(InputFile inputFile, TestSuite testSuite) {
-        saveMeasure(inputFile, testSuite.getNumberOfTests());
+        saveMeasure(inputFile, testSuite.getNumberOfSuccessfulTests());
     }
 
     private void saveMeasure(InputFile inputFile, Serializable value) {

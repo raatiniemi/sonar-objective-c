@@ -151,4 +151,16 @@ public class SurefireReportPersistorTest {
         assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m"));
         assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m"));
     }
+
+    @Test
+    public void testParseFiles_withErrorReport() {
+        TestCase testCase = TestCase.failure("ClassNameTest", "testMethodName_withFailure");
+        TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
+        TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
+        addFileToFs(classNameTestFile);
+
+        persistor.saveReports(Collections.singletonList(testReport));
+
+        assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m"));
+    }
 }

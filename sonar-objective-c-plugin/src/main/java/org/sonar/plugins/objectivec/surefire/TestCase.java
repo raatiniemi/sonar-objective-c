@@ -56,6 +56,10 @@ final class TestCase {
                 .build();
     }
 
+    boolean isSuccess() {
+        return status == Status.SUCCESS;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
