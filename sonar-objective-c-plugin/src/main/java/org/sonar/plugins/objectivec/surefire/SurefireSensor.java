@@ -31,8 +31,7 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 import java.io.File;
 
 public class SurefireSensor implements Sensor {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SurefireSensor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
     public static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
@@ -76,7 +75,7 @@ public class SurefireSensor implements Sensor {
     }
 
     protected void collect(SensorContext context, File reportsDir) {
-        LOG.info("parsing {}", reportsDir);
+        LOGGER.info("parsing {}", reportsDir);
         SurefireParser parser = new SurefireParser(context);
         parser.collect(reportsDir);
     }
