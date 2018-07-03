@@ -55,7 +55,7 @@ final class SurefireParser {
         this.context = context;
     }
 
-    void collect(File baseReportDirectory) {
+    void collect(@Nonnull File baseReportDirectory) {
         List<File> availableReports = getAvailableReports(baseReportDirectory);
 
         if (availableReports.isEmpty()) {
