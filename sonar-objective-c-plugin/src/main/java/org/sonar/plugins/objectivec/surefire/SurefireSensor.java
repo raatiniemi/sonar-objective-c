@@ -17,7 +17,6 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -25,6 +24,7 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.List;
 
 public class SurefireSensor implements Sensor {
     private static final String NAME = "Surefire sensor";
@@ -45,8 +45,11 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        SurefireParser parser = new SurefireParser((SensorContext) context);
-        parser.collect(new File(reportPath()));
+        SurefireParser parser = new SurefireParser();
+        List<TestReport> testReports = parser.collect(new File(reportPath()));
+
+        SurefireReportPersistor persistor = SurefireReportPersistor.create(context);
+        persistor.saveReports(testReports);
     }
 
     private String reportPath() {

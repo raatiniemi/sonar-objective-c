@@ -17,29 +17,18 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
-import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.objectivec.surefire.data.SurefireStaxHandler;
-import org.sonar.plugins.objectivec.surefire.data.UnitTestClassReport;
-import org.sonar.plugins.objectivec.surefire.data.UnitTestIndex;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 final class SurefireParser {
 
@@ -47,23 +36,17 @@ final class SurefireParser {
 
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
-    private final FileSystem fileSystem;
-    private final SensorContext context;
-
-    SurefireParser(@Nonnull SensorContext context) {
-        fileSystem = context.fileSystem();
-        this.context = context;
+    SurefireParser() {
     }
 
-    void collect(@Nonnull File baseReportDirectory) {
+    List<TestReport> collect(@Nonnull File baseReportDirectory) {
         List<File> availableReports = getAvailableReports(baseReportDirectory);
 
         if (availableReports.isEmpty()) {
-            insertZeroWhenNoReports();
-            return;
+            return Collections.emptyList();
         }
 
-        parseFilesAndPersistResult(availableReports);
+        return parseFiles(availableReports);
     }
 
     @Nonnull
@@ -80,34 +63,8 @@ final class SurefireParser {
         return Arrays.asList(availableReports);
     }
 
-    private void insertZeroWhenNoReports() {
-        context.saveMeasure(CoreMetrics.TESTS, 0.0);
-    }
-
-    private void parseFilesAndPersistResult(@Nonnull List<File> reports) {
-        UnitTestIndex index = parseFiles(reports);
-        save(index);
-    }
-
     @Nonnull
-    private static UnitTestIndex parseFiles(@Nonnull List<File> reports) {
-        UnitTestIndex index = new UnitTestIndex();
-
-        SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
-        StaxParser parser = new StaxParser(staxParser, false);
-        for (File report : reports) {
-            try {
-                parser.parse(report);
-            } catch (XMLStreamException e) {
-                throw new IllegalStateException("Fail to parse the Surefire report: " + report, e);
-            }
-        }
-
-        return index;
-    }
-
-    @Nonnull
-    static List<TestReport> parseFiles(File[] reports) {
+    static List<TestReport> parseFiles(List<File> reports) {
         try {
             List<TestReport> testReports = new ArrayList<>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -121,81 +78,5 @@ final class SurefireParser {
             LOGGER.error("Unable to create new document builder", e);
             return Collections.emptyList();
         }
-    }
-
-    private void save(@Nonnull UnitTestIndex index) {
-        long negativeTimeTestNumber = 0;
-
-        for (Map.Entry<String, UnitTestClassReport> entry : index.getIndexByClassname().entrySet()) {
-            UnitTestClassReport report = entry.getValue();
-            if (report.getTests() == 0) {
-                continue;
-            }
-
-            negativeTimeTestNumber += report.getNegativeTimeTestNumber();
-            Resource resource = getUnitTestResource(entry.getKey());
-            if (resource == null) {
-                LOGGER.warn("Resource not found: {}", entry.getKey());
-                continue;
-            }
-
-            save(report, resource);
-        }
-
-        if (negativeTimeTestNumber > 0) {
-            LOGGER.warn("There is {} test(s) reported with negative time by data, total duration may not be accurate.", negativeTimeTestNumber);
-        }
-    }
-
-    private void save(@Nonnull UnitTestClassReport report, Resource resource) {
-        double testsCount = report.getTests() - report.getSkipped();
-        saveMeasure(resource, CoreMetrics.SKIPPED_TESTS, report.getSkipped());
-        saveMeasure(resource, CoreMetrics.TESTS, testsCount);
-        saveMeasure(resource, CoreMetrics.TEST_ERRORS, report.getErrors());
-        saveMeasure(resource, CoreMetrics.TEST_FAILURES, report.getFailures());
-        saveMeasure(resource, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
-        double passedTests = testsCount - report.getErrors() - report.getFailures();
-        if (testsCount > 0) {
-            double percentage = passedTests * 100d / testsCount;
-            saveMeasure(resource, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
-        }
-    }
-
-    @Nullable
-    private Resource getUnitTestResource(@Nonnull String classname) {
-
-        String fileName = classname.replace('.', '/') + ".m";
-
-        InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(fileName));
-
-        /*
-         * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
-         * wasn't found in the root.
-         */
-        if (inputFile == null) {
-            List<InputFile> files = ImmutableList.copyOf(fileSystem.inputFiles(fileSystem.predicates().and(
-                    fileSystem.predicates().hasType(InputFile.Type.TEST),
-                    fileSystem.predicates().matchesPathPattern("**/" + fileName.replace("_", "+")))));
-
-            if (files.isEmpty()) {
-                LOGGER.info("Unable to locate test source file {}", fileName);
-            } else {
-                /*
-                 * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
-                 * test class name in the event that there are multiple matches.
-                 */
-                inputFile = files.get(0);
-            }
-        }
-
-        return inputFile == null ? null : context.getResource(inputFile);
-    }
-
-    private void saveMeasure(Resource resource, @Nonnull Metric metric, double value) {
-        if (Double.isNaN(value)) {
-            return;
-        }
-
-        context.saveMeasure(resource, metric, value);
     }
 }
