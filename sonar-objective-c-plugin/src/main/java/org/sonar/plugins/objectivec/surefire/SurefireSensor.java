@@ -32,8 +32,8 @@ import java.io.File;
 
 public class SurefireSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
-    public static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
+    private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
+    private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     private final Settings settings;
     private final FileSystem fileSystem;
