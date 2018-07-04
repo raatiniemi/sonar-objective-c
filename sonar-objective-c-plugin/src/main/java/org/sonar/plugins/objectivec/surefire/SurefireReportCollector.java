@@ -24,17 +24,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-final class SurefireParser {
+final class SurefireReportCollector {
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
-    private SurefireParser() {
+    private SurefireReportCollector() {
     }
 
     @Nonnull
     static List<File> collect(@Nonnull String baseReportDirectory) {
-        SurefireParser parser = new SurefireParser();
+        SurefireReportCollector collector = new SurefireReportCollector();
 
-        return parser.getAvailableReports(new File(baseReportDirectory));
+        return collector.getAvailableReports(new File(baseReportDirectory));
     }
 
     @Nonnull

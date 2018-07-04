@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
-public class SurefireParserTest {
+public class SurefireReportCollectorTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -39,14 +39,14 @@ public class SurefireParserTest {
 
     @Test
     public void collect_withoutExistingDirectory() {
-        List<File> availableReports = SurefireParser.collect("");
+        List<File> availableReports = SurefireReportCollector.collect("");
 
         assertTrue(availableReports.isEmpty());
     }
 
     @Test
     public void collect_withEmptyDirectory() {
-        List<File> availableReports = SurefireParser.collect(temporaryFolder.getRoot().getAbsolutePath());
+        List<File> availableReports = SurefireReportCollector.collect(temporaryFolder.getRoot().getAbsolutePath());
 
         assertTrue(availableReports.isEmpty());
     }
@@ -55,7 +55,7 @@ public class SurefireParserTest {
     public void collect_withSingleReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "empty");
 
-        List<File> availableReports = SurefireParser.collect(documentPath.toString());
+        List<File> availableReports = SurefireReportCollector.collect(documentPath.toString());
 
         assertEquals(1, availableReports.size());
     }
@@ -64,7 +64,7 @@ public class SurefireParserTest {
     public void collect_withMultipleReports() {
         Path documentPath = Paths.get(resourcePath.toString(), "reports");
 
-        List<File> availableReports = SurefireParser.collect(documentPath.toString());
+        List<File> availableReports = SurefireReportCollector.collect(documentPath.toString());
 
         assertEquals(2, availableReports.size());
     }

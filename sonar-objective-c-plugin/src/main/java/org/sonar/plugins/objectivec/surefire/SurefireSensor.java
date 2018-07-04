@@ -55,7 +55,7 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<File> availableReports = SurefireParser.collect(reportPath());
+        List<File> availableReports = SurefireReportCollector.collect(reportPath());
         List<TestReport> testReports = parseFiles(availableReports);
 
         SurefireReportPersistor persistor = SurefireReportPersistor.create(context);
