@@ -65,7 +65,7 @@ public class SurefireReportPersistorTest {
     }
 
     @Nonnull
-    private DefaultInputFile createFile(String relativePath) {
+    private DefaultInputFile createFile(@Nonnull String relativePath) {
         return new DefaultInputFile(context.module().key(), relativePath)
                 .setLanguage("bla")
                 .setType(InputFile.Type.TEST)
@@ -76,7 +76,8 @@ public class SurefireReportPersistorTest {
         context.fileSystem().add(inputFile);
     }
 
-    private <T extends Serializable> T getMeasure(String componentKey, String testKey) {
+    @Nonnull
+    private <T extends Serializable> T getMeasure(@Nonnull String componentKey, @Nonnull String testKey) {
         Measure<T> measure = context.measure(componentKey, testKey);
 
         return measure.value();
