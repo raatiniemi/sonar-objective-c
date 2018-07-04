@@ -39,14 +39,14 @@ final class SurefireParser {
     SurefireParser() {
     }
 
-    List<TestReport> collect(@Nonnull File baseReportDirectory) {
+    List<File> collect(@Nonnull File baseReportDirectory) {
         List<File> availableReports = getAvailableReports(baseReportDirectory);
 
         if (availableReports.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return parseFiles(availableReports);
+        return availableReports;
     }
 
     @Nonnull
