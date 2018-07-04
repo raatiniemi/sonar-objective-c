@@ -55,19 +55,21 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<File> availableReports = SurefireReportCollector.collect(reportPath());
+        List<File> availableReports = SurefireReportCollector.collect(getReportDirectoryPath());
         List<TestReport> testReports = parseFiles(availableReports);
 
         SurefireReportPersistor persistor = SurefireReportPersistor.create(context);
         persistor.saveReports(testReports);
     }
 
-    private String reportPath() {
-        String reportPath = settings.getString(REPORT_PATH_KEY);
-        if (reportPath == null) {
-            reportPath = DEFAULT_REPORT_PATH;
+    @Nonnull
+    private String getReportDirectoryPath() {
+        String reportDirectoryPath = settings.getString(REPORT_PATH_KEY);
+        if (reportDirectoryPath == null) {
+            return DEFAULT_REPORT_PATH;
         }
-        return reportPath;
+
+        return reportDirectoryPath;
     }
 
     @Nonnull
