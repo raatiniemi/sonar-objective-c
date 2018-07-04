@@ -50,7 +50,7 @@ final class ReportParser {
     }
 
     @Nonnull
-    public static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
         return new ReportParser(documentBuilder);
     }
 
