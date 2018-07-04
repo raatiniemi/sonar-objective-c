@@ -39,6 +39,7 @@ final class SurefireParser {
     SurefireParser() {
     }
 
+    @Nonnull
     List<File> collect(@Nonnull File baseReportDirectory) {
         List<File> availableReports = getAvailableReports(baseReportDirectory);
 
