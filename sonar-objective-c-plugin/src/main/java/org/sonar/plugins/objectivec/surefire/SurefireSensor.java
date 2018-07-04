@@ -31,6 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SurefireSensor implements Sensor {
@@ -80,6 +81,8 @@ public class SurefireSensor implements Sensor {
 
             return reports.stream()
                     .map(parser::parse)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .collect(Collectors.toList());
         } catch (ParserConfigurationException e) {
             LOGGER.error("Unable to create new document builder", e);

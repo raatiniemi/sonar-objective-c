@@ -27,8 +27,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class ReportParserTest {
@@ -46,9 +48,10 @@ public class ReportParserTest {
         Path documentPath = Paths.get(resourcePath.toString(), "empty", "TEST-empty.xml");
         TestReport expected = TestReport.create("TestTarget.xctest", Collections.emptyList());
 
-        TestReport actual = reportParser.parse(documentPath.toFile());
+        Optional<TestReport> actual = reportParser.parse(documentPath.toFile());
 
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -58,9 +61,10 @@ public class ReportParserTest {
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport expected = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
 
-        TestReport actual = reportParser.parse(documentPath.toFile());
+        Optional<TestReport> actual = reportParser.parse(documentPath.toFile());
 
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -77,9 +81,10 @@ public class ReportParserTest {
         testSuites.add(TestSuite.create("SecondClassNameTest", secondTestCases));
         TestReport expected = TestReport.create("TestTarget.xctest", testSuites);
 
-        TestReport actual = reportParser.parse(documentPath.toFile());
+        Optional<TestReport> actual = reportParser.parse(documentPath.toFile());
 
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -89,8 +94,9 @@ public class ReportParserTest {
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport expected = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
 
-        TestReport actual = reportParser.parse(documentPath.toFile());
+        Optional<TestReport> actual = reportParser.parse(documentPath.toFile());
 
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 }

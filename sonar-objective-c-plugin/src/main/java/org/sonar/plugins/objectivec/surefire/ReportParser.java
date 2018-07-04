@@ -25,7 +25,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -75,20 +74,20 @@ final class ReportParser {
         return element.getElementsByTagName(TEST_CASE);
     }
 
-    @Nullable
-    TestReport parse(@Nonnull File xmlFile) {
+    @Nonnull
+    Optional<TestReport> parse(@Nonnull File xmlFile) {
         try {
             Document document = documentBuilder.parse(xmlFile);
+            TestReport testReport = parseTestReport(document);
 
-            return parseTestReport(document);
+            return Optional.of(testReport);
         } catch (FileNotFoundException e) {
             LOGGER.error("Surefire report not found {}", xmlFile, e);
         } catch (IOException | SAXException e) {
             LOGGER.error("Error processing file named {}", xmlFile, e);
         }
 
-        // TODO: Prevent returning `null`.
-        return null;
+        return Optional.empty();
     }
 
     @Nonnull
