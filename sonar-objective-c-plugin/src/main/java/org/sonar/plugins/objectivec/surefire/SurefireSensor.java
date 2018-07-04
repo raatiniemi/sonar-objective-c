@@ -34,6 +34,7 @@ public class SurefireSensor implements Sensor {
 
     private final Settings settings;
 
+    @SuppressWarnings("WeakerAccess")
     public SurefireSensor(final Settings config) {
         this.settings = config;
     }
