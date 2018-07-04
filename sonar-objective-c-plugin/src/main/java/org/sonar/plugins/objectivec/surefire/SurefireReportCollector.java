@@ -27,23 +27,26 @@ import java.util.List;
 final class SurefireReportCollector {
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
-    private SurefireReportCollector() {
+    private final File reportDirectory;
+
+    private SurefireReportCollector(@Nonnull File reportDirectory) {
+        this.reportDirectory = reportDirectory;
     }
 
     @Nonnull
-    static List<File> collect(@Nonnull String baseReportDirectory) {
-        SurefireReportCollector collector = new SurefireReportCollector();
+    static List<File> collect(@Nonnull String reportDirectoryPath) {
+        SurefireReportCollector collector = new SurefireReportCollector(new File(reportDirectoryPath));
 
-        return collector.getAvailableReports(new File(baseReportDirectory));
+        return collector.getAvailableReports();
     }
 
     @Nonnull
-    private List<File> getAvailableReports(@Nonnull File baseReportDirectory) {
-        if (!baseReportDirectory.isDirectory() || !baseReportDirectory.exists()) {
+    private List<File> getAvailableReports() {
+        if (!reportDirectory.isDirectory() || !reportDirectory.exists()) {
             return Collections.emptyList();
         }
 
-        File[] availableReports = baseReportDirectory.listFiles(includeReports);
+        File[] availableReports = reportDirectory.listFiles(includeReports);
         if (null == availableReports) {
             return Collections.emptyList();
         }
