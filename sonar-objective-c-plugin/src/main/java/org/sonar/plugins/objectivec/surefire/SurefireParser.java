@@ -25,10 +25,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 final class SurefireParser {
 
@@ -61,14 +61,12 @@ final class SurefireParser {
     @Nonnull
     static List<TestReport> parseFiles(List<File> reports) {
         try {
-            List<TestReport> testReports = new ArrayList<>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             SurefireReportParser parser = SurefireReportParser.create(factory.newDocumentBuilder());
-            for (File report : reports) {
-                testReports.add(parser.parse(report));
-            }
 
-            return testReports;
+            return reports.stream()
+                    .map(parser::parse)
+                    .collect(Collectors.toList());
         } catch (ParserConfigurationException e) {
             LOGGER.error("Unable to create new document builder", e);
             return Collections.emptyList();
