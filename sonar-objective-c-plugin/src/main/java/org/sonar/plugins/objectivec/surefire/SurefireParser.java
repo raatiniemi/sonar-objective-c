@@ -17,23 +17,14 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 final class SurefireParser {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
-
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
     private SurefireParser() {
@@ -58,20 +49,5 @@ final class SurefireParser {
         }
 
         return Arrays.asList(availableReports);
-    }
-
-    @Nonnull
-    static List<TestReport> parseFiles(List<File> reports) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            SurefireReportParser parser = SurefireReportParser.create(factory.newDocumentBuilder());
-
-            return reports.stream()
-                    .map(parser::parse)
-                    .collect(Collectors.toList());
-        } catch (ParserConfigurationException e) {
-            LOGGER.error("Unable to create new document builder", e);
-            return Collections.emptyList();
-        }
     }
 }

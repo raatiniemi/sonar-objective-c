@@ -17,6 +17,8 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -24,10 +26,16 @@ import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SurefireSensor implements Sensor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
+
     private static final String NAME = "Surefire sensor";
     private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
     private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
@@ -48,7 +56,7 @@ public class SurefireSensor implements Sensor {
     @Override
     public void execute(@Nonnull SensorContext context) {
         List<File> availableReports = SurefireParser.collect(reportPath());
-        List<TestReport> testReports = SurefireParser.parseFiles(availableReports);
+        List<TestReport> testReports = parseFiles(availableReports);
 
         SurefireReportPersistor persistor = SurefireReportPersistor.create(context);
         persistor.saveReports(testReports);
@@ -60,5 +68,20 @@ public class SurefireSensor implements Sensor {
             reportPath = DEFAULT_REPORT_PATH;
         }
         return reportPath;
+    }
+
+    @Nonnull
+    private static List<TestReport> parseFiles(@Nonnull List<File> reports) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            SurefireReportParser parser = SurefireReportParser.create(factory.newDocumentBuilder());
+
+            return reports.stream()
+                    .map(parser::parse)
+                    .collect(Collectors.toList());
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("Unable to create new document builder", e);
+            return Collections.emptyList();
+        }
     }
 }
