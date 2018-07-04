@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name='TestTarget.xctest' tests='1' failures='0'>
+    <testsuite name='ClassNameTest' tests='1' failures='0'>
+        <testcase classname='ClassNameTest' name='testMethodName' time='0.002'/>
+    </testsuite>
+</testsuites>

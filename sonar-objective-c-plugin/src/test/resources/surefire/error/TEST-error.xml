@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name='TestTarget.xctest' tests='1' failures='1'>
+    <testsuite name='ClassNameTest' tests='1' failures='1'>
+        <testcase classname='ClassNameTest' name='testMethodName_withFailure'>
+            <failure message='Message for failure reason'>TargetNameTest/TestClassName.m:20</failure>
+        </testcase>
+    </testsuite>
+</testsuites>
