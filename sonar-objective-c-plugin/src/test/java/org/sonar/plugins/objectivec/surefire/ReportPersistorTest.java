@@ -38,7 +38,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class SurefireReportPersistorTest {
+public class ReportPersistorTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -47,12 +47,12 @@ public class SurefireReportPersistorTest {
     private DefaultInputFile secondClassNameTestFile;
 
     private SensorContextTester context;
-    private SurefireReportPersistor persistor;
+    private ReportPersistor persistor;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        persistor = SurefireReportPersistor.create(context);
+        persistor = ReportPersistor.create(context);
 
         classNameTestFile = createFile("ClassNameTest.m");
         firstClassNameTestFile = createFile("FirstClassNameTest.m");

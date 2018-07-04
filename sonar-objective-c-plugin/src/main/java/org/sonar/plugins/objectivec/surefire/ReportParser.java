@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-final class SurefireReportParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireReportParser.class);
+final class ReportParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
 
     private static final String TEST_SUITE = "testsuite";
     private static final String TEST_CASE = "testcase";
@@ -46,13 +46,13 @@ final class SurefireReportParser {
 
     private final DocumentBuilder documentBuilder;
 
-    private SurefireReportParser(@Nonnull DocumentBuilder documentBuilder) {
+    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
         this.documentBuilder = documentBuilder;
     }
 
     @Nonnull
-    public static SurefireReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new SurefireReportParser(documentBuilder);
+    public static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new ReportParser(documentBuilder);
     }
 
     @Nonnull

@@ -24,18 +24,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-final class SurefireReportCollector {
+final class ReportCollector {
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
     private final File reportDirectory;
 
-    private SurefireReportCollector(@Nonnull File reportDirectory) {
+    private ReportCollector(@Nonnull File reportDirectory) {
         this.reportDirectory = reportDirectory;
     }
 
     @Nonnull
     static List<File> collect(@Nonnull String reportDirectoryPath) {
-        SurefireReportCollector collector = new SurefireReportCollector(new File(reportDirectoryPath));
+        ReportCollector collector = new ReportCollector(new File(reportDirectoryPath));
 
         return collector.getAvailableReports();
     }

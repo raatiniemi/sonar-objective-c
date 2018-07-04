@@ -31,14 +31,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class SurefireReportParserTest {
+public class ReportParserTest {
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private final Path resourcePath = Paths.get("src", "test", "resources", "surefire");
-    private SurefireReportParser reportParser;
+    private ReportParser reportParser;
 
     @Before
     public void setUp() throws Exception {
-        reportParser = SurefireReportParser.create(factory.newDocumentBuilder());
+        reportParser = ReportParser.create(factory.newDocumentBuilder());
     }
 
     @Test

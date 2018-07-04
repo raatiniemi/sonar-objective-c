@@ -55,10 +55,10 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<File> availableReports = SurefireReportCollector.collect(getReportDirectoryPath());
+        List<File> availableReports = ReportCollector.collect(getReportDirectoryPath());
         List<TestReport> testReports = parseFiles(availableReports);
 
-        SurefireReportPersistor persistor = SurefireReportPersistor.create(context);
+        ReportPersistor persistor = ReportPersistor.create(context);
         persistor.saveReports(testReports);
     }
 
@@ -76,7 +76,7 @@ public class SurefireSensor implements Sensor {
     private static List<TestReport> parseFiles(@Nonnull List<File> reports) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            SurefireReportParser parser = SurefireReportParser.create(factory.newDocumentBuilder());
+            ReportParser parser = ReportParser.create(factory.newDocumentBuilder());
 
             return reports.stream()
                     .map(parser::parse)

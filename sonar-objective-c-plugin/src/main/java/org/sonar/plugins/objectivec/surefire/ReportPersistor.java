@@ -29,20 +29,20 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-final class SurefireReportPersistor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireReportPersistor.class);
+final class ReportPersistor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
 
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private SurefireReportPersistor(@Nonnull SensorContext context) {
+    private ReportPersistor(@Nonnull SensorContext context) {
         this.context = context;
         fileSystem = context.fileSystem();
     }
 
     @Nonnull
-    static SurefireReportPersistor create(@Nonnull SensorContext sensorContext) {
-        return new SurefireReportPersistor(sensorContext);
+    static ReportPersistor create(@Nonnull SensorContext sensorContext) {
+        return new ReportPersistor(sensorContext);
     }
 
     void saveReports(@Nonnull List<TestReport> testReports) {
