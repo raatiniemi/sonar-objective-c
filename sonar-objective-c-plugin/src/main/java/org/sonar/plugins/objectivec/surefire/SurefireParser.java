@@ -36,12 +36,14 @@ final class SurefireParser {
 
     private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
 
-    SurefireParser() {
+    private SurefireParser() {
     }
 
     @Nonnull
-    List<File> collect(@Nonnull File baseReportDirectory) {
-        return getAvailableReports(baseReportDirectory);
+    static List<File> collect(@Nonnull String baseReportDirectory) {
+        SurefireParser parser = new SurefireParser();
+
+        return parser.getAvailableReports(new File(baseReportDirectory));
     }
 
     @Nonnull

@@ -16,7 +16,9 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -28,10 +30,46 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class SurefireParserTest {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     private final Path resourcePath = Paths.get("src", "test", "resources", "surefire");
+
+    @Test
+    public void collect_withoutExistingDirectory() {
+        List<File> availableReports = SurefireParser.collect("");
+
+        assertTrue(availableReports.isEmpty());
+    }
+
+    @Test
+    public void collect_withEmptyDirectory() {
+        List<File> availableReports = SurefireParser.collect(temporaryFolder.getRoot().getAbsolutePath());
+
+        assertTrue(availableReports.isEmpty());
+    }
+
+    @Test
+    public void collect_withSingleReport() {
+        Path documentPath = Paths.get(resourcePath.toString(), "empty");
+
+        List<File> availableReports = SurefireParser.collect(documentPath.toString());
+
+        assertEquals(1, availableReports.size());
+    }
+
+    @Test
+    public void collect_withMultipleReports() {
+        Path documentPath = Paths.get(resourcePath.toString(), "reports");
+
+        List<File> availableReports = SurefireParser.collect(documentPath.toString());
+
+        assertEquals(2, availableReports.size());
+    }
 
     @Test
     public void testParseFiles_withEmptyReport() {
