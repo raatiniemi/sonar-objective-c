@@ -44,7 +44,7 @@ public class ReportParserTest {
     }
 
     @Test
-    public void parseFiles_withEmptyReport() {
+    public void parse_withEmptyReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "empty", "TEST-empty.xml");
         TestReport expected = TestReport.create("TestTarget.xctest", Collections.emptyList());
 
@@ -55,7 +55,7 @@ public class ReportParserTest {
     }
 
     @Test
-    public void parseFiles_withOneTestCaseReport() {
+    public void parse_withOneTestCaseReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "reports", "TEST-one-test-case.xml");
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
@@ -68,7 +68,7 @@ public class ReportParserTest {
     }
 
     @Test
-    public void parseFiles_withMultipleTestCasesReport() {
+    public void parse_withMultipleTestCasesReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "reports", "TEST-multiple-test-cases.xml");
         List<TestCase> firstTestCases = new ArrayList<>();
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName_withCondition", 0.003));
@@ -88,7 +88,7 @@ public class ReportParserTest {
     }
 
     @Test
-    public void parseFiles_withErrorReport() {
+    public void parse_withErrorReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "error", "TEST-error.xml");
         TestCase testCase = TestCase.failure("ClassNameTest", "testMethodName_withFailure");
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
