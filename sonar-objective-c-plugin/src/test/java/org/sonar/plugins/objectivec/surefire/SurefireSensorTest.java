@@ -46,15 +46,13 @@ public class SurefireSensorTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private final Path resourcePath = Paths.get("src", "test", "resources", "surefire", "reports");
+    private final MapSettings settings = new MapSettings();
 
     private SurefireSensor sensor;
     private SensorContextTester context;
 
     @Before
     public void setUp() {
-        MapSettings settings = new MapSettings();
-        settings.setProperty("sonar.junit.reportsPath", resourcePath.toString());
-
         sensor = new SurefireSensor(settings);
         context = SensorContextTester.create(temporaryFolder.getRoot());
     }
@@ -95,6 +93,7 @@ public class SurefireSensorTest {
 
     @Test
     public void execute() {
+        settings.setProperty("sonar.junit.reportsPath", resourcePath.toString());
         addFileToFs(createFile("FirstClassNameTest.m"));
         addFileToFs(createFile("SecondClassNameTest.m"));
 
@@ -106,5 +105,10 @@ public class SurefireSensorTest {
         assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
         assertEquals(Long.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+    }
+
+    @Test
+    public void execute_withoutReports() {
+        sensor.execute(context);
     }
 }

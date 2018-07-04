@@ -27,7 +27,6 @@ import org.xml.sax.SAXException;
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,16 +74,18 @@ final class ReportParser {
     }
 
     @Nonnull
-    Optional<TestReport> parse(@Nonnull File xmlFile) {
+    Optional<TestReport> parse(@Nonnull File xmlReportFile) {
+        if (!xmlReportFile.exists()) {
+            return Optional.empty();
+        }
+
         try {
-            Document document = documentBuilder.parse(xmlFile);
+            Document document = documentBuilder.parse(xmlReportFile);
             TestReport testReport = parseTestReport(document);
 
             return Optional.of(testReport);
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Surefire report not found {}", xmlFile, e);
         } catch (IOException | SAXException e) {
-            LOGGER.error("Error processing file named {}", xmlFile, e);
+            LOGGER.error("Error processing file named {}", xmlReportFile, e);
         }
 
         return Optional.empty();
