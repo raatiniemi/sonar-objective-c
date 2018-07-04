@@ -94,7 +94,7 @@ public class SurefireSensorTest {
     }
 
     @Test
-    public void testExecute() {
+    public void execute() {
         addFileToFs(createFile("FirstClassNameTest.m"));
         addFileToFs(createFile("SecondClassNameTest.m"));
 

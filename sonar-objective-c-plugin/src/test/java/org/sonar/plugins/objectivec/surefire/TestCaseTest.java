@@ -27,35 +27,35 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class TestCaseTest {
     @Test
-    public void testIsSuccess_withSuccessTestCase() {
+    public void isSuccess_withSuccessTestCase() {
         TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.001);
 
         assertTrue(testCase.isSuccess());
     }
 
     @Test
-    public void testIsSuccess_withFailureTestCase() {
+    public void isSuccess_withFailureTestCase() {
         TestCase testCase = TestCase.failure("TestClass", "TestMethod");
 
         assertFalse(testCase.isSuccess());
     }
 
     @Test
-    public void testGetDurationInMilliseconds_withLowestPossibleValue() {
+    public void getDurationInMilliseconds_withLowestPossibleValue() {
         TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.001);
 
         assertEquals(1, testCase.getDurationInMilliseconds());
     }
 
     @Test
-    public void testGetDurationInMilliseconds_withLongerTest() {
+    public void getDurationInMilliseconds_withLongerTest() {
         TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.123);
 
         assertEquals(123, testCase.getDurationInMilliseconds());
     }
 
     @Test
-    public void testGetDurationInMilliseconds_withLessThanOneMillisecond() {
+    public void getDurationInMilliseconds_withLessThanOneMillisecond() {
         TestCase testCase = TestCase.success("TestClass", "TestMethod", 0.0001);
 
         assertEquals(0, testCase.getDurationInMilliseconds());

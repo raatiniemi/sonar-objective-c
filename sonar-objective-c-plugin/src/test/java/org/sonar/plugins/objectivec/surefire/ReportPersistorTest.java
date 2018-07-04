@@ -84,14 +84,14 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void testSaveReports_withoutReports() {
+    public void saveReports_withoutReports() {
         persistor.saveReports(Collections.emptyList());
 
         // TODO: How can we verify that no measures are added.
     }
 
     @Test
-    public void testSaveReports_withEmptyReport() {
+    public void saveReports_withEmptyReport() {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.emptyList());
         addFileToFs(classNameTestFile);
 
@@ -101,7 +101,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void testParseFiles_withOneTestCaseReport() {
+    public void parseFiles_withOneTestCaseReport() {
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
@@ -115,7 +115,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void testParseFiles_withMultipleTestCasesReport() {
+    public void parseFiles_withMultipleTestCasesReport() {
         List<TestCase> firstTestCases = new ArrayList<>();
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName_withCondition", 0.003));
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName", 0.001));
@@ -140,7 +140,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void testParseFiles_withMultipleReports() {
+    public void parseFiles_withMultipleReports() {
         List<TestCase> firstTestCases = new ArrayList<>();
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName_withCondition", 0.003));
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName", 0.001));
@@ -164,7 +164,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void testParseFiles_withErrorReport() {
+    public void parseFiles_withErrorReport() {
         TestCase testCase = TestCase.failure("ClassNameTest", "testMethodName_withFailure");
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
@@ -178,7 +178,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void testParseFiles_withClassNameCategory() {
+    public void parseFiles_withClassNameCategory() {
         TestCase testCase = TestCase.success("BaseClassName_CategoryNameTests", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("BaseClassName_CategoryNameTests", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
