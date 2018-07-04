@@ -166,8 +166,9 @@ final class ReportParser {
         return !element.hasChildNodes();
     }
 
-    private boolean isFailureTestCase(Element element) {
+    private boolean isFailureTestCase(@Nonnull Element element) {
         NodeList failureElements = element.getElementsByTagName("failure");
+
         return 1 == failureElements.getLength();
     }
 }
