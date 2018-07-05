@@ -43,6 +43,7 @@ Binary packages are available in the release section.
 - Ensure OCLint violation reports are properly parsed and sent to SonarQube
 - Update available rules for OCLint
 - Include description from OCLint rules
+- Update Surefire report parsing to use new API
 
 ### Prerequisites
 
