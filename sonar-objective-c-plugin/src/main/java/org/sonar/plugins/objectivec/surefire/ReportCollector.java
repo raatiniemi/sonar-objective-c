@@ -17,15 +17,20 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 final class ReportCollector {
-    private static final FilenameFilter includeReports = (dir, name) -> name.startsWith("TEST") && name.endsWith(".xml");
+    private static final IOFileFilter includeReports = FileFilterUtils.and(
+            FileFilterUtils.prefixFileFilter("TEST"),
+            FileFilterUtils.suffixFileFilter("xml")
+    );
 
     private final File reportDirectory;
 
@@ -46,11 +51,11 @@ final class ReportCollector {
             return Collections.emptyList();
         }
 
-        File[] availableReports = reportDirectory.listFiles(includeReports);
-        if (null == availableReports) {
-            return Collections.emptyList();
-        }
-
-        return Arrays.asList(availableReports);
+        Collection<File> availableReports = FileUtils.listFiles(
+                reportDirectory,
+                includeReports,
+                FileFilterUtils.trueFileFilter()
+        );
+        return new ArrayList<>(availableReports);
     }
 }

@@ -68,4 +68,11 @@ public class ReportCollectorTest {
 
         assertEquals(2, availableReports.size());
     }
+
+    @Test
+    public void collect_withReportsInSeparateDirectories() {
+        List<File> availableReports = ReportCollector.collect(resourcePath.toString());
+
+        assertEquals(4, availableReports.size());
+    }
 }
