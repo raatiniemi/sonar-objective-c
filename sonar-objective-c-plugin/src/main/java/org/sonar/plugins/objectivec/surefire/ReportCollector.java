@@ -20,6 +20,8 @@ package org.sonar.plugins.objectivec.surefire;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -27,6 +29,7 @@ import java.io.FilenameFilter;
 import java.util.*;
 
 final class ReportCollector {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportCollector.class);
     private static final IOFileFilter includeReports = FileFilterUtils.and(
             FileFilterUtils.prefixFileFilter("TEST"),
             FileFilterUtils.suffixFileFilter("xml")
@@ -40,6 +43,7 @@ final class ReportCollector {
 
     @Nonnull
     static List<File> collect(@Nonnull String reportDirectoryPath) {
+        LOGGER.debug("Collecting Surefire reports from path: {}", reportDirectoryPath);
         ReportCollector collector = new ReportCollector(new File(reportDirectoryPath));
 
         return collector.getAvailableReports();
@@ -47,7 +51,13 @@ final class ReportCollector {
 
     @Nonnull
     private List<File> getAvailableReports() {
-        if (!reportDirectory.isDirectory() || !reportDirectory.exists()) {
+        if (!reportDirectory.exists()) {
+            LOGGER.info("Unable to collect Surefire reports, directory do not exists");
+            return Collections.emptyList();
+        }
+
+        if (!reportDirectory.isDirectory()) {
+            LOGGER.warn("Unable to collect Surefire reports, path is not a directory");
             return Collections.emptyList();
         }
 
@@ -56,6 +66,7 @@ final class ReportCollector {
                 includeReports,
                 FileFilterUtils.trueFileFilter()
         );
+        LOGGER.debug("Found {} Surefire report(s)", availableReports.size());
         return new ArrayList<>(availableReports);
     }
 }

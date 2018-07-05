@@ -76,6 +76,7 @@ final class ReportParser {
     @Nonnull
     Optional<TestReport> parse(@Nonnull File xmlReportFile) {
         if (!xmlReportFile.exists()) {
+            LOGGER.warn("Surefire report do not exist at path: {}", xmlReportFile.getPath());
             return Optional.empty();
         }
 

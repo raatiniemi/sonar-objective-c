@@ -67,6 +67,7 @@ public class SurefireSensor implements Sensor {
     private String getReportDirectoryPath() {
         String reportDirectoryPath = settings.getString(REPORT_PATH_KEY);
         if (reportDirectoryPath == null) {
+            LOGGER.info("No 'sonar.junit.reportsPath' specified, using default path");
             return DEFAULT_REPORT_PATH;
         }
 
