@@ -18,6 +18,7 @@ package org.sonar.plugins.objectivec.surefire;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -63,7 +64,8 @@ final class ReportPersistor {
     private Optional<InputFile> buildInputFile(@Nonnull String className) {
         String filename = buildFilename(className);
 
-        InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(filename));
+        FilePredicate predicate = fileSystem.predicates().matchesPathPattern("**/" + filename);
+        InputFile inputFile = fileSystem.inputFile(predicate);
         return Optional.ofNullable(inputFile);
     }
 
