@@ -43,7 +43,6 @@ public final class CoberturaSensor implements Sensor {
     private final Settings settings;
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
-    private Project project;
 
     public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
 
@@ -55,8 +54,6 @@ public final class CoberturaSensor implements Sensor {
     }
 
     public boolean shouldExecuteOnProject(final Project project) {
-        this.project = project;
-
         return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
     }
 
