@@ -39,11 +39,9 @@ public final class CoberturaSensor implements Sensor {
 
     private final ReportFilesFinder reportFilesFinder;
 
-    private final Settings settings;
     private final FileSystem fileSystem;
 
     public CoberturaSensor(final FileSystem fileSystem, final Settings settings) {
-        this.settings = settings;
         this.fileSystem = fileSystem;
 
         reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
