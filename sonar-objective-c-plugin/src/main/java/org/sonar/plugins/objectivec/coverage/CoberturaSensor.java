@@ -32,7 +32,6 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 
 public final class CoberturaSensor implements Sensor {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
 
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
@@ -56,22 +55,17 @@ public final class CoberturaSensor implements Sensor {
     }
 
     public boolean shouldExecuteOnProject(final Project project) {
-
         this.project = project;
 
         return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
     }
 
     public void analyse(final Project project, final SensorContext context) {
-
         final String projectBaseDir = fileSystem.baseDir().getPath();
 
         for (final File report : reportFilesFinder.reportsIn(projectBaseDir)) {
             LOGGER.info("Processing coverage report {}", report);
             CoberturaReportParser.parseReport(report, fileSystem, project, context);
         }
-
     }
-
-
 }
