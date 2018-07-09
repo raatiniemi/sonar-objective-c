@@ -26,7 +26,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -42,13 +41,10 @@ public final class CoberturaSensor implements Sensor {
 
     private final Settings settings;
     private final FileSystem fileSystem;
-    private final PathResolver pathResolver;
 
-    public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
-
+    public CoberturaSensor(final FileSystem fileSystem, final Settings settings) {
         this.settings = settings;
         this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;
 
         reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
     }
