@@ -17,8 +17,6 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -29,6 +27,7 @@ import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
+import java.io.File;
 
 public final class CoberturaSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
