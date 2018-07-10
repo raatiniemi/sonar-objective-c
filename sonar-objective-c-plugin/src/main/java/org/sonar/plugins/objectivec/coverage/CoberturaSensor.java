@@ -49,7 +49,7 @@ public final class CoberturaSensor implements Sensor {
 
         for (final File report : reportFilesFinder.reportsIn(projectBaseDir)) {
             LOGGER.info("Processing coverage report {}", report);
-            CoberturaReportParser.parseReport(report, context.fileSystem(), context);
+            CoberturaReportParser.parseReport(report, context);
         }
     }
 

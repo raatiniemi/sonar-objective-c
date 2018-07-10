@@ -43,19 +43,19 @@ import java.util.Map;
 final class CoberturaReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 
-    private final FileSystem fileSystem;
     private final SensorContext context;
+    private final FileSystem fileSystem;
 
-    private CoberturaReportParser(FileSystem fileSystem, SensorContext context) {
-        this.fileSystem = fileSystem;
+    private CoberturaReportParser(SensorContext context) {
         this.context = context;
+        fileSystem = context.fileSystem();
     }
 
     /**
      * Parse a Cobertura xml report and create measures accordingly
      */
-    public static void parseReport(File xmlFile, FileSystem fileSystem, SensorContext context) {
-        new CoberturaReportParser(fileSystem, context).parse(xmlFile);
+    public static void parseReport(File xmlFile, SensorContext context) {
+        new CoberturaReportParser(context).parse(xmlFile);
     }
 
     private void parse(File xmlFile) {
