@@ -29,7 +29,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
@@ -42,24 +41,21 @@ import java.util.Locale;
 import java.util.Map;
 
 final class CoberturaReportParser {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 
     private final FileSystem fileSystem;
-    private final Project project;
     private final SensorContext context;
 
-    private CoberturaReportParser(FileSystem fileSystem, Project project, SensorContext context) {
+    private CoberturaReportParser(FileSystem fileSystem, SensorContext context) {
         this.fileSystem = fileSystem;
-        this.project = project;
         this.context = context;
     }
 
     /**
      * Parse a Cobertura xml report and create measures accordingly
      */
-    public static void parseReport(File xmlFile, FileSystem fileSystem, Project project, SensorContext context) {
-        new CoberturaReportParser(fileSystem, project, context).parse(xmlFile);
+    public static void parseReport(File xmlFile, FileSystem fileSystem, SensorContext context) {
+        new CoberturaReportParser(fileSystem, context).parse(xmlFile);
     }
 
     private void parse(File xmlFile) {
