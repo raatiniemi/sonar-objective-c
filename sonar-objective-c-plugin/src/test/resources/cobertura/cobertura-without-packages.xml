@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+<coverage line-rate="1.0000000000000000" branch-rate="1.0000000000000000" lines-covered="0" lines-valid="0"
+          branches-covered="0" branches-valid="0" complexity="0.0" timestamp="1530852376" version="Slather 2.4.5">
+    <sources>
+        <source>...</source>
+    </sources>
+    <packages/>
+</coverage>
