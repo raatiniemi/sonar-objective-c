@@ -43,7 +43,7 @@ public class ReportParserTest {
     }
 
     @Test
-    public void parseFiles_withoutReport() {
+    public void parse_withoutReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "TEST-non-existing.xml");
 
         Optional<TestReport> actual = reportParser.parse(documentPath.toFile());
