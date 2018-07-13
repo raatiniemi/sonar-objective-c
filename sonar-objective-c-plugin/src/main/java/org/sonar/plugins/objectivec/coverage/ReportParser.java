@@ -16,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 final class ReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
@@ -125,9 +127,89 @@ final class ReportParser {
     @Nonnull
     private Line parseLine(@Nonnull Element lineElement) {
         int number = Integer.valueOf(lineElement.getAttribute("number"));
-        boolean branch = lineElement.getAttribute("branch").equalsIgnoreCase("true");
         int hits = Integer.valueOf(lineElement.getAttribute("hits"));
 
-        return Line.from(number, branch, hits);
+        Optional<ConditionCoverage> conditionCoverageValue = parseConditionCoverage(lineElement);
+        if (conditionCoverageValue.isPresent()) {
+            ConditionCoverage conditionCoverage = conditionCoverageValue.get();
+            return Line.from(number, hits, conditionCoverage.conditions, conditionCoverage.conditionsCovered);
+        }
+
+        return Line.from(number, hits);
+    }
+
+    @Nonnull
+    private Optional<ConditionCoverage> parseConditionCoverage(@Nonnull Element lineElement) {
+        if (isNotBranch(lineElement)) {
+            return Optional.empty();
+        }
+
+        return parseConditionCoverageValues(lineElement);
+
+    }
+
+    private boolean isNotBranch(@Nonnull Element lineElement) {
+        return !lineElement.getAttribute("branch").equalsIgnoreCase("true");
+    }
+
+    @Nonnull
+    private Optional<ConditionCoverage> parseConditionCoverageValues(@Nonnull Element lineElement) {
+        String rawConditionCoverageValue = lineElement.getAttribute("condition-coverage");
+        if (isConditionCoverageValueMissing(rawConditionCoverageValue)) {
+            return Optional.empty();
+        }
+
+        return extractConditionCoverageValue(rawConditionCoverageValue);
+    }
+
+    private boolean isConditionCoverageValueMissing(String rawConditionCoverageValue) {
+        return rawConditionCoverageValue == null || rawConditionCoverageValue.isEmpty();
+    }
+
+    @Nonnull
+    private Optional<ConditionCoverage> extractConditionCoverageValue(String rawConditionCoverageValue) {
+        String conditionCoverage = StringUtils.substringBetween(rawConditionCoverageValue, "(", ")");
+        String[] conditionCoverageValues = StringUtils.split(conditionCoverage, "/");
+        if (isConditionCoverageValuesValid(conditionCoverageValues)) {
+            return Optional.empty();
+        }
+
+        try {
+            int conditionsCovered = Integer.valueOf(conditionCoverageValues[0]);
+            int conditions = Integer.valueOf(conditionCoverageValues[1]);
+
+            if (0 == conditions) {
+                LOGGER.warn("Condition coverage exists but number conditions are zero");
+                return Optional.empty();
+            }
+
+            if (conditions < conditionsCovered) {
+                LOGGER.warn("Number of covered conditions are higher than the number of conditions");
+                return Optional.empty();
+            }
+
+            return Optional.of(ConditionCoverage.from(conditions, conditionsCovered));
+        } catch (NumberFormatException e) {
+            LOGGER.error("Unable to parse condition coverage from: {}", rawConditionCoverageValue, e);
+            return Optional.empty();
+        }
+    }
+
+    private boolean isConditionCoverageValuesValid(String[] conditionCoverageValues) {
+        return conditionCoverageValues == null || 2 != conditionCoverageValues.length;
+    }
+
+    private static class ConditionCoverage {
+        private final int conditions;
+        private final int conditionsCovered;
+
+        private ConditionCoverage(int conditions, int conditionsCovered) {
+            this.conditions = conditions;
+            this.conditionsCovered = conditionsCovered;
+        }
+
+        static ConditionCoverage from(int conditions, int conditionsCovered) {
+            return new ConditionCoverage(conditions, conditionsCovered);
+        }
     }
 }

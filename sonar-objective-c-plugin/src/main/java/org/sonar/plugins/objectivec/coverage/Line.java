@@ -21,17 +21,23 @@ import java.util.Objects;
 
 final class Line {
     private final int number;
-    private final boolean branch;
     private final int hits;
+    private final int conditions;
+    private final int conditionsCovered;
 
-    private Line(int number, boolean branch, int hits) {
+    private Line(int number, int hits, int conditions, int conditionsCovered) {
         this.number = number;
-        this.branch = branch;
         this.hits = hits;
+        this.conditions = conditions;
+        this.conditionsCovered = conditionsCovered;
     }
 
-    static Line from(int number, boolean branch, int hits) {
-        return new Line(number, branch, hits);
+    static Line from(int number, int hits, int conditions, int conditionsCovered) {
+        return new Line(number, hits, conditions, conditionsCovered);
+    }
+
+    static Line from(int number, int hits) {
+        return Line.from(number, hits, 0, 0);
     }
 
     @Override
@@ -45,12 +51,23 @@ final class Line {
         }
 
         Line line = (Line) o;
-        return number == line.number &&
-                branch == line.branch;
+        return number == line.number
+                && conditions == line.conditions
+                && conditionsCovered == line.conditionsCovered;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, branch);
+        return Objects.hash(number, conditions, conditionsCovered);
+    }
+
+    @Override
+    public String toString() {
+        return "Line{" +
+                "number=" + number +
+                ", hits=" + hits +
+                ", conditions=" + conditions +
+                ", conditionsCovered=" + conditionsCovered +
+                '}';
     }
 }

@@ -76,8 +76,46 @@ public class ReportParserTest {
     public void parse_withOneClass() {
         Path documentPath = Paths.get(resourcePath.toString(), "cobertura-with-one-class.xml");
         List<Line> lines = new ArrayList<>();
-        lines.add(Line.from(13, false, 7));
-        lines.add(Line.from(14, false, 7));
+        lines.add(Line.from(13, 7));
+        lines.add(Line.from(14, 7));
+        List<CoberturaClass> classes = new ArrayList<>();
+        classes.add(CoberturaClass.from("PackageName/ClassName.m", lines));
+        CoberturaPackage coberturaPackage = CoberturaPackage.from("PackageName", classes);
+        List<CoberturaPackage> expected = new ArrayList<>();
+        expected.add(coberturaPackage);
+
+        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+
+        assertFalse(actual.isEmpty());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parse_withConditions() {
+        Path documentPath = Paths.get(resourcePath.toString(), "cobertura-with-conditions.xml");
+        List<Line> lines = new ArrayList<>();
+        lines.add(Line.from(14, 7, 2, 1));
+        List<CoberturaClass> classes = new ArrayList<>();
+        classes.add(CoberturaClass.from("PackageName/ClassName.m", lines));
+        CoberturaPackage coberturaPackage = CoberturaPackage.from("PackageName", classes);
+        List<CoberturaPackage> expected = new ArrayList<>();
+        expected.add(coberturaPackage);
+
+        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+
+        assertFalse(actual.isEmpty());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parse_withInvalidConditions() {
+        Path documentPath = Paths.get(resourcePath.toString(), "cobertura-with-invalid-conditions.xml");
+        List<Line> lines = new ArrayList<>();
+        lines.add(Line.from(14, 7));
+        lines.add(Line.from(15, 7));
+        lines.add(Line.from(16, 7));
+        lines.add(Line.from(17, 7));
+        lines.add(Line.from(18, 7));
         List<CoberturaClass> classes = new ArrayList<>();
         classes.add(CoberturaClass.from("PackageName/ClassName.m", lines));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("PackageName", classes);

@@ -48,7 +48,7 @@ public class LineEqualHashCodeTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters() {
-        Line line = Line.from(1, false, 2);
+        Line line = Line.from(1, 2);
 
         return Arrays.asList(
                 new Object[][]{
@@ -74,25 +74,37 @@ public class LineEqualHashCodeTest {
                                 "With different number",
                                 Boolean.FALSE,
                                 line,
-                                Line.from(2, false, 2)
+                                Line.from(2, 2)
                         },
                         {
-                                "With different branch",
+                                "With different conditions",
                                 Boolean.FALSE,
-                                line,
-                                Line.from(1, true, 2)
+                                Line.from(1, 5, 1, 0),
+                                Line.from(1, 5, 2, 0)
+                        },
+                        {
+                                "With different conditions covered",
+                                Boolean.FALSE,
+                                Line.from(1, 5, 2, 2),
+                                Line.from(1, 5, 2, 1)
                         },
                         {
                                 "With different hits",
                                 Boolean.TRUE,
                                 line,
-                                Line.from(1, false, 5)
+                                Line.from(1, 5)
                         },
                         {
                                 "With same values",
                                 Boolean.TRUE,
                                 line,
-                                Line.from(1, false, 2)
+                                Line.from(1, 2)
+                        },
+                        {
+                                "With same values and conditions",
+                                Boolean.TRUE,
+                                Line.from(1, 2, 4,3),
+                                Line.from(1, 2, 4,3)
                         }
                 }
         );

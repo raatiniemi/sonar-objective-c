@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+<coverage line-rate="1.0000000000000000" branch-rate="1.0000000000000000" lines-covered="14" lines-valid="14"
+          branches-covered="0" branches-valid="0" complexity="0.0" timestamp="1530852376" version="Slather 2.4.5">
+    <sources>
+        <source>...</source>
+    </sources>
+    <packages>
+        <package name="PackageName" line-rate="0.7895196506550218" branch-rate="1.0000000000000000" complexity="0.0">
+            <classes>
+                <class name="ClassName.m" filename="PackageName/ClassName.m"
+                       line-rate="1.0000000000000000" branch-rate="1.0000000000000000" complexity="0.0">
+                    <methods/>
+                    <lines>
+                        <line number="14" hits="7" branch="true" condition-coverage="150% (2/1)">
+                            <conditions>
+                                <condition number="0" type="jump" coverage="150%"/>
+                            </conditions>
+                        </line>
+                        <line number="15" hits="7" branch="true"/>
+                        <line number="16" hits="7" branch="true" condition-coverage=""/>
+                        <line number="17" hits="7" branch="true" condition-coverage="100% (0/0)"/>
+                        <line number="18" hits="7" branch="true" condition-coverage="100% (a/b)"/>
+                    </lines>
+                </class>
+            </classes>
+        </package>
+    </packages>
+</coverage>

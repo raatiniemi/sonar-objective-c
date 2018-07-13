@@ -49,7 +49,7 @@ public class CoberturaPackageEqualHashCodeTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters() {
-        Line line = Line.from(1, false, 2);
+        Line line = Line.from(1, 2);
         CoberturaClass coberturaClass = CoberturaClass.from("RASqlite/RASqlite.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("RASqlite", Collections.singletonList(coberturaClass));
 
