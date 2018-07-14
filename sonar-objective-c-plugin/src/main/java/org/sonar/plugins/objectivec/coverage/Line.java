@@ -1,5 +1,4 @@
 /*
- * Copyright © 2012 OCTO Technology, Backelite (${email})
  * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
