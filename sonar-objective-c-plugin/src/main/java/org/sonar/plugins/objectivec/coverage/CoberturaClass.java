@@ -16,10 +16,7 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 final class CoberturaClass {
     private final String filename;
@@ -32,6 +29,14 @@ final class CoberturaClass {
 
     static CoberturaClass from(String filename, List<Line> lines) {
         return new CoberturaClass(filename, lines);
+    }
+
+    String getFilename() {
+        return filename;
+    }
+
+    Collection<Line> getLines() {
+        return Collections.unmodifiableCollection(lines);
     }
 
     @Override

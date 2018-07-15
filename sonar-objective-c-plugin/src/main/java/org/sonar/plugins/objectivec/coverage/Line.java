@@ -39,6 +39,26 @@ final class Line {
         return Line.from(number, hits, 0, 0);
     }
 
+    int getNumber() {
+        return number;
+    }
+
+    int getHits() {
+        return hits;
+    }
+
+    int getConditions() {
+        return conditions;
+    }
+
+    int getConditionsCovered() {
+        return conditionsCovered;
+    }
+
+    boolean hasConditions() {
+        return conditions > 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

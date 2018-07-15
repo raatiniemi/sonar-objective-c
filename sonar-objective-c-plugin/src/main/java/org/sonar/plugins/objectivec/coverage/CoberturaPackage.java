@@ -16,10 +16,8 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 final class CoberturaPackage {
     private final String name;
@@ -32,6 +30,11 @@ final class CoberturaPackage {
 
     static CoberturaPackage from(String name, List<CoberturaClass> classes) {
         return new CoberturaPackage(name, new LinkedHashSet<>(classes));
+    }
+
+    @Nonnull
+    Collection<CoberturaClass> getClasses() {
+        return Collections.unmodifiableCollection(classes);
     }
 
     @Override
