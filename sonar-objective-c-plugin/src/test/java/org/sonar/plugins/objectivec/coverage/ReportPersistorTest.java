@@ -106,6 +106,21 @@ public class ReportPersistorTest {
     }
 
     @Test
+    public void saveReports_withZeroLineNumber() {
+        Line line = Line.from(0, 0);
+        CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
+        CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
+        List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
+        addFileToFs(classNameFile);
+
+        persistor.saveReports(coberturaPackages);
+
+        assertNull(context.lineHits(classNameFile.key(), 0));
+        assertNull(context.conditions(classNameFile.key(), 0));
+        assertNull(context.coveredConditions(classNameFile.key(), 0));
+    }
+
+    @Test
     public void saveReports_withSimpleClass() {
         Line line = Line.from(1, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));

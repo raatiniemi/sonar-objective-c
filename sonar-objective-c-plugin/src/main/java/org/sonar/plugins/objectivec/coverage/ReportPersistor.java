@@ -28,9 +28,11 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 final class ReportPersistor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
+    private static final Predicate<Line> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
     private final SensorContext context;
     private final FileSystem fileSystem;
@@ -70,7 +72,8 @@ final class ReportPersistor {
 
     // TODO: Method should be renamed
     private void saveReportForClass(@Nonnull InputFile inputFile, @Nonnull CoberturaClass coberturaClass) {
-        coberturaClass.getLines()
+        coberturaClass.getLines().stream()
+                .filter(excludeWithZeroLineNumber)
                 .forEach(saveCoverageForLine(inputFile));
     }
 
