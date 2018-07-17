@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 
 final class ReportPersistor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
-    private static final Predicate<Line> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
+    private static final Predicate<CoberturaLine> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
     private final SensorContext context;
     private final FileSystem fileSystem;
@@ -77,7 +77,7 @@ final class ReportPersistor {
                 .forEach(saveCoverageForLine(inputFile));
     }
 
-    private Consumer<Line> saveCoverageForLine(InputFile inputFile) {
+    private Consumer<CoberturaLine> saveCoverageForLine(InputFile inputFile) {
         return line -> {
             NewCoverage newCoverage = context.newCoverage()
                     .onFile(inputFile)

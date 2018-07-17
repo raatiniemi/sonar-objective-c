@@ -93,7 +93,7 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withoutClassFile() {
-        Line line = Line.from(1, 1);
+        CoberturaLine line = CoberturaLine.from(1, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
@@ -107,7 +107,7 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withZeroLineNumber() {
-        Line line = Line.from(0, 0);
+        CoberturaLine line = CoberturaLine.from(0, 0);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
@@ -122,7 +122,7 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withSimpleClass() {
-        Line line = Line.from(1, 1);
+        CoberturaLine line = CoberturaLine.from(1, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
@@ -137,7 +137,7 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withConditions() {
-        Line line = Line.from(1, 1, 2, 1);
+        CoberturaLine line = CoberturaLine.from(1, 1, 2, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
@@ -152,9 +152,9 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withLines() {
-        List<Line> lines = Arrays.asList(
-                Line.from(1, 1),
-                Line.from(2, 1)
+        List<CoberturaLine> lines = Arrays.asList(
+                CoberturaLine.from(1, 1),
+                CoberturaLine.from(2, 1)
         );
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", lines);
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
@@ -173,9 +173,9 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withFiles() {
-        List<Line> lines = Arrays.asList(
-                Line.from(1, 1),
-                Line.from(2, 2, 2, 2)
+        List<CoberturaLine> lines = Arrays.asList(
+                CoberturaLine.from(1, 1),
+                CoberturaLine.from(2, 2, 2, 2)
         );
         List<CoberturaClass> coberturaClasses = Arrays.asList(
                 CoberturaClass.from("TargetName/ClassName.m", lines),
@@ -204,9 +204,9 @@ public class ReportPersistorTest {
 
     @Test
     public void saveReports_withTargets() {
-        List<Line> lines = Arrays.asList(
-                Line.from(1, 1),
-                Line.from(2, 2, 2, 2)
+        List<CoberturaLine> lines = Arrays.asList(
+                CoberturaLine.from(1, 1),
+                CoberturaLine.from(2, 2, 2, 2)
         );
         List<CoberturaPackage> coberturaPackages = Arrays.asList(
                 CoberturaPackage.from(

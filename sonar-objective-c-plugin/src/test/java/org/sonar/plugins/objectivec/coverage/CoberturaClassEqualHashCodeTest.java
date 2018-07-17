@@ -49,7 +49,7 @@ public class CoberturaClassEqualHashCodeTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters() {
-        Line line = Line.from(1, 2);
+        CoberturaLine line = CoberturaLine.from(1, 2);
         CoberturaClass clazz = CoberturaClass.from("RASqlite/RASqlite.m", Collections.singletonList(line));
 
         return Arrays.asList(
@@ -84,7 +84,7 @@ public class CoberturaClassEqualHashCodeTest {
                                 clazz,
                                 CoberturaClass.from(
                                         "RASqlite/RASqlite.m",
-                                        Collections.singletonList(Line.from(2, 4))
+                                        Collections.singletonList(CoberturaLine.from(2, 4))
                                 )
                         },
                         {

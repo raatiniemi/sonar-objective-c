@@ -28,16 +28,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 @RunWith(Parameterized.class)
-public class LineEqualHashCodeTest {
+public class CoberturaLineEqualHashCodeTest {
     private final String message;
     private final Boolean expected;
-    private final Line line;
+    private final CoberturaLine line;
     private final Object compareTo;
 
-    public LineEqualHashCodeTest(
+    public CoberturaLineEqualHashCodeTest(
             String message,
             Boolean expected,
-            Line line,
+            CoberturaLine line,
             Object compareTo
     ) {
         this.message = message;
@@ -48,7 +48,7 @@ public class LineEqualHashCodeTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters() {
-        Line line = Line.from(1, 2);
+        CoberturaLine line = CoberturaLine.from(1, 2);
 
         return Arrays.asList(
                 new Object[][]{
@@ -74,37 +74,37 @@ public class LineEqualHashCodeTest {
                                 "With different number",
                                 Boolean.FALSE,
                                 line,
-                                Line.from(2, 2)
+                                CoberturaLine.from(2, 2)
                         },
                         {
                                 "With different conditions",
                                 Boolean.FALSE,
-                                Line.from(1, 5, 1, 0),
-                                Line.from(1, 5, 2, 0)
+                                CoberturaLine.from(1, 5, 1, 0),
+                                CoberturaLine.from(1, 5, 2, 0)
                         },
                         {
                                 "With different conditions covered",
                                 Boolean.FALSE,
-                                Line.from(1, 5, 2, 2),
-                                Line.from(1, 5, 2, 1)
+                                CoberturaLine.from(1, 5, 2, 2),
+                                CoberturaLine.from(1, 5, 2, 1)
                         },
                         {
                                 "With different hits",
                                 Boolean.TRUE,
                                 line,
-                                Line.from(1, 5)
+                                CoberturaLine.from(1, 5)
                         },
                         {
                                 "With same values",
                                 Boolean.TRUE,
                                 line,
-                                Line.from(1, 2)
+                                CoberturaLine.from(1, 2)
                         },
                         {
                                 "With same values and conditions",
                                 Boolean.TRUE,
-                                Line.from(1, 2, 4,3),
-                                Line.from(1, 2, 4,3)
+                                CoberturaLine.from(1, 2, 4,3),
+                                CoberturaLine.from(1, 2, 4,3)
                         }
                 }
         );

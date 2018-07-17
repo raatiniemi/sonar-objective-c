@@ -20,14 +20,14 @@ import java.util.*;
 
 final class CoberturaClass {
     private final String filename;
-    private final Set<Line> lines;
+    private final Set<CoberturaLine> lines;
 
-    private CoberturaClass(String filename, List<Line> lines) {
+    private CoberturaClass(String filename, List<CoberturaLine> lines) {
         this.filename = filename;
         this.lines = new LinkedHashSet<>(lines);
     }
 
-    static CoberturaClass from(String filename, List<Line> lines) {
+    static CoberturaClass from(String filename, List<CoberturaLine> lines) {
         return new CoberturaClass(filename, lines);
     }
 
@@ -35,7 +35,7 @@ final class CoberturaClass {
         return filename;
     }
 
-    Collection<Line> getLines() {
+    Collection<CoberturaLine> getLines() {
         return Collections.unmodifiableCollection(lines);
     }
 

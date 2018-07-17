@@ -109,7 +109,7 @@ final class ReportParser {
     private CoberturaClass parseClass(@Nonnull Element classElement) {
         String filename = classElement.getAttribute("filename");
 
-        List<Line> lines = new ArrayList<>();
+        List<CoberturaLine> lines = new ArrayList<>();
         NodeList lineElements = classElement.getElementsByTagName("line");
         for (int i = 0; i < lineElements.getLength(); i++) {
             Node node = lineElements.item(i);
@@ -125,17 +125,17 @@ final class ReportParser {
     }
 
     @Nonnull
-    private Line parseLine(@Nonnull Element lineElement) {
+    private CoberturaLine parseLine(@Nonnull Element lineElement) {
         int number = Integer.valueOf(lineElement.getAttribute("number"));
         int hits = Integer.valueOf(lineElement.getAttribute("hits"));
 
         Optional<ConditionCoverage> conditionCoverageValue = parseConditionCoverage(lineElement);
         if (conditionCoverageValue.isPresent()) {
             ConditionCoverage conditionCoverage = conditionCoverageValue.get();
-            return Line.from(number, hits, conditionCoverage.conditions, conditionCoverage.conditionsCovered);
+            return CoberturaLine.from(number, hits, conditionCoverage.conditions, conditionCoverage.conditionsCovered);
         }
 
-        return Line.from(number, hits);
+        return CoberturaLine.from(number, hits);
     }
 
     @Nonnull

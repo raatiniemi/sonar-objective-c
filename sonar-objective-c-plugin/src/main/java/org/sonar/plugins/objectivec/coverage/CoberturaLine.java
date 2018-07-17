@@ -18,25 +18,25 @@ package org.sonar.plugins.objectivec.coverage;
 
 import java.util.Objects;
 
-final class Line {
+final class CoberturaLine {
     private final int number;
     private final int hits;
     private final int conditions;
     private final int conditionsCovered;
 
-    private Line(int number, int hits, int conditions, int conditionsCovered) {
+    private CoberturaLine(int number, int hits, int conditions, int conditionsCovered) {
         this.number = number;
         this.hits = hits;
         this.conditions = conditions;
         this.conditionsCovered = conditionsCovered;
     }
 
-    static Line from(int number, int hits, int conditions, int conditionsCovered) {
-        return new Line(number, hits, conditions, conditionsCovered);
+    static CoberturaLine from(int number, int hits, int conditions, int conditionsCovered) {
+        return new CoberturaLine(number, hits, conditions, conditionsCovered);
     }
 
-    static Line from(int number, int hits) {
-        return Line.from(number, hits, 0, 0);
+    static CoberturaLine from(int number, int hits) {
+        return CoberturaLine.from(number, hits, 0, 0);
     }
 
     int getNumber() {
@@ -65,11 +65,11 @@ final class Line {
             return true;
         }
 
-        if (!(o instanceof Line)) {
+        if (!(o instanceof CoberturaLine)) {
             return false;
         }
 
-        Line line = (Line) o;
+        CoberturaLine line = (CoberturaLine) o;
         return number == line.number
                 && conditions == line.conditions
                 && conditionsCovered == line.conditionsCovered;
@@ -82,7 +82,7 @@ final class Line {
 
     @Override
     public String toString() {
-        return "Line{" +
+        return "CoberturaLine{" +
                 "number=" + number +
                 ", hits=" + hits +
                 ", conditions=" + conditions +
