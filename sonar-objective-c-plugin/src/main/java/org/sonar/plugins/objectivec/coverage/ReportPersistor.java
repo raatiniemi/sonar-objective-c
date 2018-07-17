@@ -70,7 +70,6 @@ final class ReportPersistor {
         return Optional.ofNullable(inputFile);
     }
 
-    // TODO: Method should be renamed
     private void saveReportForClass(@Nonnull InputFile inputFile, @Nonnull CoberturaClass coberturaClass) {
         coberturaClass.getLines().stream()
                 .filter(excludeWithZeroLineNumber)
