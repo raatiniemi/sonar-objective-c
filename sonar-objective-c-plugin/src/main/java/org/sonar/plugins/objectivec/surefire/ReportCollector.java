@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 final class ReportCollector {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportCollector.class);
