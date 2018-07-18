@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,61 +17,82 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
+import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class CoberturaSensor implements Sensor {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
-
+    private static final String NAME = "Cobertura sensor";
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
             + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
 
-    private final ReportFilesFinder reportFilesFinder;
-
     private final Settings settings;
-    private final FileSystem fileSystem;
-    private final PathResolver pathResolver;
-    private Project project;
 
-    public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
-
+    @SuppressWarnings("WeakerAccess")
+    public CoberturaSensor(final Settings settings) {
         this.settings = settings;
-        this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;
-
-        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
     }
 
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        this.project = project;
-
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
     }
 
-    public void analyse(final Project project, final SensorContext context) {
+    @Override
+    public void execute(@Nonnull SensorContext context) {
+        List<CoberturaPackage> availableReports = collectAndParseAvailableReports(context);
 
-        final String projectBaseDir = fileSystem.baseDir().getPath();
+        ReportPersistor reportPersistor = ReportPersistor.create(context);
+        reportPersistor.saveReports(availableReports);
+    }
 
-        for (final File report : reportFilesFinder.reportsIn(projectBaseDir)) {
-            LOGGER.info("Processing coverage report {}", report);
-            CoberturaReportParser.parseReport(report, fileSystem, project, context);
+    @Nonnull
+    private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull SensorContext context) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            ReportParser reportParser = ReportParser.create(factory.newDocumentBuilder());
+
+            return collectAvailableReports(context)
+                    .map(reportParser::parse)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("Unable to create document builder", e);
+            return Collections.emptyList();
+        }
+    }
+
+    @Nonnull
+    private Stream<File> collectAvailableReports(@Nonnull SensorContext context) {
+        return ReportCollector.collect(context.fileSystem().baseDir().getAbsolutePath(), getReportFilePattern()).stream();
+    }
+
+    @Nonnull
+    private String getReportFilePattern() {
+        String reportPath = settings.getString(REPORT_PATTERN_KEY);
+
+        if (reportPath == null) {
+            LOGGER.debug("No value specified for \"" + REPORT_PATTERN_KEY + "\" using default report pattern");
+            reportPath = DEFAULT_REPORT_PATTERN;
         }
 
+        return reportPath;
     }
-
-
 }

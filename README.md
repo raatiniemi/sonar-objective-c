@@ -44,6 +44,7 @@ Binary packages are available in the release section.
 - Update available rules for OCLint
 - Include description from OCLint rules
 - Update Surefire report parsing to use new API
+- Update Cobertura report parsing to use new API
 
 ### Prerequisites
 
