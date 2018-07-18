@@ -51,7 +51,7 @@ final class ReportPersistor {
             for (TestSuite testSuite : testReport.getTestSuites()) {
                 Optional<InputFile> value = buildInputFile(testSuite.getClassName());
                 if (value.isPresent()) {
-                    getInputFile(value.get(), testSuite);
+                    saveMeasures(value.get(), testSuite);
                     continue;
                 }
 
@@ -85,7 +85,7 @@ final class ReportPersistor {
         return className + ".m";
     }
 
-    private void getInputFile(@Nonnull InputFile inputFile, @Nonnull TestSuite testSuite) {
+    private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull TestSuite testSuite) {
         saveMeasure(inputFile, CoreMetrics.TESTS, testSuite.getNumberOfTests());
         saveMeasure(inputFile, CoreMetrics.TEST_FAILURES, testSuite.getNumberOfFailedTests());
         saveMeasure(inputFile, CoreMetrics.TEST_EXECUTION_TIME, testSuite.getDurationInMilliseconds());
