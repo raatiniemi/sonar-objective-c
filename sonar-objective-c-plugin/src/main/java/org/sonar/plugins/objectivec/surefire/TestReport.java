@@ -17,10 +17,7 @@
 package org.sonar.plugins.objectivec.surefire;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 final class TestReport {
     private final String targetName;
@@ -37,8 +34,8 @@ final class TestReport {
     }
 
     @Nonnull
-    Set<TestSuite> getTestSuites() {
-        return testSuites;
+    Collection<TestSuite> getTestSuites() {
+        return Collections.unmodifiableCollection(testSuites);
     }
 
     @Override
