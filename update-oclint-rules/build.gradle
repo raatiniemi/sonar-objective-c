@@ -24,6 +24,8 @@ dependencies {
     compile 'com.github.kittinunf.fuel:fuel:1.13.0'
     compile 'org.jsoup:jsoup:1.11.3'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.4'
+
+    testCompile 'junit:junit:4.12'
 }
 
 compileKotlin {
