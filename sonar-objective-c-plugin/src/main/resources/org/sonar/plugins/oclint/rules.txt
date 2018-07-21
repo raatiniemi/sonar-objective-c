@@ -81,8 +81,6 @@ Summary: Name: base class destructor should be virtual or protected
 <p>Make base class destructor public and virtual, or protected and nonvirtual</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/BaseClassDestructorShouldBeVirtualOrProtectedRule.cpp">oclint-rules/rules/convention/BaseClassDestructorShouldBeVirtualOrProtectedRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>References:</strong></p>
-<p>Sutter &amp; Alexandrescu (November 2004). <a class="reference external" href="http://gotw.ca/publications/c++cs.htm">“C++ Coding Standards: 101 Rules, Guidelines, and Best Practices”</a>. <em>Addison-Wesley Professional</em></p>
 <pre>class Base
 {
 public:
@@ -92,6 +90,8 @@ class C : public Base
 {
     virtual ~C();
 }</pre>
+<p><strong>References:</strong></p>
+<p>Sutter &amp; Alexandrescu (November 2004). <a class="reference external" href="http://gotw.ca/publications/c++cs.htm">“C++ Coding Standards: 101 Rules, Guidelines, and Best Practices”</a>. <em>Addison-Wesley Professional</em></p>
 
 Severity: 2
 Category: OCLint
@@ -311,7 +311,6 @@ Summary: Name: deep nested block
 <p>This rule indicates blocks nested more deeply than the upper limit.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/NestedBlockDepthRule.cpp">oclint-rules/rules/size/NestedBlockDepthRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>if (1)
 {               // 1
     {           // 2
@@ -319,6 +318,8 @@ Summary: Name: deep nested block
         }
     }
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> NESTED_BLOCK_DEPTH</dt> <dd> The depth of a block or compound statement reporting threshold, default value is 5.</dd></dl>
 
 Severity: 3
 Category: OCLint
@@ -559,14 +560,14 @@ Summary: Name: goto statement
 <p><a class="reference external" href="http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF">“Go To Statement Considered Harmful”</a></p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/GotoStatementRule.cpp">oclint-rules/rules/basic/GotoStatementRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>References:</strong></p>
-<p>Edsger Dijkstra (March 1968). <a class="reference external" href="http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF">“Go To Statement Considered Harmful”</a>. <em>Communications of the ACM</em> (PDF) 11 (3): 147–148. doi:10.1145/362929.362947.</p>
 <pre>void example()
 {
     A:
         a();
     goto A;     // Considered Harmful
 }</pre>
+<p><strong>References:</strong></p>
+<p>Edsger Dijkstra (March 1968). <a class="reference external" href="http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF">“Go To Statement Considered Harmful”</a>. <em>Communications of the ACM</em> (PDF) 11 (3): 147–148. doi:10.1145/362929.362947.</p>
 
 Severity: 3
 Category: OCLint
@@ -579,10 +580,6 @@ Summary: Name: high cyclomatic complexity
 <p>The experiments McCabe, the author of cyclomatic complexity, conclude that methods in the 3 to 7 complexity range are quite well structured. He also suggest the cyclomatic complexity of 10 is a reasonable upper limit.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/CyclomaticComplexityRule.cpp">oclint-rules/rules/size/CyclomaticComplexityRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
-<p><strong>Suppress:</strong></p>
-<p><strong>References:</strong></p>
-<p>McCabe (December 1976). <a class="reference external" href="http://www.literateprogramming.com/mccabe.pdf">“A Complexity Measure”</a>. <em>IEEE Transactions on Software Engineering: 308–320</em></p>
 <pre>void example(int a, int b, int c) // 1
 {
     if (a == b)                   // 2
@@ -609,7 +606,13 @@ Summary: Name: high cyclomatic complexity
         default:                  // 7
             break;
     }
-} __attribute__((annotate("oclint:suppress[high cyclomatic complexity]")))</pre>
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> CYCLOMATIC_COMPLEXITY</dt> <dd> The cyclomatic complexity reporting threshold, default value is 10.</dd></dl>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[high cyclomatic complexity]")))</pre>
+<p><strong>References:</strong></p>
+<p>McCabe (December 1976). <a class="reference external" href="http://www.literateprogramming.com/mccabe.pdf">“A Complexity Measure”</a>. <em>IEEE Transactions on Software Engineering: 308–320</em></p>
 
 Severity: 3
 Category: OCLint
@@ -621,8 +624,6 @@ Summary: Name: high ncss method
 <p>This rule counts number of lines for a method by counting Non Commenting Source Statements (NCSS). NCSS only takes actual statements into consideration, in other words, ignores empty statements, empty blocks, closing brackets or semicolons after closing brackets. Meanwhile, a statement that is broken into multiple lines contribute only one count.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/NcssMethodCountRule.cpp">oclint-rules/rules/size/NcssMethodCountRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
-<p><strong>Suppress:</strong></p>
 <pre>void example()          // 1
 {
     if (1)              // 2
@@ -631,7 +632,11 @@ Summary: Name: high ncss method
     else                // 3
     {
     }
-} __attribute__((annotate("oclint:suppress[high ncss method]")))</pre>
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> NCSS_METHOD</dt> <dd> The high NCSS method reporting threshold, default value is 30.</dd></dl>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[high ncss method]")))</pre>
 
 Severity: 3
 Category: OCLint
@@ -644,14 +649,16 @@ Summary: Name: high npath complexity
 <p>Based on studies done by the original author in AT&amp;T Bell Lab, an NPath threshold value of 200 has been established for a method.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/NPathComplexityRule.cpp">oclint-rules/rules/size/NPathComplexityRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
-<p><strong>Suppress:</strong></p>
-<p><strong>References:</strong></p>
-<p>Brian A. Nejmeh (1988). <a class="reference external" href="http://dl.acm.org/citation.cfm?id=42379">“NPATH: a measure of execution path complexity and its applications”</a>. <em>Communications of the ACM 31 (2) p. 188-200</em></p>
 <pre>void example()
 {
     // complicated code that is hard to understand
-} __attribute__((annotate("oclint:suppress[high npath complexity]")))</pre>
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> NPATH_COMPLEXITY</dt> <dd> The NPath complexity reporting threshold, default value is 200.</dd></dl>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[high npath complexity]")))</pre>
+<p><strong>References:</strong></p>
+<p>Brian A. Nejmeh (1988). <a class="reference external" href="http://dl.acm.org/citation.cfm?id=42379">“NPATH: a measure of execution path complexity and its applications”</a>. <em>Communications of the ACM 31 (2) p. 188-200</em></p>
 
 Severity: 3
 Category: OCLint
@@ -750,7 +757,6 @@ Summary: Name: long class
 <p>Long class generally indicates that this class tries to do many things. Each class should do one thing and that one thing well.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/LongClassRule.cpp">oclint-rules/rules/size/LongClassRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>class Foo
 {
     void bar()
@@ -758,6 +764,8 @@ Summary: Name: long class
         // 1001 lines of code
     }
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_CLASS</dt> <dd> The class size reporting threshold, default value is 1000.</dd></dl>
 
 Severity: 3
 Category: OCLint
@@ -769,11 +777,12 @@ Summary: Name: long line
 <p>When the number of characters for one line of code is very high, it largely harms the readability. Break long lines of code into multiple lines.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/LongLineRule.cpp">oclint-rules/rules/size/LongLineRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>void example()
 {
     int a012345678901234567890123456789...1234567890123456789012345678901234567890123456789;
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_LINE</dt> <dd> The long line reporting threshold, default value is 100.</dd></dl>
 
 Severity: 3
 Category: OCLint
@@ -785,13 +794,14 @@ Summary: Name: long method
 <p>Long method generally indicates that this method tries to do many things. Each method should do one thing and that one thing well.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/LongMethodRule.cpp">oclint-rules/rules/size/LongMethodRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>void example()
 {
     cout << "hello world";
     cout << "hello world";
     // repeat 48 times
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_METHOD</dt> <dd> The long method reporting threshold, default value is 50.</dd></dl>
 
 Severity: 3
 Category: OCLint
@@ -803,11 +813,12 @@ Summary: Name: long variable name
 <p>Variables with long names harm readability.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/naming/LongVariableNameRule.cpp">oclint-rules/rules/naming/LongVariableNameRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>void aMethod()
 {
     int reallyReallyLongIntegerName;
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_VARIABLE_NAME</dt> <dd> The long variable name reporting threshold, default value is 20.</dd></dl>
 
 Severity: 2
 Category: OCLint
@@ -1171,11 +1182,12 @@ Summary: Name: short variable name
 <p>A variable with a short name is hard to understand what it stands for. Variable with name, but the name has number of characters less than the threshold will be emitted.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/naming/ShortVariableNameRule.cpp">oclint-rules/rules/naming/ShortVariableNameRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>void aMethod(int i)  // i is short
 {
     int ii;          // ii is short
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> SHORT_VARIABLE_NAME</dt> <dd> The short variable name reporting threshold, default value is 3.</dd></dl>
 
 Severity: 2
 Category: OCLint
@@ -1209,7 +1221,6 @@ Summary: Name: too few branches in switch statement
 <p>To increase code readability, when a switch consists of only a few branches, it’s much better to use an if statement instead.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/TooFewBranchesInSwitchStatementRule.cpp">oclint-rules/rules/convention/TooFewBranchesInSwitchStatementRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>void example(int a)
 {
     switch (a) {
@@ -1219,6 +1230,8 @@ Summary: Name: too few branches in switch statement
             break;
     } // Better to use an if statement and check if variable a equals 1.
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> MINIMUM_CASES_IN_SWITCH</dt> <dd> The reporting threshold for count of case statements in a switch statement, default value is 3.</dd></dl>
 
 Severity: 2
 Category: OCLint
@@ -1230,7 +1243,6 @@ Summary: Name: too many fields
 <p>A class with too many fields indicates it does too many things and lacks proper abstraction. It can be redesigned to have fewer fields.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/TooManyFieldsRule.cpp">oclint-rules/rules/size/TooManyFieldsRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>class c
 {
     int a, b;
@@ -1243,6 +1255,8 @@ Summary: Name: too many fields
 
     void m() {}
 };</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> TOO_MANY_FIELDS</dt> <dd> The reporting threshold for too many fields, default value is 20.</dd></dl>
 
 Severity: 3
 Category: OCLint
@@ -1254,7 +1268,6 @@ Summary: Name: too many methods
 <p>A class with too many methods indicates it does too many things and is hard to read and understand. It usually contains complicated code, and should be refactored.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/TooManyMethodsRule.cpp">oclint-rules/rules/size/TooManyMethodsRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
 <pre>class c
 {
     int a();
@@ -1274,6 +1287,8 @@ Summary: Name: too many methods
     int ad();
     int ae();
 };</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> TOO_MANY_METHODS</dt> <dd> The reporting threshold for too many methods, default value is 30.</dd></dl>
 
 Severity: 3
 Category: OCLint
@@ -1285,13 +1300,14 @@ Summary: Name: too many parameters
 <p>Methods with too many parameters are hard to understand and maintain, and are thirsty for refactorings, like <a class="reference external" href="http://www.refactoring.com/catalog/replaceParameterWithMethod.html">Replace Parameter With method</a>, <a class="reference external" href="http://www.refactoring.com/catalog/introduceParameterObject.html">Introduce Parameter Object</a>, or <a class="reference external" href="http://www.refactoring.com/catalog/preserveWholeObject.html">Preserve Whole Object</a>.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/TooManyParametersRule.cpp">oclint-rules/rules/size/TooManyParametersRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Thresholds:</strong></p>
-<p><strong>References:</strong></p>
-<p>Fowler, Martin (1999). <em>Refactoring: Improving the design of existing code.</em> Addison Wesley.</p>
 <pre>void example(int a, int b, int c, int d, int e, int f,
     int g, int h, int i, int j, int k, int l)
 {
 }</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> TOO_MANY_PARAMETERS</dt> <dd> The reporting threshold for too many parameters, default value is 10.</dd></dl>
+<p><strong>References:</strong></p>
+<p>Fowler, Martin (1999). <em>Refactoring: Improving the design of existing code.</em> Addison Wesley.</p>
 
 Severity: 3
 Category: OCLint
@@ -1370,12 +1386,13 @@ Summary: Name: unused local variable
 <p>This rule detects local variables that are declared, but not used.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/unused/UnusedLocalVariableRule.cpp">oclint-rules/rules/unused/UnusedLocalVariableRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Suppress:</strong></p>
 <pre>int example(int a)
 {
     int i;          // variable i is declared, but not used
     return 0;
-} __attribute__((annotate("oclint:suppress[unused local variable]")))</pre>
+}</pre>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[unused local variable]")))</pre>
 
 Severity: 0
 Category: OCLint
@@ -1387,11 +1404,12 @@ Summary: Name: unused method parameter
 <p>This rule detects parameters that are not used in the method.</p>
 <p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/unused/UnusedMethodParameterRule.cpp">oclint-rules/rules/unused/UnusedMethodParameterRule.cpp</a></p>
 <p><strong>Example:</strong></p>
-<p><strong>Suppress:</strong></p>
 <pre>int example(int a)  // parameter a is not used
 {
     return 0;
-} __attribute__((annotate("oclint:suppress[unused method parameter]")))</pre>
+}</pre>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[unused method parameter]")))</pre>
 
 Severity: 0
 Category: OCLint

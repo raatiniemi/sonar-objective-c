@@ -28,17 +28,17 @@ internal data class Rule(
 
     companion object {
         fun from(category: RuleCategory, html: Element): Rule {
-            val elements = skipVersion(paragraphs(html))
+            val elements = skipVersion(elementsFrom(html))
 
             return Rule(
                     name = readName(elements),
-                    description = readDescription(elements, example = readExample(html)),
+                    description = readDescription(elements),
                     category = category.name,
                     severity = category.severity
             )
         }
 
-        private fun paragraphs(html: Element): Elements = html.select("p")
+        private fun elementsFrom(html: Element): Elements = html.select("p, pre, dl")
 
         private fun skipVersion(elements: List<Element>) = elements.drop(1)
 
@@ -50,16 +50,23 @@ internal data class Rule(
                     .capitalize()
         }
 
-        private fun readDescription(elements: List<Element>, example: String): String {
-            val description = elements.drop(1)
-                    .map { "<p>${it.html()}</p>" }
-                    .toMutableList()
-
-            description.add(example)
-
-            return description.joinToString(separator = "\n")
+        private fun readDescription(elements: List<Element>): String {
+            return elements.drop(1)
+                    .joinToString(separator = "\n") { buildElement(it) }
         }
 
-        private fun readExample(html: Element) = "<pre>${html.select("pre").text()}</pre>"
+        private fun buildElement(element: Element): String {
+            val tagName = element.tagName()// ?: return ""
+
+            return when (tagName) {
+                "pre" -> "<pre>${element.text()}</pre>"
+                null -> ""
+                else -> "<$tagName>${removeNewLines(element)}</$tagName>"
+            }
+        }
+
+        private fun removeNewLines(element: Element): String {
+            return element.html().replace("\n", "")
+        }
     }
 }
