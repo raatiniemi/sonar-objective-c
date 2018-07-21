@@ -14,7 +14,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules, and [Faux Pas](http://fauxpasapp.com/): 102 rules |
 | Size | YES | |
 | Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
-| Code coverage | YES | With [gcovr](http://gcovr.com) for project before Xcode 7, otherwise [slather](https://github.com/venmo/slather) |
+| Code coverage | YES | Uses [slather](https://github.com/venmo/slather) |
 
 ### Compatibility
 
@@ -53,7 +53,6 @@ Binary packages are available in the release section.
 - [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [xctool](https://github.com/facebook/xctool) ([HomeBrew](http://brew.sh) installed and ```brew install xctool```). If you are using Xcode 6, make sure to update xctool (```brew upgrade xctool```) to a version > 0.2.2.
 - [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9). 
-- [gcovr](http://gcovr.com) installed for legacy (pre Xcode 7 coverage)
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 - [Faux Pas](http://fauxpasapp.com/) command line tools installed (optional)
@@ -69,14 +68,6 @@ To install the fixed version, follow those steps :
 	git checkout fix/duration_of_failed_tests_workaround
 	gem build xcpretty.gemspec
 	sudo gem install --both xcpretty-0.2.2.gem
-
-### Code coverage data format
-
-Since Xcode 7, Apple changed its coverage data format to a new format called 'profdata'.
-By default this format will be used by the plugin, except if you explicitly force it to legacy mode (for Xcode 6 and below) in your *sonar-project.properties* with this line:
-
-    sonar.objectivec.coverageType=legacy
-  
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
