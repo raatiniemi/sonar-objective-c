@@ -17,6 +17,8 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
@@ -28,7 +30,6 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -63,8 +64,7 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        Collection<LizardMeasure> measures = parseReportsIn(projectBaseDir, parser);
+        Collection<LizardMeasure> measures = parseReportsIn(parser);
         if (measures.isEmpty()) {
             return;
         }
@@ -75,29 +75,24 @@ public class LizardSensor implements Sensor {
     }
 
     /**
-     *
-     * @param baseDir base directory of the project to search the report
      * @param parser LizardReportParser to parse the report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    private Collection<LizardMeasure> parseReportsIn(final String baseDir, LizardReportParser parser) {
-        final String reportFileName = buildReportPath(baseDir);
-        final File reportFile = new File(reportFileName);
-        if (reportFile.exists() && reportFile.isFile()) {
-            LOGGER.info("Processing complexity report");
-            return parser.parseReport(new File(reportFileName));
-        }
-
-        LOGGER.warn("No complexity report is available for parsing");
-        return Collections.emptyList();
+    @Nonnull
+    private Collection<LizardMeasure> parseReportsIn(@Nonnull LizardReportParser parser) {
+        ReportPatternFinder reportFinder = ReportFinder.create(fileSystem.baseDir());
+        return reportFinder.findReportMatching(buildReportPath())
+                .map(parser::parseReport)
+                .orElse(Collections.emptySet());
     }
 
     /**
      * Build path for the report file using the {@code basePath} as prefix
-     * @param basePath Base path for the project.
+     *
      * @return the default report path or the one specified in the sonar-project.properties
      */
-    String buildReportPath(String basePath) {
+    @Nonnull
+    private String buildReportPath() {
         String reportPath = conf.getString(REPORT_PATH_KEY);
 
         if (reportPath == null) {
@@ -105,6 +100,6 @@ public class LizardSensor implements Sensor {
             reportPath = DEFAULT_REPORT_PATH;
         }
 
-        return String.format("%s/%s",basePath, reportPath);
+        return reportPath;
     }
 }

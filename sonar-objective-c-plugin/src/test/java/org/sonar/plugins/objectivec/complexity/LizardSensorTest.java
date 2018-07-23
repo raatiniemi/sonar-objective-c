@@ -111,28 +111,6 @@ public class LizardSensorTest {
     }
 
     @Test
-    public void buildReportPath_withoutConfiguredReportPath() {
-        String basePath = temporaryFolder.getRoot().getPath();
-        String expected = String.format("%s/%s", basePath, LizardSensor.DEFAULT_REPORT_PATH);
-
-        String actual = sensor.buildReportPath(basePath);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void buildReportPath_withConfiguredReportPath() {
-        String basePath = temporaryFolder.getRoot().getPath();
-        String path = "lizard-report.xml";
-        String expected = String.format("%s/%s", basePath, path);
-        settings.setProperty(LizardSensor.REPORT_PATH_KEY, path);
-
-        String actual = sensor.buildReportPath(basePath);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void execute_withDefaultReportPattern() {
         addFileToFs(firstClassNameFile);
         addFileToFs(secondClassNameFile);
