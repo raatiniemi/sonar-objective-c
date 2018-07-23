@@ -59,20 +59,20 @@ public final class OCLintSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
+        List<Violation> violations = parseReportIn(fileSystem.baseDir());
 
-        parseReportIn(projectBaseDir, ViolationPersistor.create(context));
+        ViolationPersistor persistor = ViolationPersistor.create(context);
+        persistor.saveViolations(violations);
     }
 
-    private void parseReportIn(final String baseDir, ViolationPersistor persistor) {
-        ReportPatternFinder reportFinder = ReportFinder.create(new File(baseDir));
-        List<Violation> violations = reportFinder.findReportsMatching(buildReportPath())
+    @Nonnull
+    private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
+        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+        return reportFinder.findReportsMatching(buildReportPath())
                 .stream()
                 .map(parser::parse)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-
-        persistor.saveViolations(violations);
     }
 
     private String buildReportPath() {
