@@ -17,11 +17,8 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.tools.ant.DirectoryScanner;
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
@@ -32,6 +29,10 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class OCLintSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
@@ -64,20 +65,12 @@ public final class OCLintSensor implements Sensor {
     }
 
     private void parseReportIn(final String baseDir, ViolationPersistor persistor) {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{buildReportPath()});
-        scanner.setBasedir(baseDir);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-
-        List<Violation> violations = new ArrayList<>();
-
-        for(String filename : files) {
-            LOGGER.info("Processing OCLint report {}", filename);
-
-            violations.addAll(parser.parse(new File(filename)));
-        }
+        ReportPatternFinder reportFinder = ReportFinder.create(new File(baseDir));
+        List<Violation> violations = reportFinder.findReportsMatching(buildReportPath())
+                .stream()
+                .map(parser::parse)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         persistor.saveViolations(violations);
     }
