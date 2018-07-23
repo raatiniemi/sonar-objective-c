@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
@@ -57,7 +58,7 @@ public final class OCLintSensor implements Sensor {
     }
 
     @Override
-    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
+    public void execute(@Nonnull SensorContext context) {
         List<Violation> violations = parseReportIn(fileSystem.baseDir());
 
         ViolationPersistor persistor = ViolationPersistor.create(context);
