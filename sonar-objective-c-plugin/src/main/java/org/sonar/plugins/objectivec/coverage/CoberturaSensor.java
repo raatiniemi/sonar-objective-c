@@ -17,6 +17,8 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.Sensor;
@@ -81,7 +83,9 @@ public final class CoberturaSensor implements Sensor {
 
     @Nonnull
     private Stream<File> collectAvailableReports(@Nonnull SensorContext context) {
-        return ReportCollector.collect(context.fileSystem().baseDir().getAbsolutePath(), getReportFilePattern()).stream();
+        ReportPatternFinder reportFinder = ReportFinder.create(context.fileSystem().baseDir());
+
+        return reportFinder.findReportsMatching(getReportFilePattern()).stream();
     }
 
     @Nonnull
