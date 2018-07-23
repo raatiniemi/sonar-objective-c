@@ -63,6 +63,10 @@ public final class ReportFinder implements ReportPatternFinder {
 
     @Nonnull
     private Stream<String> getBasenameForMatchingFiles(@Nonnull String pattern) {
+        if (!reportDirectory.exists()) {
+            return Stream.empty();
+        }
+
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{pattern});
         scanner.setBasedir(reportDirectory);

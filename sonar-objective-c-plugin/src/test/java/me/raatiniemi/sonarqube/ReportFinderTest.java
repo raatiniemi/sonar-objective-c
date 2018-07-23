@@ -55,6 +55,15 @@ public class ReportFinderTest {
     }
 
     @Test
+    public void findReportsMatching_withoutExistingDirectory() {
+        ReportPatternFinder reportFinder = ReportFinder.create(new File("/tmp/do-not-exists"));
+
+        Set<File> actual = reportFinder.findReportsMatching("*");
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
     public void findReportsMatching_withEmptyDirectory() {
         Set<File> actual = reportFinder.findReportsMatching("*");
 
@@ -90,6 +99,15 @@ public class ReportFinderTest {
         Set<File> actual = reportFinder.findReportsMatching("*.xml");
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void findReportMatching_withoutExistingDirectory() {
+        ReportPatternFinder reportFinder = ReportFinder.create(new File("/tmp/do-not-exists"));
+
+        Optional<File> actual = reportFinder.findReportMatching("*");
+
+        assertFalse(actual.isPresent());
     }
 
     @Test
