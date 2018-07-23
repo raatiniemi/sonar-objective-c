@@ -30,9 +30,8 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class OCLintSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
@@ -68,11 +67,10 @@ public final class OCLintSensor implements Sensor {
     @Nonnull
     private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
         ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
-        return reportFinder.findReportsMatching(buildReportPath())
-                .stream()
+
+        return reportFinder.findReportMatching(buildReportPath())
                 .map(parser::parse)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .orElse(Collections.emptyList());
     }
 
     private String buildReportPath() {
