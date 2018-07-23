@@ -53,19 +53,21 @@ public class LizardSensorTest {
     private SensorContextTester context;
     private LizardSensor sensor;
 
-    private DefaultInputFile classNameFile;
+    private DefaultInputFile firstClassNameFile;
+    private DefaultInputFile secondClassNameFile;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         sensor = new LizardSensor(context.fileSystem(), settings);
 
-        classNameFile = createFile();
+        firstClassNameFile = createFile("TargetName/FirstClassNameTest.m");
+        secondClassNameFile = createFile("TargetName/SecondClassNameTest.m");
     }
 
     @Nonnull
-    private DefaultInputFile createFile() {
-        return new DefaultInputFile(context.module().key(), "TargetName/ClassName.m")
+    private DefaultInputFile createFile(@Nonnull String relativePath) {
+        return new DefaultInputFile(context.module().key(), relativePath)
                 .setLanguage("bla")
                 .setType(InputFile.Type.MAIN)
                 .initMetadata("1\n2\n3\n4\n5\n6");
@@ -77,7 +79,7 @@ public class LizardSensorTest {
 
     private void createReportFile(@Nonnull String relativePath) {
         try {
-            List<String> reportLines = Files.readAllLines(Paths.get(resourcePath.toString(), "correctFile.xml"));
+            List<String> reportLines = Files.readAllLines(Paths.get(resourcePath.toString(), "lizard.xml"));
 
             Path destination = Paths.get(temporaryFolder.getRoot().getAbsolutePath(), relativePath);
             Files.createDirectories(destination.getParent());
@@ -89,9 +91,9 @@ public class LizardSensorTest {
     }
 
     @Nullable
-    private <T extends Serializable> T getMeasure(@Nonnull String key) {
-        Measure<T> measure = context.measure(classNameFile.key(), key);
-        if (null == measure) {
+    private <T extends Serializable> T getMeasure(@Nonnull String componentKey, @Nonnull String testKey) {
+        Measure<T> measure = context.measure(componentKey, testKey);
+        if (measure == null) {
             return null;
         }
 
@@ -106,29 +108,6 @@ public class LizardSensorTest {
 
         assertEquals("Lizard complexity sensor", descriptor.name());
         assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
-    }
-
-    @Test
-    public void execute_withDefaultReportPattern() {
-        addFileToFs(classNameFile);
-        createReportFile("sonar-reports/lizard-report.xml");
-
-        sensor.execute(context);
-
-        assertEquals(Integer.valueOf(2), getMeasure(CoreMetrics.FUNCTIONS_KEY));
-        assertEquals(Integer.valueOf(6), getMeasure(CoreMetrics.COMPLEXITY_KEY));
-    }
-
-    @Test
-    public void execute_withReportPattern() {
-        settings.setProperty("sonar.objectivec.lizard.report", "lizard.xml");
-        addFileToFs(classNameFile);
-        createReportFile("lizard.xml");
-
-        sensor.execute(context);
-
-        assertEquals(Integer.valueOf(2), getMeasure(CoreMetrics.FUNCTIONS_KEY));
-        assertEquals(Integer.valueOf(6), getMeasure(CoreMetrics.COMPLEXITY_KEY));
     }
 
     @Test
@@ -151,5 +130,47 @@ public class LizardSensorTest {
         String actual = sensor.buildReportPath(basePath);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void execute_withDefaultReportPattern() {
+        addFileToFs(firstClassNameFile);
+        addFileToFs(secondClassNameFile);
+        createReportFile("sonar-reports/lizard-report.xml");
+
+        sensor.execute(context);
+
+        assertEquals(Integer.valueOf(10), getMeasure(firstClassNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure(firstClassNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
+        assertEquals(Integer.valueOf(42), getMeasure(secondClassNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
+    }
+
+    @Test
+    public void execute_withReportPattern() {
+        settings.setProperty("sonar.objectivec.lizard.report", "lizard.xml");
+        addFileToFs(firstClassNameFile);
+        addFileToFs(secondClassNameFile);
+        createReportFile("lizard.xml");
+
+        sensor.execute(context);
+
+        assertEquals(Integer.valueOf(10), getMeasure(firstClassNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure(firstClassNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
+        assertEquals(Integer.valueOf(42), getMeasure(secondClassNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
+    }
+
+    @Test
+    public void execute_withoutReport() {
+        addFileToFs(firstClassNameFile);
+        addFileToFs(secondClassNameFile);
+
+        sensor.execute(context);
+
+        assertNull(getMeasure(firstClassNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+        assertNull(getMeasure(firstClassNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
+        assertNull(getMeasure(secondClassNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+        assertNull(getMeasure(secondClassNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
     }
 }
