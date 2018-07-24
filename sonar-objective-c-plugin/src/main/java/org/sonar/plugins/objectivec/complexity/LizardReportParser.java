@@ -20,11 +20,11 @@ package org.sonar.plugins.objectivec.complexity;
 import me.raatiniemi.sonarqube.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -51,22 +51,31 @@ final class LizardReportParser extends XmlReportParser<Set<LizardMeasure>> {
     }
 
     @Nonnull
+    private static Collection<Element> getMeasureElements(@Nonnull Document document) {
+        return getElements(document, MEASURE);
+    }
+
+    private static boolean isNotFileMeasure(@Nonnull Element measureElement) {
+        return !measureElement.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE);
+    }
+
+    @Nonnull
+    private Collection<Element> getMeasureItemElements(@Nonnull Element measureElement) {
+        return getElements(measureElement, MEASURE_ITEM);
+    }
+
+    @Nonnull
     @Override
     protected Set<LizardMeasure> parse(@Nonnull Document document) {
-        NodeList nodeList = document.getElementsByTagName(MEASURE);
         Set<LizardMeasure> measures = new LinkedHashSet<>();
 
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
+        for (Element measureElement : getMeasureElements(document)) {
+            if (isNotFileMeasure(measureElement)) {
                 continue;
             }
 
-            Element element = (Element) node;
-
-            if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE)) {
-                NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
-                measures.addAll(addComplexityFileMeasures(itemList));
+            for (Element measureItemElement : getMeasureItemElements(measureElement)) {
+                measures.add(buildLizardMeasure(measureItemElement));
             }
         }
 
@@ -74,30 +83,17 @@ final class LizardReportParser extends XmlReportParser<Set<LizardMeasure>> {
     }
 
     @Nonnull
-    private Set<LizardMeasure> addComplexityFileMeasures(@Nonnull NodeList itemList) {
-        Set<LizardMeasure> measures = new LinkedHashSet<>();
+    private LizardMeasure buildLizardMeasure(@Nonnull Element element) {
+        String fileName = element.getAttribute(NAME);
+        NodeList values = element.getElementsByTagName(VALUE);
 
-        for (int i = 0; i < itemList.getLength(); i++) {
-            Node item = itemList.item(i);
-            if (item.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
+        int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
+        int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
-            Element itemElement = (Element) item;
-            String fileName = itemElement.getAttribute(NAME);
-            NodeList values = itemElement.getElementsByTagName(VALUE);
-            int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-            int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
-
-            LizardMeasure measure = LizardMeasure.builder()
-                    .setPath(fileName)
-                    .setComplexity(complexity)
-                    .setNumberOfFunctions(numberOfFunctions)
-                    .build();
-
-            measures.add(measure);
-        }
-
-        return measures;
+        return LizardMeasure.builder()
+                .setPath(fileName)
+                .setComplexity(complexity)
+                .setNumberOfFunctions(numberOfFunctions)
+                .build();
     }
 }
