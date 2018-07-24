@@ -16,24 +16,22 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import me.raatiniemi.sonarqube.XmlReportParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-final class ReportParser {
+final class ReportParser extends XmlReportParser<TestReport> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
 
     private static final String TEST_SUITE = "testsuite";
@@ -42,10 +40,8 @@ final class ReportParser {
     private static final String NAME = "name";
     private static final String TIME = "time";
 
-    private final DocumentBuilder documentBuilder;
-
     private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
-        this.documentBuilder = documentBuilder;
+        super(documentBuilder);
     }
 
     @Nonnull
@@ -74,26 +70,8 @@ final class ReportParser {
     }
 
     @Nonnull
-    Optional<TestReport> parse(@Nonnull File xmlReportFile) {
-        if (!xmlReportFile.exists()) {
-            LOGGER.warn("Surefire report do not exist at path: {}", xmlReportFile.getPath());
-            return Optional.empty();
-        }
-
-        try {
-            Document document = documentBuilder.parse(xmlReportFile);
-            TestReport testReport = parseTestReport(document);
-
-            return Optional.of(testReport);
-        } catch (IOException | SAXException e) {
-            LOGGER.error("Error processing file named {}", xmlReportFile, e);
-        }
-
-        return Optional.empty();
-    }
-
-    @Nonnull
-    private TestReport parseTestReport(@Nonnull Document document) {
+    @Override
+    protected TestReport parse(@Nonnull Document document) {
         String targetName = getTargetName(document.getDocumentElement());
         List<TestSuite> testSuites = parseTestSuites(document);
 
