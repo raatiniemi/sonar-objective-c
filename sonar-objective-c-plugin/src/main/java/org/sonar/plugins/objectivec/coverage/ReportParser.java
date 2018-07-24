@@ -22,18 +22,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 final class ReportParser extends XmlReportParser<List<CoberturaPackage>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
+
+    private static final String PACKAGE = "package";
+    private static final String CLASS = "class";
+    private static final String LINE = "line";
 
     private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
         super(documentBuilder);
@@ -45,42 +47,36 @@ final class ReportParser extends XmlReportParser<List<CoberturaPackage>> {
     }
 
     @Nonnull
+    private static Collection<Element> getPackageElements(@Nonnull Document document) {
+        return getElements(document, PACKAGE);
+    }
+
+    @Nonnull
+    private static Collection<Element> getClassElements(@Nonnull Element element) {
+        return getElements(element, CLASS);
+    }
+
+    @Nonnull
+    private static Collection<Element> getLineElements(@Nonnull Element classElement) {
+        return getElements(classElement, LINE);
+    }
+
+    @Nonnull
     @Override
     protected List<CoberturaPackage> parse(@Nonnull Document document) {
-        NodeList elements = document.getElementsByTagName("package");
-        if (elements.getLength() == 0) {
-            return Collections.emptyList();
-        }
-
-        List<CoberturaPackage> packages = new ArrayList<>();
-        for (int i = 0; i < elements.getLength(); i++) {
-            Node node = elements.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            Element element = (Element) node;
-            packages.add(parsePackage(element));
-        }
-
-        return packages;
+        return getPackageElements(document)
+                .stream()
+                .map(this::parsePackage)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
     private CoberturaPackage parsePackage(@Nonnull Element packageElement) {
         String name = packageElement.getAttribute("name");
-
-        List<CoberturaClass> classes = new ArrayList<>();
-        NodeList classElements = packageElement.getElementsByTagName("class");
-        for (int i = 0; i < classElements.getLength(); i++) {
-            Node node = classElements.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            Element classElement = (Element) node;
-            classes.add(parseClass(classElement));
-        }
+        List<CoberturaClass> classes = getClassElements(packageElement)
+                .stream()
+                .map(this::parseClass)
+                .collect(Collectors.toList());
 
         return CoberturaPackage.from(name, classes);
     }
@@ -88,18 +84,10 @@ final class ReportParser extends XmlReportParser<List<CoberturaPackage>> {
     @Nonnull
     private CoberturaClass parseClass(@Nonnull Element classElement) {
         String filename = classElement.getAttribute("filename");
-
-        List<CoberturaLine> lines = new ArrayList<>();
-        NodeList lineElements = classElement.getElementsByTagName("line");
-        for (int i = 0; i < lineElements.getLength(); i++) {
-            Node node = lineElements.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            Element lineElement = (Element) node;
-            lines.add(parseLine(lineElement));
-        }
+        List<CoberturaLine> lines = getLineElements(classElement)
+                .stream()
+                .map(this::parseLine)
+                .collect(Collectors.toList());
 
         return CoberturaClass.from(filename, lines);
     }
