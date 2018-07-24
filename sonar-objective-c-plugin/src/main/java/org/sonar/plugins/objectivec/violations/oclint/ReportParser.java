@@ -19,13 +19,12 @@ package org.sonar.plugins.objectivec.violations.oclint;
 import me.raatiniemi.sonarqube.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 final class ReportParser extends XmlReportParser<List<Violation>> {
     private static final String VIOLATION = "violation";
@@ -44,31 +43,17 @@ final class ReportParser extends XmlReportParser<List<Violation>> {
     }
 
     @Nonnull
-    private static NodeList getViolationElements(@Nonnull Document document) {
-        return document.getElementsByTagName(VIOLATION);
+    private static Collection<Element> getViolationElements(@Nonnull Document document) {
+        return getElements(document, VIOLATION);
     }
 
     @Nonnull
     @Override
     protected List<Violation> parse(@Nonnull final Document document) {
-        List<Violation> violations = new ArrayList<>();
-
-        NodeList violationElements = getViolationElements(document);
-        for (int i = 0; i < violationElements.getLength(); i++) {
-            Node node = violationElements.item(i);
-            if (isNotElement(node)) {
-                continue;
-            }
-
-            Element element = (Element) node;
-            violations.add(buildViolation(element));
-        }
-
-        return violations;
-    }
-
-    private boolean isNotElement(@Nonnull Node item) {
-        return item.getNodeType() != Node.ELEMENT_NODE;
+        return getViolationElements(document)
+                .stream()
+                .map(this::buildViolation)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
