@@ -30,9 +30,12 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public final class OCLintSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
@@ -41,7 +44,6 @@ public final class OCLintSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintSensor.class);
     private static final String NAME = "OCLint violation sensor";
 
-    private final ReportParser parser = new ReportParser();
     private final Settings conf;
     private final FileSystem fileSystem;
 
@@ -67,11 +69,20 @@ public final class OCLintSensor implements Sensor {
 
     @Nonnull
     private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
-        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            ReportParser parser = ReportParser.create(factory.newDocumentBuilder());
 
-        return reportFinder.findReportMatching(buildReportPath())
-                .map(parser::parse)
-                .orElse(Collections.emptyList());
+            ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+            return reportFinder.findReportMatching(buildReportPath())
+                    .map(parser::parse)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .orElse(Collections.emptyList());
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("Unable to create new document builder", e);
+            return Collections.emptyList();
+        }
     }
 
     private String buildReportPath() {

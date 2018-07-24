@@ -20,17 +20,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,36 +36,33 @@ import static org.junit.Assert.assertTrue;
 public class ReportParserTest {
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
 
-    private DocumentBuilder builder;
     private ReportParser parser;
 
     @Before
     public void setUp() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        builder = factory.newDocumentBuilder();
-
-        parser = new ReportParser();
+        parser = ReportParser.create(factory.newDocumentBuilder());
     }
 
     @Test
-    public void parse_withEmptyDocument() throws Exception {
+    public void parse_withEmptyDocument() {
         Path documentPath = Paths.get(resourcePath.toString(), "empty.xml");
-        Document document = builder.parse(documentPath.toFile());
 
-        List<Violation> actual = parser.parse(document);
+        Optional<List<Violation>> actual = parser.parse(documentPath.toFile());
 
-        assertTrue(actual.isEmpty());
+        assertTrue(actual.isPresent());
+        assertTrue(actual.get().isEmpty());
     }
 
     @Test
-    public void parse_withSampleDocument() throws IOException, SAXException {
+    public void parse_withSampleDocument() {
         Path documentPath = Paths.get(resourcePath.toString(), "oclint.xml");
-        Document document = builder.parse(documentPath.toFile());
         List<Violation> expected = buildExpectedViolationsForSample();
 
-        List<Violation> actual = parser.parse(document);
+        Optional<List<Violation>> actual = parser.parse(documentPath.toFile());
 
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Nonnull

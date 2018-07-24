@@ -16,33 +16,32 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import me.raatiniemi.sonarqube.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-final class ReportParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
-
+final class ReportParser extends XmlReportParser<List<Violation>> {
     private static final String VIOLATION = "violation";
     private static final String PATH = "path";
     private static final String START_LINE = "startline";
     private static final String RULE = "rule";
     private static final String MESSAGE = "message";
+
+    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
+        super(documentBuilder);
+    }
+
+    @Nonnull
+    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new ReportParser(documentBuilder);
+    }
 
     @Nonnull
     private static NodeList getViolationElements(@Nonnull Document document) {
@@ -50,27 +49,8 @@ final class ReportParser {
     }
 
     @Nonnull
-    List<Violation> parse(@Nonnull final File xmlFile) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(xmlFile);
-
-            return parse(document);
-        } catch (final FileNotFoundException e){
-            LOGGER.error("OCLint report not found {}", xmlFile, e);
-        } catch (final ParserConfigurationException e) {
-            LOGGER.error("Error parsing file named {}", xmlFile, e);
-        } catch (final IOException | SAXException e) {
-            LOGGER.error("Error processing file named {}", xmlFile, e);
-        }
-
-        return Collections.emptyList();
-    }
-
-    @Nonnull
-    List<Violation> parse(@Nonnull final Document document) {
+    @Override
+    protected List<Violation> parse(@Nonnull final Document document) {
         List<Violation> violations = new ArrayList<>();
 
         NodeList violationElements = getViolationElements(document);
