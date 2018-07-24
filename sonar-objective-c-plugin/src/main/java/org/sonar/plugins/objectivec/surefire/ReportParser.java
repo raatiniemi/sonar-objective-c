@@ -21,15 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 final class ReportParser extends XmlReportParser<TestReport> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
@@ -56,17 +56,13 @@ final class ReportParser extends XmlReportParser<TestReport> {
     }
 
     @Nonnull
-    private static NodeList getTestSuiteElements(@Nonnull Document document) {
-        return document.getElementsByTagName(TEST_SUITE);
-    }
-
-    private static boolean isNotElement(@Nonnull Node item) {
-        return item.getNodeType() != Node.ELEMENT_NODE;
+    private static Collection<Element> getTestSuiteElements(@Nonnull Document document) {
+        return getElements(document, TEST_SUITE);
     }
 
     @Nonnull
-    private static NodeList getTestCaseElements(@Nonnull Element element) {
-        return element.getElementsByTagName(TEST_CASE);
+    private static Collection<Element> getTestCaseElements(@Nonnull Element element) {
+        return getElements(element, TEST_CASE);
     }
 
     @Nonnull
@@ -80,20 +76,10 @@ final class ReportParser extends XmlReportParser<TestReport> {
 
     @Nonnull
     private List<TestSuite> parseTestSuites(@Nonnull Document document) {
-        List<TestSuite> testSuites = new ArrayList<>();
-
-        NodeList elements = getTestSuiteElements(document);
-        for (int i = 0; i < elements.getLength(); i++) {
-            Node node = elements.item(i);
-            if (isNotElement(node)) {
-                continue;
-            }
-
-            Element element = (Element) node;
-            testSuites.add(parseTestSuite(element));
-        }
-
-        return testSuites;
+        return getTestSuiteElements(document)
+                .stream()
+                .map(this::parseTestSuite)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
@@ -105,21 +91,12 @@ final class ReportParser extends XmlReportParser<TestReport> {
 
     @Nonnull
     private List<TestCase> parseTestCasesFromTestSuite(@Nonnull Element testSuiteElement) {
-        List<TestCase> testCases = new ArrayList<>();
-
-        NodeList elements = getTestCaseElements(testSuiteElement);
-        for (int i = 0; i < elements.getLength(); i++) {
-            Node node = elements.item(i);
-            if (isNotElement(node)) {
-                continue;
-            }
-
-            Element element = (Element) node;
-            Optional<TestCase> value = parseTestCase(element);
-            value.ifPresent(testCases::add);
-        }
-
-        return testCases;
+        return getTestCaseElements(testSuiteElement)
+                .stream()
+                .map(this::parseTestCase)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
