@@ -30,8 +30,11 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This sensor searches for the report generated from the tool Lizard
@@ -44,8 +47,6 @@ public class LizardSensor implements Sensor {
 
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
-
-    private final LizardReportParser parser = new LizardReportParser();
 
     private final Settings conf;
     private final FileSystem fileSystem;
@@ -64,7 +65,7 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        Collection<LizardMeasure> measures = parseReportsIn(parser);
+        Set<LizardMeasure> measures = parseReportsIn();
         if (measures.isEmpty()) {
             return;
         }
@@ -74,16 +75,22 @@ public class LizardSensor implements Sensor {
                 .saveMeasures(measures);
     }
 
-    /**
-     * @param parser LizardReportParser to parse the report
-     * @return Map containing as key the name of the file and as value a list containing the measures for that file
-     */
     @Nonnull
-    private Collection<LizardMeasure> parseReportsIn(@Nonnull LizardReportParser parser) {
-        ReportPatternFinder reportFinder = ReportFinder.create(fileSystem.baseDir());
-        return reportFinder.findReportMatching(buildReportPath())
-                .map(parser::parseReport)
-                .orElse(Collections.emptySet());
+    private Set<LizardMeasure> parseReportsIn() {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            LizardReportParser parser = LizardReportParser.create(factory.newDocumentBuilder());
+
+            ReportPatternFinder reportFinder = ReportFinder.create(fileSystem.baseDir());
+            return reportFinder.findReportMatching(buildReportPath())
+                    .map(parser::parse)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .orElse(Collections.emptySet());
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("Unable to create new document builder", e);
+            return Collections.emptySet();
+        }
     }
 
     /**

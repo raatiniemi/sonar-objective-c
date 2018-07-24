@@ -17,32 +17,21 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import me.raatiniemi.sonarqube.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * This class parses xml Reports form the tool Lizard in order to extract this measures: COMPLEXITY, FUNCTIONS
  */
-final class LizardReportParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
-
+final class LizardReportParser extends XmlReportParser<Set<LizardMeasure>> {
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
     private static final String MEASURE_ITEM = "item";
@@ -52,41 +41,20 @@ final class LizardReportParser {
     private static final int CYCLOMATIC_COMPLEXITY_INDEX = 2;
     private static final int FUNCTIONS_INDEX = 3;
 
-    /**
-     *
-     * @param xmlFile lizard xml report
-     * @return Map containing as key the name of the file and as value a list containing the measures for that file
-     */
-    @Nonnull
-    Collection<LizardMeasure> parseReport(@Nonnull final File xmlFile) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(xmlFile);
-
-            return parseFile(document);
-        } catch (final FileNotFoundException e){
-            LOGGER.error("Lizard Report not found {}", xmlFile, e);
-        } catch (final ParserConfigurationException e) {
-            LOGGER.error("Error parsing file named {}", xmlFile, e);
-        } catch (final IOException | SAXException e) {
-            LOGGER.error("Error processing file named {}", xmlFile, e);
-        }
-
-        return Collections.emptyList();
+    private LizardReportParser(@Nonnull DocumentBuilder documentBuilder) {
+        super(documentBuilder);
     }
 
-    /**
-     *
-     * @param document Document object representing the lizard report
-     * @return Map containing as key the name of the file and as value a list containing the measures for that file
-     */
     @Nonnull
-    private Collection<LizardMeasure> parseFile(@Nonnull Document document) {
-        Set<LizardMeasure> measures = new LinkedHashSet<>();
+    static LizardReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new LizardReportParser(documentBuilder);
+    }
 
+    @Nonnull
+    @Override
+    protected Set<LizardMeasure> parse(@Nonnull Document document) {
         NodeList nodeList = document.getElementsByTagName(MEASURE);
+        Set<LizardMeasure> measures = new LinkedHashSet<>();
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -106,7 +74,7 @@ final class LizardReportParser {
     }
 
     @Nonnull
-    private Collection<LizardMeasure> addComplexityFileMeasures(@Nonnull NodeList itemList) {
+    private Set<LizardMeasure> addComplexityFileMeasures(@Nonnull NodeList itemList) {
         Set<LizardMeasure> measures = new LinkedHashSet<>();
 
         for (int i = 0; i < itemList.getLength(); i++) {
