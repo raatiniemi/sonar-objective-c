@@ -19,12 +19,18 @@ package me.raatiniemi.sonarqube;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class XmlReportParser<T> implements ReportParser<T> {
@@ -34,6 +40,27 @@ public abstract class XmlReportParser<T> implements ReportParser<T> {
 
     protected XmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
         this.documentBuilder = documentBuilder;
+    }
+
+    @Nonnull
+    private static Collection<Element> parseElementsFromNodeList(@Nonnull NodeList nodeList) {
+        List<Element> elements = new ArrayList<>();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (isNotElement(node)) {
+                continue;
+            }
+
+            Element element = (Element) node;
+            elements.add(element);
+        }
+
+        return elements;
+    }
+
+    private static boolean isNotElement(@Nonnull Node node) {
+        return node.getNodeType() != Node.ELEMENT_NODE;
     }
 
     @Nonnull
@@ -56,4 +83,18 @@ public abstract class XmlReportParser<T> implements ReportParser<T> {
 
     @Nonnull
     protected abstract T parse(@Nonnull Document document);
+
+    @Nonnull
+    protected static Collection<Element> getElements(@Nonnull Document document, @Nonnull String tagName) {
+        NodeList nodeList = document.getElementsByTagName(tagName);
+
+        return parseElementsFromNodeList(nodeList);
+    }
+
+    @Nonnull
+    protected static Collection<Element> getElements(@Nonnull Element element, @Nonnull String tagName) {
+        NodeList nodeList = element.getElementsByTagName(tagName);
+
+        return parseElementsFromNodeList(nodeList);
+    }
 }
