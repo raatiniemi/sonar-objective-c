@@ -16,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import me.raatiniemi.sonarqube.XmlReportParser;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,24 +24,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-final class ReportParser {
+final class ReportParser extends XmlReportParser<List<CoberturaPackage>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
 
-    private final DocumentBuilder documentBuilder;
-
     private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
-        this.documentBuilder = documentBuilder;
+        super(documentBuilder);
     }
 
     @Nonnull
@@ -49,24 +45,8 @@ final class ReportParser {
     }
 
     @Nonnull
-    List<CoberturaPackage> parse(@Nonnull File xmlReportFile) {
-        if (!xmlReportFile.exists()) {
-            LOGGER.warn("Coverage report do not exist at path: {}", xmlReportFile.getPath());
-            return Collections.emptyList();
-        }
-
-        try {
-            Document document = documentBuilder.parse(xmlReportFile);
-            return parseCoberturaReport(document);
-        } catch (IOException | SAXException e) {
-            LOGGER.error("Unable to process coverage report: {}", xmlReportFile, e);
-        }
-
-        return Collections.emptyList();
-    }
-
-    @Nonnull
-    private List<CoberturaPackage> parseCoberturaReport(@Nonnull Document document) {
+    @Override
+    protected List<CoberturaPackage> parse(@Nonnull Document document) {
         NodeList elements = document.getElementsByTagName("package");
         if (elements.getLength() == 0) {
             return Collections.emptyList();

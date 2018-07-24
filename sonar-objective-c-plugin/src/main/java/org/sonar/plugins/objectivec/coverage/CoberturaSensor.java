@@ -34,6 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -73,6 +74,8 @@ public final class CoberturaSensor implements Sensor {
 
             return collectAvailableReports(context)
                     .map(reportParser::parse)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
         } catch (ParserConfigurationException e) {

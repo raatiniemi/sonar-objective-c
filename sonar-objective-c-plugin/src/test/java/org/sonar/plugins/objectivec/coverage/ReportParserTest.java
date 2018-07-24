@@ -27,6 +27,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -45,18 +46,19 @@ public class ReportParserTest {
     public void parse_withoutReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "non-existing.xml");
 
-        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+        Optional<List<CoberturaPackage>> actual = reportParser.parse(documentPath.toFile());
 
-        assertTrue(actual.isEmpty());
+        assertFalse(actual.isPresent());
     }
 
     @Test
     public void parse_withoutPackages() {
         Path documentPath = Paths.get(resourcePath.toString(), "cobertura-without-packages.xml");
 
-        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+        Optional<List<CoberturaPackage>> actual = reportParser.parse(documentPath.toFile());
 
-        assertTrue(actual.isEmpty());
+        assertTrue(actual.isPresent());
+        assertTrue(actual.get().isEmpty());
     }
 
     @Test
@@ -66,10 +68,10 @@ public class ReportParserTest {
         List<CoberturaPackage> expected = new ArrayList<>();
         expected.add(coberturaPackage);
 
-        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+        Optional<List<CoberturaPackage>> actual = reportParser.parse(documentPath.toFile());
 
-        assertFalse(actual.isEmpty());
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -84,10 +86,10 @@ public class ReportParserTest {
         List<CoberturaPackage> expected = new ArrayList<>();
         expected.add(coberturaPackage);
 
-        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+        Optional<List<CoberturaPackage>> actual = reportParser.parse(documentPath.toFile());
 
-        assertFalse(actual.isEmpty());
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -101,10 +103,10 @@ public class ReportParserTest {
         List<CoberturaPackage> expected = new ArrayList<>();
         expected.add(coberturaPackage);
 
-        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+        Optional<List<CoberturaPackage>> actual = reportParser.parse(documentPath.toFile());
 
-        assertFalse(actual.isEmpty());
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -122,9 +124,9 @@ public class ReportParserTest {
         List<CoberturaPackage> expected = new ArrayList<>();
         expected.add(coberturaPackage);
 
-        List<CoberturaPackage> actual = reportParser.parse(documentPath.toFile());
+        Optional<List<CoberturaPackage>> actual = reportParser.parse(documentPath.toFile());
 
-        assertFalse(actual.isEmpty());
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 }
