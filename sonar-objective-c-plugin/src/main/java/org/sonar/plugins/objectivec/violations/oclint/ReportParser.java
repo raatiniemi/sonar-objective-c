@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 final class ReportParser extends XmlReportParser<List<Violation>> {
@@ -32,6 +33,32 @@ final class ReportParser extends XmlReportParser<List<Violation>> {
     private static final String START_LINE = "startline";
     private static final String RULE = "rule";
     private static final String MESSAGE = "message";
+
+    private static final Function<Element, Violation> buildViolation = element -> Violation.builder()
+            .setPath(parsePath(element))
+            .setStartLine(parseStartLine(element))
+            .setRule(parseRule(element))
+            .setMessage(parseMessage(element))
+            .build();
+
+    @Nonnull
+    private static String parsePath(@Nonnull Element element) {
+        return element.getAttribute(PATH);
+    }
+
+    private static int parseStartLine(@Nonnull Element element) {
+        return Integer.parseInt(element.getAttribute(START_LINE));
+    }
+
+    @Nonnull
+    private static String parseRule(@Nonnull Element element) {
+        return element.getAttribute(RULE);
+    }
+
+    @Nonnull
+    private static String parseMessage(@Nonnull Element element) {
+        return element.getAttribute(MESSAGE);
+    }
 
     private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
         super(documentBuilder);
@@ -52,17 +79,7 @@ final class ReportParser extends XmlReportParser<List<Violation>> {
     protected List<Violation> parse(@Nonnull final Document document) {
         return getViolationElements(document)
                 .stream()
-                .map(this::buildViolation)
+                .map(buildViolation)
                 .collect(Collectors.toList());
-    }
-
-    @Nonnull
-    private Violation buildViolation(@Nonnull Element element) {
-        return Violation.builder()
-                .setPath(element.getAttribute(PATH))
-                .setStartLine(Integer.parseInt(element.getAttribute(START_LINE)))
-                .setRule(element.getAttribute(RULE))
-                .setMessage(element.getAttribute(MESSAGE))
-                .build();
     }
 }
