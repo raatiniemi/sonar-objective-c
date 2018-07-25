@@ -59,7 +59,7 @@ public class LizardSensorTest {
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        sensor = new LizardSensor(context.fileSystem(), settings);
+        sensor = new LizardSensor(settings);
 
         firstClassNameFile = createFile("TargetName/FirstClassNameTest.m");
         secondClassNameFile = createFile("TargetName/SecondClassNameTest.m");

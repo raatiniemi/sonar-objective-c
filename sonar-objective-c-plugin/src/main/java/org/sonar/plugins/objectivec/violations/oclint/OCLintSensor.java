@@ -21,7 +21,6 @@ import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -45,12 +44,10 @@ public final class OCLintSensor implements Sensor {
     private static final String NAME = "OCLint violation sensor";
 
     private final Settings conf;
-    private final FileSystem fileSystem;
 
     @SuppressWarnings("WeakerAccess")
-    public OCLintSensor(final FileSystem fileSystem, final Settings config) {
+    public OCLintSensor(final Settings config) {
         this.conf = config;
-        this.fileSystem = fileSystem;
     }
 
     @Override
@@ -61,7 +58,7 @@ public final class OCLintSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<Violation> violations = parseReportIn(fileSystem.baseDir());
+        List<Violation> violations = parseReportIn(context.fileSystem().baseDir());
 
         OCLintSensorPersistence persistence = OCLintSensorPersistence.create(context);
         persistence.saveMeasures(violations);

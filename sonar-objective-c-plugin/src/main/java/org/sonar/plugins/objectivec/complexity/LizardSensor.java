@@ -21,7 +21,6 @@ import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -32,6 +31,7 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -49,12 +49,10 @@ public class LizardSensor implements Sensor {
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 
     private final Settings conf;
-    private final FileSystem fileSystem;
 
     @SuppressWarnings("WeakerAccess")
-    public LizardSensor(final FileSystem moduleFileSystem, final Settings config) {
+    public LizardSensor(final Settings config) {
         this.conf = config;
-        this.fileSystem = moduleFileSystem;
     }
 
     @Override
@@ -65,23 +63,23 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        Set<LizardMeasure> measures = parseReportsIn();
+        Set<LizardMeasure> measures = parseReportsIn(context.fileSystem().baseDir());
         if (measures.isEmpty()) {
             return;
         }
 
         LOGGER.info("Saving results of complexity analysis");
-        new LizardSensorPersistence(context, fileSystem)
+        new LizardSensorPersistence(context, context.fileSystem())
                 .saveMeasures(measures);
     }
 
     @Nonnull
-    private Set<LizardMeasure> parseReportsIn() {
+    private Set<LizardMeasure> parseReportsIn(@Nonnull File reportDirectory) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             LizardReportParser parser = LizardReportParser.create(factory.newDocumentBuilder());
 
-            ReportPatternFinder reportFinder = ReportFinder.create(fileSystem.baseDir());
+            ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
             return reportFinder.findReportMatching(buildReportPath())
                     .map(parser::parse)
                     .filter(Optional::isPresent)
