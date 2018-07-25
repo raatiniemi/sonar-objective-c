@@ -33,18 +33,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-final class ViolationPersistor extends SensorPersistence<Violation> {
+final class OCLintSensorPersistence extends SensorPersistence<Violation> {
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private ViolationPersistor(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
+    private OCLintSensorPersistence(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
         this.context = context;
         this.fileSystem = fileSystem;
     }
 
     @Nonnull
-    static ViolationPersistor create(@Nonnull final SensorContext context) {
-        return new ViolationPersistor(context, context.fileSystem());
+    static OCLintSensorPersistence create(@Nonnull final SensorContext context) {
+        return new OCLintSensorPersistence(context, context.fileSystem());
     }
 
     @Override

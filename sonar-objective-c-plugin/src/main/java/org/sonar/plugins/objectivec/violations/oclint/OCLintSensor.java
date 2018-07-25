@@ -63,8 +63,8 @@ public final class OCLintSensor implements Sensor {
     public void execute(@Nonnull SensorContext context) {
         List<Violation> violations = parseReportIn(fileSystem.baseDir());
 
-        ViolationPersistor persistor = ViolationPersistor.create(context);
-        persistor.saveMeasures(violations);
+        OCLintSensorPersistence persistence = OCLintSensorPersistence.create(context);
+        persistence.saveMeasures(violations);
     }
 
     @Nonnull
