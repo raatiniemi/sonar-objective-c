@@ -63,8 +63,8 @@ public class SurefireSensor implements Sensor {
         Collection<File> availableReports = reportFinder.findReportsMatching("TEST-*.xml");
         List<TestReport> testReports = parseFiles(availableReports);
 
-        ReportPersistor persistor = ReportPersistor.create(context);
-        persistor.saveMeasures(testReports);
+        SurefireSensorPersistence persistence = SurefireSensorPersistence.create(context);
+        persistence.saveMeasures(testReports);
     }
 
     @Nonnull

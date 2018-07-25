@@ -38,7 +38,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class ReportPersistorTest {
+public class SurefireSensorPersistenceTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -47,12 +47,12 @@ public class ReportPersistorTest {
     private DefaultInputFile secondClassNameTestFile;
 
     private SensorContextTester context;
-    private ReportPersistor persistor;
+    private SurefireSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        persistor = ReportPersistor.create(context);
+        persistence = SurefireSensorPersistence.create(context);
 
         classNameTestFile = createFile("TestTarget/ClassNameTest.m");
         firstClassNameTestFile = createFile("TestTarget/FirstClassNameTest.m");
@@ -85,7 +85,7 @@ public class ReportPersistorTest {
 
     @Test
     public void saveMeasures_withoutReports() {
-        persistor.saveMeasures(Collections.emptyList());
+        persistence.saveMeasures(Collections.emptyList());
 
         // TODO: How can we verify that no measures are added.
     }
@@ -95,7 +95,7 @@ public class ReportPersistorTest {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.emptyList());
         addFileToFs(classNameTestFile);
 
-        persistor.saveMeasures(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         // TODO: How can we verify that no measures are added.
     }
@@ -107,7 +107,7 @@ public class ReportPersistorTest {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(classNameTestFile);
 
-        persistor.saveMeasures(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
@@ -129,7 +129,7 @@ public class ReportPersistorTest {
         addFileToFs(firstClassNameTestFile);
         addFileToFs(secondClassNameTestFile);
 
-        persistor.saveMeasures(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
@@ -153,7 +153,7 @@ public class ReportPersistorTest {
         addFileToFs(firstClassNameTestFile);
         addFileToFs(secondClassNameTestFile);
 
-        persistor.saveMeasures(testReports);
+        persistence.saveMeasures(testReports);
 
         assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
@@ -170,7 +170,7 @@ public class ReportPersistorTest {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(classNameTestFile);
 
-        persistor.saveMeasures(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
@@ -184,7 +184,7 @@ public class ReportPersistorTest {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(createFile("TestTarget/BaseClassName+CategoryNameTests.m"));
 
-        persistor.saveMeasures(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_FAILURES_KEY));
@@ -198,7 +198,7 @@ public class ReportPersistorTest {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(createFile("ClassNameTest.m"));
 
-        persistor.saveMeasures(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));

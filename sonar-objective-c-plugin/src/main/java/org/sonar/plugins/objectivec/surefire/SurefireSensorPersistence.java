@@ -31,20 +31,20 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
 
-final class ReportPersistor extends SensorPersistence<TestReport> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
+final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensorPersistence.class);
 
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private ReportPersistor(@Nonnull SensorContext context) {
+    private SurefireSensorPersistence(@Nonnull SensorContext context) {
         this.context = context;
         fileSystem = context.fileSystem();
     }
 
     @Nonnull
-    static ReportPersistor create(@Nonnull SensorContext sensorContext) {
-        return new ReportPersistor(sensorContext);
+    static SurefireSensorPersistence create(@Nonnull SensorContext sensorContext) {
+        return new SurefireSensorPersistence(sensorContext);
     }
 
     @Override
