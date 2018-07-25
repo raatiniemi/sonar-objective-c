@@ -62,8 +62,8 @@ public final class CoberturaSensor implements Sensor {
     public void execute(@Nonnull SensorContext context) {
         List<CoberturaPackage> availableReports = collectAndParseAvailableReports(context);
 
-        ReportPersistor reportPersistor = ReportPersistor.create(context);
-        reportPersistor.saveMeasures(availableReports);
+        CoberturaSensorPersistence persistence = CoberturaSensorPersistence.create(context);
+        persistence.saveMeasures(availableReports);
     }
 
     @Nonnull

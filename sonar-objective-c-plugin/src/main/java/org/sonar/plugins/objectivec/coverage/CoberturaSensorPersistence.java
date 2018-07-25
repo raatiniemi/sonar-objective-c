@@ -31,21 +31,21 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-final class ReportPersistor extends SensorPersistence<CoberturaPackage> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
+final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackage> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensorPersistence.class);
     private static final Predicate<CoberturaLine> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private ReportPersistor(@Nonnull SensorContext context) {
+    private CoberturaSensorPersistence(@Nonnull SensorContext context) {
         this.context = context;
         fileSystem = context.fileSystem();
     }
 
     @Nonnull
-    static ReportPersistor create(@Nonnull SensorContext context) {
-        return new ReportPersistor(context);
+    static CoberturaSensorPersistence create(@Nonnull SensorContext context) {
+        return new CoberturaSensorPersistence(context);
     }
 
 
