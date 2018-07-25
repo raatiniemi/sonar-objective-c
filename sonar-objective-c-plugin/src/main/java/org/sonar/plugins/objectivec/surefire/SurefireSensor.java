@@ -64,7 +64,7 @@ public class SurefireSensor implements Sensor {
         List<TestReport> testReports = parseFiles(availableReports);
 
         ReportPersistor persistor = ReportPersistor.create(context);
-        persistor.saveReports(testReports);
+        persistor.saveMeasures(testReports);
     }
 
     @Nonnull
