@@ -48,7 +48,6 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
         return new CoberturaSensorPersistence(context);
     }
 
-
     @Override
     public void saveMeasures(@Nonnull Collection<CoberturaPackage> measures) {
         for (CoberturaPackage coberturaPackage : measures) {
