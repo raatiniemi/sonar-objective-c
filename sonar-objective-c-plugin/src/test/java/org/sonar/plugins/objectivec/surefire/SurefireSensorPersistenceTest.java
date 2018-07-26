@@ -109,9 +109,9 @@ public class SurefireSensorPersistenceTest {
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure(classNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(classNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(classNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
@@ -131,12 +131,12 @@ public class SurefireSensorPersistenceTest {
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
@@ -155,12 +155,12 @@ public class SurefireSensorPersistenceTest {
 
         persistence.saveMeasures(testReports);
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
@@ -182,13 +182,14 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.success("BaseClassName_CategoryNameTests", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("BaseClassName_CategoryNameTests", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        addFileToFs(createFile("TestTarget/BaseClassName+CategoryNameTests.m"));
+        DefaultInputFile categoryNameTestFile = createFile("TestTarget/BaseClassName+CategoryNameTests.m");
+        addFileToFs(categoryNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure(categoryNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(categoryNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(categoryNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
