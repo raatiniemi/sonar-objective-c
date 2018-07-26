@@ -20,8 +20,6 @@ package org.sonar.plugins.objectivec.coverage;
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -29,8 +27,7 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +36,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class CoberturaSensor extends XmlReportSensor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
     private static final String NAME = "Cobertura sensor";
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
             + ".coverage.reportPattern";
@@ -66,20 +62,18 @@ public final class CoberturaSensor extends XmlReportSensor {
 
     @Nonnull
     private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            CoberturaXmlReportParser reportParser = CoberturaXmlReportParser.create(factory.newDocumentBuilder());
-
-            return collectAvailableReports(projectDirectory)
-                    .map(reportParser::parse)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .flatMap(List::stream)
-                    .collect(Collectors.toList());
-        } catch (ParserConfigurationException e) {
-            LOGGER.error("Unable to create document builder", e);
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
             return Collections.emptyList();
         }
+
+        CoberturaXmlReportParser reportParser = CoberturaXmlReportParser.create(documentBuilder.get());
+        return collectAvailableReports(projectDirectory)
+                .map(reportParser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     @Nonnull

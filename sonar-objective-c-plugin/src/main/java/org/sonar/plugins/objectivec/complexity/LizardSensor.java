@@ -29,8 +29,7 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.util.Collections;
 import java.util.Optional;
@@ -73,19 +72,17 @@ public class LizardSensor extends XmlReportSensor {
 
     @Nonnull
     private Set<LizardMeasure> parseReportsIn(@Nonnull File reportDirectory) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            LizardXmlReportParser parser = LizardXmlReportParser.create(factory.newDocumentBuilder());
-
-            ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
-            return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
-                    .map(parser::parse)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .orElse(Collections.emptySet());
-        } catch (ParserConfigurationException e) {
-            LOGGER.error("Unable to create new document builder", e);
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
             return Collections.emptySet();
         }
+
+        LizardXmlReportParser parser = LizardXmlReportParser.create(documentBuilder.get());
+        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
+        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+                .map(parser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(Collections.emptySet());
     }
 }

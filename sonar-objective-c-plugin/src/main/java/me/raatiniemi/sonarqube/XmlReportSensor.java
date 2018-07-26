@@ -23,6 +23,10 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.config.Settings;
 
 import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.Optional;
 
 public abstract class XmlReportSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(XmlReportSensor.class);
@@ -43,5 +47,17 @@ public abstract class XmlReportSensor implements Sensor {
         }
 
         return value;
+    }
+
+    @Nonnull
+    protected final Optional<DocumentBuilder> createDocumentBuilder() {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+            return Optional.of(factory.newDocumentBuilder());
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("Unable to create new document builder", e);
+            return Optional.empty();
+        }
     }
 }

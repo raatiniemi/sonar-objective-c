@@ -20,16 +20,13 @@ package org.sonar.plugins.objectivec.surefire;
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,8 +35,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SurefireSensor extends XmlReportSensor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
-
     private static final String NAME = "Surefire sensor";
     private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
     private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
@@ -67,19 +62,17 @@ public class SurefireSensor extends XmlReportSensor {
     }
 
     @Nonnull
-    private static List<TestReport> parseFiles(@Nonnull Collection<File> reports) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            SurefireXmlReportParser parser = SurefireXmlReportParser.create(factory.newDocumentBuilder());
-
-            return reports.stream()
-                    .map(parser::parse)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList());
-        } catch (ParserConfigurationException e) {
-            LOGGER.error("Unable to create new document builder", e);
+    private List<TestReport> parseFiles(@Nonnull Collection<File> reports) {
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
             return Collections.emptyList();
         }
+
+        SurefireXmlReportParser parser = SurefireXmlReportParser.create(documentBuilder.get());
+        return reports.stream()
+                .map(parser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 }
