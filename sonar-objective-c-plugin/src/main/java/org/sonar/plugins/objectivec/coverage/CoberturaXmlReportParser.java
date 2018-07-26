@@ -30,20 +30,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-final class ReportParser extends XmlReportParser<List<CoberturaPackage>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
+final class CoberturaXmlReportParser extends XmlReportParser<List<CoberturaPackage>> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaXmlReportParser.class);
 
     private static final String PACKAGE = "package";
     private static final String CLASS = "class";
     private static final String LINE = "line";
 
-    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
+    private CoberturaXmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
         super(documentBuilder);
     }
 
     @Nonnull
-    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new ReportParser(documentBuilder);
+    static CoberturaXmlReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new CoberturaXmlReportParser(documentBuilder);
     }
 
     @Nonnull

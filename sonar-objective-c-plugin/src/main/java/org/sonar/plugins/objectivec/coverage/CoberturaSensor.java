@@ -68,7 +68,7 @@ public final class CoberturaSensor extends XmlReportSensor {
     private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            ReportParser reportParser = ReportParser.create(factory.newDocumentBuilder());
+            CoberturaXmlReportParser reportParser = CoberturaXmlReportParser.create(factory.newDocumentBuilder());
 
             return collectAvailableReports(projectDirectory)
                     .map(reportParser::parse)

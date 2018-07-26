@@ -33,15 +33,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
-public class ReportParserTest {
+public class OCLintXmlReportParserTest {
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
 
-    private ReportParser parser;
+    private OCLintXmlReportParser parser;
 
     @Before
     public void setUp() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        parser = ReportParser.create(factory.newDocumentBuilder());
+        parser = OCLintXmlReportParser.create(factory.newDocumentBuilder());
     }
 
     @Test

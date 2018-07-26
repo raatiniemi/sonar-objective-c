@@ -75,7 +75,7 @@ public class LizardSensor extends XmlReportSensor {
     private Set<LizardMeasure> parseReportsIn(@Nonnull File reportDirectory) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            LizardReportParser parser = LizardReportParser.create(factory.newDocumentBuilder());
+            LizardXmlReportParser parser = LizardXmlReportParser.create(factory.newDocumentBuilder());
 
             ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
             return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))

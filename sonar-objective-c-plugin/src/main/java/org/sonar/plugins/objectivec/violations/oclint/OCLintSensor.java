@@ -66,7 +66,7 @@ public final class OCLintSensor extends XmlReportSensor {
     private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            ReportParser parser = ReportParser.create(factory.newDocumentBuilder());
+            OCLintXmlReportParser parser = OCLintXmlReportParser.create(factory.newDocumentBuilder());
 
             ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
             return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))

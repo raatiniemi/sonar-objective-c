@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-final class ReportParser extends XmlReportParser<List<Violation>> {
+final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
     private static final String VIOLATION = "violation";
     private static final String PATH = "path";
     private static final String START_LINE = "startline";
@@ -60,13 +60,13 @@ final class ReportParser extends XmlReportParser<List<Violation>> {
         return element.getAttribute(MESSAGE);
     }
 
-    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
+    private OCLintXmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
         super(documentBuilder);
     }
 
     @Nonnull
-    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new ReportParser(documentBuilder);
+    static OCLintXmlReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new OCLintXmlReportParser(documentBuilder);
     }
 
     @Nonnull

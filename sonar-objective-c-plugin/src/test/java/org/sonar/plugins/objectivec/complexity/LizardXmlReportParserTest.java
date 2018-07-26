@@ -34,18 +34,18 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
-public class LizardReportParserTest {
+public class LizardXmlReportParserTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
     private final Path resourcePath = Paths.get("src", "test", "resources", "lizard");
 
-    private LizardReportParser reportParser;
+    private LizardXmlReportParser reportParser;
 
     @Before
     public void setup() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        reportParser = LizardReportParser.create(factory.newDocumentBuilder());
+        reportParser = LizardXmlReportParser.create(factory.newDocumentBuilder());
     }
 
     @Test

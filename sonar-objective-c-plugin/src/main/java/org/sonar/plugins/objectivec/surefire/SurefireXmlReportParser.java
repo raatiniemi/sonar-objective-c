@@ -31,8 +31,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-final class ReportParser extends XmlReportParser<TestReport> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
+final class SurefireXmlReportParser extends XmlReportParser<TestReport> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireXmlReportParser.class);
 
     private static final String TEST_SUITE = "testsuite";
     private static final String TEST_CASE = "testcase";
@@ -40,13 +40,13 @@ final class ReportParser extends XmlReportParser<TestReport> {
     private static final String NAME = "name";
     private static final String TIME = "time";
 
-    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
+    private SurefireXmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
         super(documentBuilder);
     }
 
     @Nonnull
-    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new ReportParser(documentBuilder);
+    static SurefireXmlReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new SurefireXmlReportParser(documentBuilder);
     }
 
     @Nonnull

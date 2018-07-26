@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * This class parses xml Reports form the tool Lizard in order to extract this measures: COMPLEXITY, FUNCTIONS
  */
-final class LizardReportParser extends XmlReportParser<Set<LizardMeasure>> {
+final class LizardXmlReportParser extends XmlReportParser<Set<LizardMeasure>> {
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
     private static final String MEASURE_ITEM = "item";
@@ -41,13 +41,13 @@ final class LizardReportParser extends XmlReportParser<Set<LizardMeasure>> {
     private static final int CYCLOMATIC_COMPLEXITY_INDEX = 2;
     private static final int FUNCTIONS_INDEX = 3;
 
-    private LizardReportParser(@Nonnull DocumentBuilder documentBuilder) {
+    private LizardXmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
         super(documentBuilder);
     }
 
     @Nonnull
-    static LizardReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new LizardReportParser(documentBuilder);
+    static LizardXmlReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new LizardXmlReportParser(documentBuilder);
     }
 
     @Nonnull

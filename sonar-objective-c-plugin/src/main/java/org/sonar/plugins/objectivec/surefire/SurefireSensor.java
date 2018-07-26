@@ -70,7 +70,7 @@ public class SurefireSensor extends XmlReportSensor {
     private static List<TestReport> parseFiles(@Nonnull Collection<File> reports) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            ReportParser parser = ReportParser.create(factory.newDocumentBuilder());
+            SurefireXmlReportParser parser = SurefireXmlReportParser.create(factory.newDocumentBuilder());
 
             return reports.stream()
                     .map(parser::parse)
