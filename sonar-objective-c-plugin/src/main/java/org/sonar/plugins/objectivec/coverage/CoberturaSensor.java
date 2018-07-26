@@ -58,19 +58,19 @@ public final class CoberturaSensor extends ReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<CoberturaPackage> availableReports = collectAndParseAvailableReports(context);
+        List<CoberturaPackage> availableReports = collectAndParseAvailableReports(context.fileSystem().baseDir());
 
         CoberturaSensorPersistence persistence = CoberturaSensorPersistence.create(context);
         persistence.saveMeasures(availableReports);
     }
 
     @Nonnull
-    private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull SensorContext context) {
+    private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             ReportParser reportParser = ReportParser.create(factory.newDocumentBuilder());
 
-            return collectAvailableReports(context)
+            return collectAvailableReports(projectDirectory)
                     .map(reportParser::parse)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
@@ -83,8 +83,8 @@ public final class CoberturaSensor extends ReportSensor {
     }
 
     @Nonnull
-    private Stream<File> collectAvailableReports(@Nonnull SensorContext context) {
-        ReportPatternFinder reportFinder = ReportFinder.create(context.fileSystem().baseDir());
+    private Stream<File> collectAvailableReports(@Nonnull File projectDirectory) {
+        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
 
         return reportFinder
                 .findReportsMatching(getSetting(REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN))
