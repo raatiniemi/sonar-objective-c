@@ -19,9 +19,9 @@ package org.sonar.plugins.objectivec.surefire;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.ReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -37,18 +37,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SurefireSensor implements Sensor {
+public class SurefireSensor extends ReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
 
     private static final String NAME = "Surefire sensor";
     private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
     private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
-    private final Settings settings;
-
     @SuppressWarnings("WeakerAccess")
-    public SurefireSensor(final Settings config) {
-        this.settings = config;
+    public SurefireSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -59,23 +57,13 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        ReportPatternFinder reportFinder = ReportFinder.create(new File(getReportDirectoryPath()));
+        File reportDirectory = new File(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH));
+        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
         Collection<File> availableReports = reportFinder.findReportsMatching("TEST-*.xml");
         List<TestReport> testReports = parseFiles(availableReports);
 
         SurefireSensorPersistence persistence = SurefireSensorPersistence.create(context);
         persistence.saveMeasures(testReports);
-    }
-
-    @Nonnull
-    private String getReportDirectoryPath() {
-        String reportDirectoryPath = settings.getString(REPORT_PATH_KEY);
-        if (reportDirectoryPath == null) {
-            LOGGER.info("No 'sonar.junit.reportsPath' specified, using default path");
-            return DEFAULT_REPORT_PATH;
-        }
-
-        return reportDirectoryPath;
     }
 
     @Nonnull

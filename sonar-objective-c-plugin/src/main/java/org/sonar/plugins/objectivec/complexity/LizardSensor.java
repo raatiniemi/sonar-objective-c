@@ -19,9 +19,9 @@ package org.sonar.plugins.objectivec.complexity;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.ReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -40,7 +40,7 @@ import java.util.Set;
  * This sensor searches for the report generated from the tool Lizard
  * in order to save complexity metrics.
  */
-public class LizardSensor implements Sensor {
+public class LizardSensor extends ReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
 
     private static final String NAME = "Lizard complexity sensor";
@@ -48,11 +48,9 @@ public class LizardSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 
-    private final Settings conf;
-
     @SuppressWarnings("WeakerAccess")
-    public LizardSensor(final Settings config) {
-        this.conf = config;
+    public LizardSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -80,7 +78,7 @@ public class LizardSensor implements Sensor {
             LizardReportParser parser = LizardReportParser.create(factory.newDocumentBuilder());
 
             ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
-            return reportFinder.findReportMatching(buildReportPath())
+            return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
                     .map(parser::parse)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
@@ -89,22 +87,5 @@ public class LizardSensor implements Sensor {
             LOGGER.error("Unable to create new document builder", e);
             return Collections.emptySet();
         }
-    }
-
-    /**
-     * Build path for the report file using the {@code basePath} as prefix
-     *
-     * @return the default report path or the one specified in the sonar-project.properties
-     */
-    @Nonnull
-    private String buildReportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-
-        if (reportPath == null) {
-            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-
-        return reportPath;
     }
 }

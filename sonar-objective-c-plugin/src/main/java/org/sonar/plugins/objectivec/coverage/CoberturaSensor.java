@@ -19,9 +19,9 @@ package org.sonar.plugins.objectivec.coverage;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.ReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -38,18 +38,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class CoberturaSensor implements Sensor {
+public final class CoberturaSensor extends ReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
     private static final String NAME = "Cobertura sensor";
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
             + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
 
-    private final Settings settings;
-
     @SuppressWarnings("WeakerAccess")
-    public CoberturaSensor(final Settings settings) {
-        this.settings = settings;
+    public CoberturaSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -88,18 +86,8 @@ public final class CoberturaSensor implements Sensor {
     private Stream<File> collectAvailableReports(@Nonnull SensorContext context) {
         ReportPatternFinder reportFinder = ReportFinder.create(context.fileSystem().baseDir());
 
-        return reportFinder.findReportsMatching(getReportFilePattern()).stream();
-    }
-
-    @Nonnull
-    private String getReportFilePattern() {
-        String reportPath = settings.getString(REPORT_PATTERN_KEY);
-
-        if (reportPath == null) {
-            LOGGER.debug("No value specified for \"" + REPORT_PATTERN_KEY + "\" using default report pattern");
-            reportPath = DEFAULT_REPORT_PATTERN;
-        }
-
-        return reportPath;
+        return reportFinder
+                .findReportsMatching(getSetting(REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN))
+                .stream();
     }
 }

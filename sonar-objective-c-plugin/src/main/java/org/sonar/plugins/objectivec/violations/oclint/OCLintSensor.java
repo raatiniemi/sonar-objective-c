@@ -19,9 +19,9 @@ package org.sonar.plugins.objectivec.violations.oclint;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.ReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -36,18 +36,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public final class OCLintSensor implements Sensor {
+public final class OCLintSensor extends ReportSensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintSensor.class);
     private static final String NAME = "OCLint violation sensor";
 
-    private final Settings conf;
-
     @SuppressWarnings("WeakerAccess")
-    public OCLintSensor(final Settings config) {
-        this.conf = config;
+    public OCLintSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -71,7 +69,7 @@ public final class OCLintSensor implements Sensor {
             ReportParser parser = ReportParser.create(factory.newDocumentBuilder());
 
             ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
-            return reportFinder.findReportMatching(buildReportPath())
+            return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
                     .map(parser::parse)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
@@ -80,16 +78,5 @@ public final class OCLintSensor implements Sensor {
             LOGGER.error("Unable to create new document builder", e);
             return Collections.emptyList();
         }
-    }
-
-    private String buildReportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-
-        if (reportPath == null) {
-            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-
-        return reportPath;
     }
 }
