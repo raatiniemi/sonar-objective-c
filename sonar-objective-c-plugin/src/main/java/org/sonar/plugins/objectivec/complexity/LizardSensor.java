@@ -19,7 +19,7 @@ package org.sonar.plugins.objectivec.complexity;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
-import me.raatiniemi.sonarqube.ReportSensor;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -40,7 +40,7 @@ import java.util.Set;
  * This sensor searches for the report generated from the tool Lizard
  * in order to save complexity metrics.
  */
-public class LizardSensor extends ReportSensor {
+public class LizardSensor extends XmlReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
 
     private static final String NAME = "Lizard complexity sensor";

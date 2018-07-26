@@ -19,7 +19,7 @@ package org.sonar.plugins.objectivec.coverage;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
-import me.raatiniemi.sonarqube.ReportSensor;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class CoberturaSensor extends ReportSensor {
+public final class CoberturaSensor extends XmlReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
     private static final String NAME = "Cobertura sensor";
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX

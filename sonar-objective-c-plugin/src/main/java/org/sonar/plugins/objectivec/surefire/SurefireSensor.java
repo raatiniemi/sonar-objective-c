@@ -19,7 +19,7 @@ package org.sonar.plugins.objectivec.surefire;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
-import me.raatiniemi.sonarqube.ReportSensor;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SurefireSensor extends ReportSensor {
+public class SurefireSensor extends XmlReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
 
     private static final String NAME = "Surefire sensor";

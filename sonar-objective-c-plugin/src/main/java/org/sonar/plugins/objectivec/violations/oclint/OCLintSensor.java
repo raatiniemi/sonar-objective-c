@@ -19,7 +19,7 @@ package org.sonar.plugins.objectivec.violations.oclint;
 
 import me.raatiniemi.sonarqube.ReportFinder;
 import me.raatiniemi.sonarqube.ReportPatternFinder;
-import me.raatiniemi.sonarqube.ReportSensor;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public final class OCLintSensor extends ReportSensor {
+public final class OCLintSensor extends XmlReportSensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
 

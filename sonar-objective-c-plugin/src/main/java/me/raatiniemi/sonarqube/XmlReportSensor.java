@@ -24,12 +24,12 @@ import org.sonar.api.config.Settings;
 
 import javax.annotation.Nonnull;
 
-public abstract class ReportSensor implements Sensor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportSensor.class);
+public abstract class XmlReportSensor implements Sensor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlReportSensor.class);
 
     private final Settings settings;
 
-    protected ReportSensor(@Nonnull Settings settings) {
+    protected XmlReportSensor(@Nonnull Settings settings) {
         this.settings = settings;
     }
 
