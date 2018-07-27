@@ -7,12 +7,12 @@
             <label>NCSS</label>
             <label>CCN</label>
         </labels>
-        <item name="viewDidLoad(...) at App/Controller/Accelerate/AccelerationViewController.m:105">
+        <item name="viewDidLoad(...) at TargetName/ClassName.m:105">
             <value>2</value>
             <value>15</value>
             <value>1</value>
         </item>
-        <item name="viewWillAppear:(...) at App/Controller/Accelerate/AccelerationViewController.m:130">
+        <item name="viewWillAppear:(...) at TargetName/ClassName.m:130">
             <value>3</value>
             <value>20</value>
             <value>5</value>
@@ -33,13 +33,13 @@
         <label>CCN</label>
         <label>Functions</label>
     </labels>
-    <item name="App/Controller/Accelerate/AccelerationViewController.h">
+    <item name="TargetName/ClassName.h">
         <value>1</value>
         <value>2</value>
         <value>0
         <value>0</value>
     </item>
-    <item name="App/Controller/Accelerate/AccelerationViewController.m">
+    <item name="TargetName/ClassName.m">
         <value>2</value>
         <value>868</value>
         <value>6</value>

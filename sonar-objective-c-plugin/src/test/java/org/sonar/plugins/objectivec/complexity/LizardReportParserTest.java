@@ -45,12 +45,12 @@ public class LizardReportParserTest {
         Path documentPath = Paths.get(resourcePath.toString(), "correctFile.xml");
         Set<LizardMeasure> expected = new LinkedHashSet<>();
         expected.add(LizardMeasure.builder()
-                .setPath("App/Controller/Accelerate/AccelerationViewController.h")
+                .setPath("TargetName/ClassName.h")
                 .setNumberOfFunctions(0)
                 .setComplexity(0)
                 .build());
         expected.add(LizardMeasure.builder()
-                .setPath("App/Controller/Accelerate/AccelerationViewController.m")
+                .setPath("TargetName/ClassName.m")
                 .setNumberOfFunctions(2)
                 .setComplexity(6)
                 .build());
