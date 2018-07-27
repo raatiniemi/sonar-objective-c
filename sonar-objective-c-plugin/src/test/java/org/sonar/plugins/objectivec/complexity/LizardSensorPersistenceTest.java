@@ -34,7 +34,7 @@ public class LizardSensorPersistenceTest {
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        persistence = new LizardSensorPersistence(context, context.fileSystem());
+        persistence = LizardSensorPersistence.create(context);
 
         classNameFile = createFile();
     }

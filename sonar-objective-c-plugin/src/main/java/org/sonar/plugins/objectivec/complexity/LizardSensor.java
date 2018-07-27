@@ -66,8 +66,8 @@ public class LizardSensor extends XmlReportSensor {
         }
 
         LOGGER.info("Saving results of complexity analysis");
-        new LizardSensorPersistence(context, context.fileSystem())
-                .saveMeasures(measures);
+        LizardSensorPersistence persistence = LizardSensorPersistence.create(context);
+        persistence.saveMeasures(measures);
     }
 
     @Nonnull

@@ -42,9 +42,14 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
     private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    LizardSensorPersistence(@Nonnull final SensorContext sensorContext, @Nonnull final FileSystem fileSystem) {
+    private LizardSensorPersistence(@Nonnull SensorContext sensorContext) {
         this.sensorContext = sensorContext;
-        this.fileSystem = fileSystem;
+        this.fileSystem = sensorContext.fileSystem();
+    }
+
+    @Nonnull
+    static LizardSensorPersistence create(@Nonnull SensorContext context) {
+        return new LizardSensorPersistence(context);
     }
 
     /**
