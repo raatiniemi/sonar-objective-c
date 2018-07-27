@@ -21,14 +21,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.sonar.api.measures.CoreMetrics;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -40,11 +40,15 @@ public class LizardReportParserTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
+    private LizardReportParser reportParser;
+
     private File correctFile;
     private File incorrectFile;
 
     @Before
     public void setup() throws IOException {
+        reportParser = new LizardReportParser();
+
         correctFile = createCorrectFile();
         incorrectFile = createIncorrectFile();
     }
@@ -123,51 +127,28 @@ public class LizardReportParserTest {
 
     @Test
     public void parseReportShouldReturnMapWhenXMLFileIsCorrect() {
-        LizardReportParser parser = new LizardReportParser();
+        Set<LizardMeasure> expected = new LinkedHashSet<>();
+        expected.add(LizardMeasure.builder()
+                .setPath("App/Controller/Accelerate/AccelerationViewController.h")
+                .setNumberOfFunctions(0)
+                .setComplexity(0)
+                .build());
+        expected.add(LizardMeasure.builder()
+                .setPath("App/Controller/Accelerate/AccelerationViewController.m")
+                .setNumberOfFunctions(2)
+                .setComplexity(6)
+                .build());
 
-        assertNotNull("correct file is null", correctFile);
+        Collection<LizardMeasure> actual = reportParser.parseReport(correctFile);
 
-        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(correctFile);
-
-        assertFalse("report is empty", report.isEmpty());
-
-        assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
-        List<LizardMeasure<Integer>> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
-        assertEquals(2, list1.size());
-
-        for (LizardMeasure measure : list1) {
-            String s = measure.getMetric().key();
-
-            if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                assertEquals("Header Functions has a wrong value", 0, measure.getValue());
-            } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                assertEquals("Header Complexity has a wrong value", 0, measure.getValue());
-            }
-        }
-
-        assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
-
-        List<LizardMeasure<Integer>> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
-        assertEquals(2, list2.size());
-        for (LizardMeasure measure : list2) {
-            String s = measure.getMetric().key();
-
-            if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                assertEquals("MFile Functions has a wrong value", 2, measure.getValue());
-            } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                assertEquals("MFile Complexity has a wrong value", 6, measure.getValue());
-            }
-        }
+        assertFalse(actual.isEmpty());
+        assertEquals(expected, actual);
     }
 
     @Test
     public void parseReportShouldReturnNullWhenXMLFileIsIncorrect() {
-        LizardReportParser parser = new LizardReportParser();
+        Collection<LizardMeasure> actual = reportParser.parseReport(incorrectFile);
 
-        assertNotNull("correct file is null", incorrectFile);
-
-        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(incorrectFile);
-        assertTrue("report is not empty", report.isEmpty());
-
+        assertTrue(actual.isEmpty());
     }
 }

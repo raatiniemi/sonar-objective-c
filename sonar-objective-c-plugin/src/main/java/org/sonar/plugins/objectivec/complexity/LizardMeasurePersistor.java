@@ -24,12 +24,12 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.measures.CoreMetrics;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -50,15 +50,15 @@ final class LizardMeasurePersistor {
      *
      * @param measures Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    <T extends Serializable> void saveMeasures(@Nonnull final Map<String, List<LizardMeasure<T>>> measures) {
-        for (Map.Entry<String, List<LizardMeasure<T>>> entry : measures.entrySet()) {
-            Optional<InputFile> value = buildInputFile(entry.getKey());
+    void saveMeasures(@Nonnull Collection<LizardMeasure> measures) {
+        for (LizardMeasure measure : measures) {
+            Optional<InputFile> value = buildInputFile(measure.getPath());
             if (value.isPresent()) {
-                entry.getValue().forEach(measure -> saveMeasure(value.get(), measure));
+                saveMeasures(value.get(), measure);
                 continue;
             }
 
-            LOGGER.warn("File not included {}", entry.getKey());
+            LOGGER.warn("File not included {}", measure.getPath());
         }
     }
 
@@ -70,18 +70,17 @@ final class LizardMeasurePersistor {
         return Optional.ofNullable(fileSystem.inputFile(predicate));
     }
 
-    private <T extends Serializable> void saveMeasure(@Nonnull InputFile inputFile, @Nonnull LizardMeasure<T> measure) {
-        Metric<T> metric = measure.getMetric();
+    private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull LizardMeasure measure) {
+        saveMeasure(inputFile, CoreMetrics.COMPLEXITY, measure.getComplexity());
+        saveMeasure(inputFile, CoreMetrics.FUNCTIONS, measure.getNumberOfFunctions());
+    }
 
-        try {
-            LOGGER.debug("Save measure {} for file {}", metric.key(), inputFile.relativePath());
-            sensorContext.<T>newMeasure()
-                    .on(inputFile)
-                    .forMetric(metric)
-                    .withValue(measure.getValue())
-                    .save();
-        } catch (Exception e) {
-            LOGGER.error(" Exception -> {} -> {}", inputFile.relativePath(), metric.key(), e);
-        }
+    private void saveMeasure(InputFile inputFile, Metric metric, Serializable value) {
+        //noinspection unchecked
+        sensorContext.newMeasure()
+                .on(inputFile)
+                .forMetric(metric)
+                .withValue(value)
+                .save();
     }
 }
