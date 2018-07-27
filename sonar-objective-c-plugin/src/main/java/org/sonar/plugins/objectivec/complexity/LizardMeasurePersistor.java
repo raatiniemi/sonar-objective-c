@@ -17,6 +17,7 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
+import me.raatiniemi.sonarqube.SensorPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -35,7 +36,7 @@ import java.util.Optional;
 /**
  * This class is used to save the measures created by the lizardReportParser in the sonar database
  */
-final class LizardMeasurePersistor {
+final class LizardMeasurePersistor extends SensorPersistence<LizardMeasure> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
     private final SensorContext sensorContext;
@@ -50,7 +51,7 @@ final class LizardMeasurePersistor {
      *
      * @param measures Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    void saveMeasures(@Nonnull Collection<LizardMeasure> measures) {
+    public void saveMeasures(@Nonnull Collection<LizardMeasure> measures) {
         for (LizardMeasure measure : measures) {
             Optional<InputFile> value = buildInputFile(measure.getPath());
             if (value.isPresent()) {
