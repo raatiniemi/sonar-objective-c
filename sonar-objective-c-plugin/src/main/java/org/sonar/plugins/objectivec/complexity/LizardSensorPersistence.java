@@ -36,13 +36,13 @@ import java.util.Optional;
 /**
  * This class is used to save the measures created by the lizardReportParser in the sonar database
  */
-final class LizardMeasurePersistor extends SensorPersistence<LizardMeasure> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
+final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensorPersistence.class);
 
     private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    LizardMeasurePersistor(@Nonnull final SensorContext sensorContext, @Nonnull final FileSystem fileSystem) {
+    LizardSensorPersistence(@Nonnull final SensorContext sensorContext, @Nonnull final FileSystem fileSystem) {
         this.sensorContext = sensorContext;
         this.fileSystem = fileSystem;
     }

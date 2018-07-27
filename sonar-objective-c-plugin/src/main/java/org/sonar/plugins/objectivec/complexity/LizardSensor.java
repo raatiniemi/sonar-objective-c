@@ -71,7 +71,7 @@ public class LizardSensor implements Sensor {
         }
 
         LOGGER.info("Saving results of complexity analysis");
-        new LizardMeasurePersistor(context, fileSystem)
+        new LizardSensorPersistence(context, fileSystem)
                 .saveMeasures(measures);
     }
 

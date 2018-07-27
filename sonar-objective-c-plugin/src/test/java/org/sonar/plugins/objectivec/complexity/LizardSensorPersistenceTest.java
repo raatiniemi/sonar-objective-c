@@ -22,19 +22,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(JUnit4.class)
-public class LizardMeasurePersistorTest {
+public class LizardSensorPersistenceTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private DefaultInputFile classNameFile;
 
     private SensorContextTester context;
-    private LizardMeasurePersistor persistor;
+    private LizardSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        persistor = new LizardMeasurePersistor(context, context.fileSystem());
+        persistence = new LizardSensorPersistence(context, context.fileSystem());
 
         classNameFile = createFile();
     }
@@ -70,7 +70,7 @@ public class LizardMeasurePersistorTest {
                 .build();
         List<LizardMeasure> measures = Collections.singletonList(measure);
 
-        persistor.saveMeasures(measures);
+        persistence.saveMeasures(measures);
 
         assertNull(getMeasure(CoreMetrics.FUNCTIONS_KEY));
         assertNull(getMeasure(CoreMetrics.COMPLEXITY_KEY));
@@ -86,7 +86,7 @@ public class LizardMeasurePersistorTest {
         List<LizardMeasure> measures = Collections.singletonList(measure);
         addFileToFs(classNameFile);
 
-        persistor.saveMeasures(measures);
+        persistence.saveMeasures(measures);
 
         assertEquals(Integer.valueOf(2), getMeasure(CoreMetrics.FUNCTIONS_KEY));
         assertEquals(Integer.valueOf(5), getMeasure(CoreMetrics.COMPLEXITY_KEY));
