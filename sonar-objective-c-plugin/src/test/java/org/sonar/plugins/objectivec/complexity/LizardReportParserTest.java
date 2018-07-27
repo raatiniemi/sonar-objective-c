@@ -32,7 +32,7 @@ public class LizardReportParserTest {
     private final LizardReportParser reportParser = new LizardReportParser();
 
     @Test
-    public void parseReportShouldReturnMapWhenXMLFileIsCorrect() {
+    public void parseReport_withCorrectFile() {
         Path documentPath = Paths.get(resourcePath.toString(), "correctFile.xml");
         Set<LizardMeasure> expected = new LinkedHashSet<>();
         expected.add(LizardMeasure.builder()
@@ -53,7 +53,7 @@ public class LizardReportParserTest {
     }
 
     @Test
-    public void parseReportShouldReturnNullWhenXMLFileIsIncorrect() {
+    public void parseReport_withIncorrectFile() {
         Path documentPath = Paths.get(resourcePath.toString(), "incorrectFile.xml");
 
         Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
