@@ -23,12 +23,13 @@ final class CoberturaPackage {
     private final String name;
     private final Set<CoberturaClass> classes;
 
-    private CoberturaPackage(String name, Set<CoberturaClass> classes) {
+    private CoberturaPackage(@Nonnull String name, @Nonnull Set<CoberturaClass> classes) {
         this.name = name;
         this.classes = classes;
     }
 
-    static CoberturaPackage from(String name, List<CoberturaClass> classes) {
+    @Nonnull
+    static CoberturaPackage from(@Nonnull String name, @Nonnull List<CoberturaClass> classes) {
         return new CoberturaPackage(name, new LinkedHashSet<>(classes));
     }
 

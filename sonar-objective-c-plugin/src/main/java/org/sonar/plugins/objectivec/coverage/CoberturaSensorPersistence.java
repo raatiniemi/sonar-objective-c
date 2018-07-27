@@ -77,7 +77,8 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
                 .forEach(saveCoverageForLine(inputFile));
     }
 
-    private Consumer<CoberturaLine> saveCoverageForLine(InputFile inputFile) {
+    @Nonnull
+    private Consumer<CoberturaLine> saveCoverageForLine(@Nonnull InputFile inputFile) {
         return line -> {
             NewCoverage newCoverage = context.newCoverage()
                     .onFile(inputFile)

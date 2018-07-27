@@ -81,7 +81,7 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
         saveMeasure(inputFile, CoreMetrics.FUNCTIONS, measure.getNumberOfFunctions());
     }
 
-    private void saveMeasure(InputFile inputFile, Metric metric, Serializable value) {
+    private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, @Nonnull Serializable value) {
         //noinspection unchecked
         sensorContext.newMeasure()
                 .on(inputFile)

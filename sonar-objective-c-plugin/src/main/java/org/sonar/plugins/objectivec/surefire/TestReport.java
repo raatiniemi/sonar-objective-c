@@ -23,7 +23,7 @@ final class TestReport {
     private final String targetName;
     private final Set<TestSuite> testSuites;
 
-    private TestReport(String targetName, Set<TestSuite> testSuites) {
+    private TestReport(@Nonnull String targetName, @Nonnull Set<TestSuite> testSuites) {
         this.targetName = targetName;
         this.testSuites = testSuites;
     }

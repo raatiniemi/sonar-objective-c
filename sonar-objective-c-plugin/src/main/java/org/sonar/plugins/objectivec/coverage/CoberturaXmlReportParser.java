@@ -24,6 +24,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import java.util.Collection;
 import java.util.List;
@@ -130,12 +131,12 @@ final class CoberturaXmlReportParser extends XmlReportParser<List<CoberturaPacka
         return extractConditionCoverageValue(rawConditionCoverageValue);
     }
 
-    private boolean isConditionCoverageValueMissing(String rawConditionCoverageValue) {
+    private boolean isConditionCoverageValueMissing(@Nullable String rawConditionCoverageValue) {
         return rawConditionCoverageValue == null || rawConditionCoverageValue.isEmpty();
     }
 
     @Nonnull
-    private Optional<ConditionCoverage> extractConditionCoverageValue(String rawConditionCoverageValue) {
+    private Optional<ConditionCoverage> extractConditionCoverageValue(@Nonnull String rawConditionCoverageValue) {
         String conditionCoverage = StringUtils.substringBetween(rawConditionCoverageValue, "(", ")");
         String[] conditionCoverageValues = StringUtils.split(conditionCoverage, "/");
         if (isConditionCoverageValuesValid(conditionCoverageValues)) {
@@ -163,7 +164,7 @@ final class CoberturaXmlReportParser extends XmlReportParser<List<CoberturaPacka
         }
     }
 
-    private boolean isConditionCoverageValuesValid(String[] conditionCoverageValues) {
+    private boolean isConditionCoverageValuesValid(@Nullable String[] conditionCoverageValues) {
         return conditionCoverageValues == null || 2 != conditionCoverageValues.length;
     }
 

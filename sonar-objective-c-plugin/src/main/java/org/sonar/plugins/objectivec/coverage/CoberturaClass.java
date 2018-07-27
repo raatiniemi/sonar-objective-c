@@ -16,25 +16,28 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 final class CoberturaClass {
     private final String filename;
     private final Set<CoberturaLine> lines;
 
-    private CoberturaClass(String filename, List<CoberturaLine> lines) {
+    private CoberturaClass(@Nonnull String filename, @Nonnull List<CoberturaLine> lines) {
         this.filename = filename;
         this.lines = new LinkedHashSet<>(lines);
     }
 
-    static CoberturaClass from(String filename, List<CoberturaLine> lines) {
+    static CoberturaClass from(@Nonnull String filename, @Nonnull List<CoberturaLine> lines) {
         return new CoberturaClass(filename, lines);
     }
 
+    @Nonnull
     String getFilename() {
         return filename;
     }
 
+    @Nonnull
     Collection<CoberturaLine> getLines() {
         return Collections.unmodifiableCollection(lines);
     }
