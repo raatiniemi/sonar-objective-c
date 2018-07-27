@@ -32,6 +32,15 @@ public class LizardReportParserTest {
     private final LizardReportParser reportParser = new LizardReportParser();
 
     @Test
+    public void parse_withoutReport() {
+        Path documentPath = Paths.get(resourcePath.toString(), "non-existing.xml");
+
+        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
     public void parseReport_withCorrectFile() {
         Path documentPath = Paths.get(resourcePath.toString(), "correctFile.xml");
         Set<LizardMeasure> expected = new LinkedHashSet<>();
