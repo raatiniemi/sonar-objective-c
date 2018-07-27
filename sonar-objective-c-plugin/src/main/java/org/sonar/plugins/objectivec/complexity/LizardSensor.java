@@ -29,10 +29,8 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This sensor searches for the report generated from the tool Lizard
@@ -66,7 +64,7 @@ public class LizardSensor implements Sensor {
     @Override
     public void execute(@Nonnull SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        Map<String, List<LizardMeasure<Integer>>> measures = parseReportsIn(projectBaseDir, parser);
+        Collection<LizardMeasure> measures = parseReportsIn(projectBaseDir, parser);
         if (measures.isEmpty()) {
             return;
         }
@@ -82,7 +80,7 @@ public class LizardSensor implements Sensor {
      * @param parser LizardReportParser to parse the report
      * @return Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    private <T extends Serializable> Map<String, List<LizardMeasure<T>>> parseReportsIn(final String baseDir, LizardReportParser parser) {
+    private Collection<LizardMeasure> parseReportsIn(final String baseDir, LizardReportParser parser) {
         final String reportFileName = buildReportPath(baseDir);
         final File reportFile = new File(reportFileName);
         if (reportFile.exists() && reportFile.isFile()) {
@@ -91,7 +89,7 @@ public class LizardSensor implements Sensor {
         }
 
         LOGGER.warn("No complexity report is available for parsing");
-        return Collections.emptyMap();
+        return Collections.emptyList();
     }
 
     /**

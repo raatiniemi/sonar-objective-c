@@ -16,28 +16,95 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import org.sonar.api.batch.measure.Metric;
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
-import java.io.Serializable;
+class LizardMeasure {
+    private final String path;
+    private final int complexity;
+    private final int numberOfFunctions;
 
-final class LizardMeasure<T extends Serializable> {
-    private final Metric<T> metric;
-    private final T value;
-
-    private LizardMeasure(Metric<T> metric, T value) {
-        this.metric = metric;
-        this.value = value;
+    private LizardMeasure(@Nonnull Builder builder) {
+        path = builder.path;
+        complexity = builder.complexity;
+        numberOfFunctions = builder.numberOfFunctions;
     }
 
-    static <T extends Serializable> LizardMeasure of(Metric<T> metric, T value) {
-        return new LizardMeasure<>(metric, value);
+    @Nonnull
+    static Builder builder() {
+        return new Builder();
     }
 
-    Metric<T> getMetric() {
-        return metric;
+    @Nonnull
+    String getPath() {
+        return path;
     }
 
-    T getValue() {
-        return value;
+    int getComplexity() {
+        return complexity;
+    }
+
+    int getNumberOfFunctions() {
+        return numberOfFunctions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof LizardMeasure)) {
+            return false;
+        }
+
+        LizardMeasure that = (LizardMeasure) o;
+        return Objects.equals(path, that.path);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path);
+    }
+
+    @Override
+    public String toString() {
+        return "LizardMeasure{" +
+                "path='" + path + '\'' +
+                ", complexity=" + complexity +
+                ", numberOfFunctions=" + numberOfFunctions +
+                '}';
+    }
+
+    static class Builder {
+        private String path = "";
+        private int complexity = 0;
+        private int numberOfFunctions = 0;
+
+        private Builder() {
+        }
+
+        @Nonnull
+        Builder setPath(@Nonnull String path) {
+            this.path = path;
+            return this;
+        }
+
+        @Nonnull
+        Builder setComplexity(int complexity) {
+            this.complexity = complexity;
+            return this;
+        }
+
+        @Nonnull
+        Builder setNumberOfFunctions(int numberOfFunctions) {
+            this.numberOfFunctions = numberOfFunctions;
+            return this;
+        }
+
+        @Nonnull
+        LizardMeasure build() {
+            return new LizardMeasure(this);
+        }
     }
 }

@@ -17,157 +17,56 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.sonar.api.measures.CoreMetrics;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
-/**
- * @author Andres Gil Herrera
- * @since 03/06/15.
- */
 public class LizardReportParserTest {
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    private final Path resourcePath = Paths.get("src", "test", "resources", "lizard");
+    private final LizardReportParser reportParser = new LizardReportParser();
 
-    private File correctFile;
-    private File incorrectFile;
+    @Test
+    public void parse_withoutReport() {
+        Path documentPath = Paths.get(resourcePath.toString(), "non-existing.xml");
 
-    @Before
-    public void setup() throws IOException {
-        correctFile = createCorrectFile();
-        incorrectFile = createIncorrectFile();
-    }
+        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
 
-    private File createCorrectFile() throws IOException {
-        File xmlFile = folder.newFile("correctFile.xml");
-        BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
-        //header
-        out.write("<?xml version=\"1.0\" ?>");
-        out.write("<?xml-stylesheet type=\"text/xsl\" href=\"https://raw.github.com/terryyin/lizard/master/lizard.xsl\"?>");
-        //root object and measure
-        out.write("<cppncss><measure type=\"Function\"><labels><label>Nr.</label><label>NCSS</label><label>CCN</label></labels>");
-        //items for function
-        out.write("<item name=\"viewDidLoad(...) at App/Controller/Accelerate/AccelerationViewController.m:105\">");
-        out.write("<value>2</value><value>15</value><value>1</value></item>");
-        out.write("<item name=\"viewWillAppear:(...) at App/Controller/Accelerate/AccelerationViewController.m:130\">");
-        out.write("<value>3</value><value>20</value><value>5</value></item>");
-        //average and close funciton measure
-        out.write("<average lable=\"NCSS\" value=\"17\"/><average lable=\"CCN\" value=\"3\"/><average lable=\"NCSS\" value=\"17\"/>");
-        out.write("<average lable=\"CCN\" value=\"3\"/><average lable=\"NCSS\" value=\"17\"/><average lable=\"CCN\" value=\"3\"/>");
-        out.write("<average lable=\"NCSS\" value=\"17\"/><average lable=\"CCN\" value=\"3\"/></measure>");
-        //open file measure and add the labels
-        out.write("<measure type=\"File\"><labels><label>Nr.</label><label>NCSS</label><label>CCN</label><label>Functions</label></labels>");
-        //items for file
-        out.write("<item name=\"App/Controller/Accelerate/AccelerationViewController.h\">");
-        out.write("<value>1</value><value>2</value><value>0</value><value>0</value></item>");
-        out.write("<item name=\"App/Controller/Accelerate/AccelerationViewController.m\">");
-        out.write("<value>2</value><value>868</value><value>6</value><value>2</value></item>");
-        //add averages
-        out.write("<average lable=\"NCSS\" value=\"435\"/><average lable=\"CCN\" value=\"70\"/><average lable=\"Functions\" value=\"21\"/>");
-        //add sum
-        out.write("<sum lable=\"NCSS\" value=\"870\"/><sum lable=\"CCN\" value=\"141\"/><sum lable=\"Functions\" value=\"42\"/>");
-        //close measures and root object
-        out.write("</measure></cppncss>");
-
-        out.close();
-
-        return xmlFile;
-    }
-
-    private File createIncorrectFile() throws IOException {
-        File xmlFile = folder.newFile("incorrectFile.xml");
-        BufferedWriter out = new BufferedWriter(new FileWriter(xmlFile));
-        //header
-        out.write("<?xml version=\"1.0\" ?>");
-        out.write("<?xml-stylesheet type=\"text/xsl\" href=\"https://raw.github.com/terryyin/lizard/master/lizard.xsl\"?>");
-        //root object and measure
-        out.write("<cppncss><measure type=\"Function\"><labels><label>Nr.</label><label>NCSS</label><label>CCN</label></labels>");
-        //items for function
-        out.write("<item name=\"viewDidLoad(...) at App/Controller/Accelerate/AccelerationViewController.m:105\">");
-        out.write("<value>2</value><value>15</value><value>1</value></item>");
-        out.write("<item name=\"viewWillAppear:(...) at App/Controller/Accelerate/AccelerationViewController.m:130\">");
-        out.write("<value>3</value><value>20</value><value>5</value></item>");
-        //average and close funciton measure
-        out.write("<average lable=\"NCSS\" value=\"17\"/><average lable=\"CCN\" value=\"3\"/><average lable=\"NCSS\" value=\"17\"/>");
-        out.write("<average lable=\"CCN\" value=\"3\"/><average lable=\"NCSS\" value=\"17\"/><average lable=\"CCN\" value=\"3\"/>");
-        out.write("<average lable=\"NCSS\" value=\"17\"/><average lable=\"CCN\" value=\"3\"/></measure>");
-        //open file measure and add the labels
-        out.write("<measure type=\"File\"><labels><label>Nr.</label><label>NCSS</label><label>CCN</label><label>Functions</label></labels>");
-        //items for file 3th value tag has no closing tag
-        out.write("<item name=\"App/Controller/Accelerate/AccelerationViewController.h\">");
-        out.write("<value>1</value><value>2</value><value>0<value>0</value></item>");
-        out.write("<item name=\"App/Controller/Accelerate/AccelerationViewController.m\">");
-        out.write("<value>2</value><value>868</value><value>6</value><value>2</value></item>");
-        //add averages
-        out.write("<average lable=\"NCSS\" value=\"435\"/><average lable=\"CCN\" value=\"70\"/><average lable=\"Functions\" value=\"21\"/>");
-        //add sum
-        out.write("<sum lable=\"NCSS\" value=\"870\"/><sum lable=\"CCN\" value=\"141\"/><sum lable=\"Functions\" value=\"42\"/>");
-        //close measures and root object no close tag for measure
-        out.write("</cppncss>");
-
-        out.close();
-
-        return xmlFile;
+        assertTrue(actual.isEmpty());
     }
 
     @Test
-    public void parseReportShouldReturnMapWhenXMLFileIsCorrect() {
-        LizardReportParser parser = new LizardReportParser();
+    public void parseReport_withCorrectFile() {
+        Path documentPath = Paths.get(resourcePath.toString(), "correctFile.xml");
+        Set<LizardMeasure> expected = new LinkedHashSet<>();
+        expected.add(LizardMeasure.builder()
+                .setPath("TargetName/ClassName.h")
+                .setNumberOfFunctions(0)
+                .setComplexity(0)
+                .build());
+        expected.add(LizardMeasure.builder()
+                .setPath("TargetName/ClassName.m")
+                .setNumberOfFunctions(2)
+                .setComplexity(6)
+                .build());
 
-        assertNotNull("correct file is null", correctFile);
+        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
 
-        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(correctFile);
-
-        assertFalse("report is empty", report.isEmpty());
-
-        assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
-        List<LizardMeasure<Integer>> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
-        assertEquals(2, list1.size());
-
-        for (LizardMeasure measure : list1) {
-            String s = measure.getMetric().key();
-
-            if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                assertEquals("Header Functions has a wrong value", 0, measure.getValue());
-            } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                assertEquals("Header Complexity has a wrong value", 0, measure.getValue());
-            }
-        }
-
-        assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
-
-        List<LizardMeasure<Integer>> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
-        assertEquals(2, list2.size());
-        for (LizardMeasure measure : list2) {
-            String s = measure.getMetric().key();
-
-            if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                assertEquals("MFile Functions has a wrong value", 2, measure.getValue());
-            } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                assertEquals("MFile Complexity has a wrong value", 6, measure.getValue());
-            }
-        }
+        assertFalse(actual.isEmpty());
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void parseReportShouldReturnNullWhenXMLFileIsIncorrect() {
-        LizardReportParser parser = new LizardReportParser();
+    public void parseReport_withIncorrectFile() {
+        Path documentPath = Paths.get(resourcePath.toString(), "incorrectFile.xml");
 
-        assertNotNull("correct file is null", incorrectFile);
+        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
 
-        Map<String, List<LizardMeasure<Integer>>> report = parser.parseReport(incorrectFile);
-        assertTrue("report is not empty", report.isEmpty());
-
+        assertTrue(actual.isEmpty());
     }
 }
