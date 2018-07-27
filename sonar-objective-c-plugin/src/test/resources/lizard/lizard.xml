@@ -1,7 +1,29 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="https://raw.githubusercontent.com/terryyin/lizard/master/lizard.xsl"?>
 <cppncss>
-    <measure type="Function"/>
+    <measure type="Function">
+        <labels>
+            <label>Nr.</label>
+            <label>NCSS</label>
+            <label>CCN</label>
+        </labels>
+        <item name="methodName(...) at TargetName/FirstClassNameTest.m:19">
+            <value>1</value>
+            <value>5</value>
+            <value>1</value>
+        </item>
+        <average label="NCSS" value="5.0"/>
+        <average label="CCN" value="1.0"/>
+        <item name="methodName(...) at TargetName/SecondClassNameTest.m:47">
+            <value>2</value>
+            <value>3</value>
+            <value>1</value>
+        </item>
+        <average label="NCSS" value="4.0"/>
+        <average label="CCN" value="1.0"/>
+        <average label="NCSS" value="4.0"/>
+        <average label="CCN" value="1.0"/>
+    </measure>
     <measure type="File">
         <labels>
             <label>Nr.</label>
