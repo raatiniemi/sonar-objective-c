@@ -32,14 +32,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
-public class ReportParserTest {
+public class SurefireXmlReportParserTest {
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private final Path resourcePath = Paths.get("src", "test", "resources", "surefire");
-    private ReportParser reportParser;
+    private SurefireXmlReportParser reportParser;
 
     @Before
     public void setUp() throws Exception {
-        reportParser = ReportParser.create(factory.newDocumentBuilder());
+        reportParser = SurefireXmlReportParser.create(factory.newDocumentBuilder());
     }
 
     @Test

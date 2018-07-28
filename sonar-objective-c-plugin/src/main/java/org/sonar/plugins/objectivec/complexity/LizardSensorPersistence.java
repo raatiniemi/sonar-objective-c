@@ -17,6 +17,7 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
+import me.raatiniemi.sonarqube.SensorPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -35,22 +36,27 @@ import java.util.Optional;
 /**
  * This class is used to save the measures created by the lizardReportParser in the sonar database
  */
-final class LizardMeasurePersistor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
+final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensorPersistence.class);
 
     private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    LizardMeasurePersistor(@Nonnull final SensorContext sensorContext, @Nonnull final FileSystem fileSystem) {
+    private LizardSensorPersistence(@Nonnull SensorContext sensorContext) {
         this.sensorContext = sensorContext;
-        this.fileSystem = fileSystem;
+        this.fileSystem = sensorContext.fileSystem();
+    }
+
+    @Nonnull
+    static LizardSensorPersistence create(@Nonnull SensorContext context) {
+        return new LizardSensorPersistence(context);
     }
 
     /**
      *
      * @param measures Map containing as key the name of the file and as value a list containing the measures for that file
      */
-    void saveMeasures(@Nonnull Collection<LizardMeasure> measures) {
+    public void saveMeasures(@Nonnull Collection<LizardMeasure> measures) {
         for (LizardMeasure measure : measures) {
             Optional<InputFile> value = buildInputFile(measure.getPath());
             if (value.isPresent()) {
@@ -75,7 +81,7 @@ final class LizardMeasurePersistor {
         saveMeasure(inputFile, CoreMetrics.FUNCTIONS, measure.getNumberOfFunctions());
     }
 
-    private void saveMeasure(InputFile inputFile, Metric metric, Serializable value) {
+    private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, @Nonnull Serializable value) {
         //noinspection unchecked
         sensorContext.newMeasure()
                 .on(inputFile)

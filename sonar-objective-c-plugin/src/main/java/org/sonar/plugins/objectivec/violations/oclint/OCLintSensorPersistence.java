@@ -17,6 +17,7 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
+import me.raatiniemi.sonarqube.SensorPersistence;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -27,26 +28,28 @@ import org.sonar.api.rule.RuleKey;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-final class ViolationPersistor {
+final class OCLintSensorPersistence extends SensorPersistence<Violation> {
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private ViolationPersistor(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
+    private OCLintSensorPersistence(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
         this.context = context;
         this.fileSystem = fileSystem;
     }
 
     @Nonnull
-    static ViolationPersistor create(@Nonnull final SensorContext context) {
-        return new ViolationPersistor(context, context.fileSystem());
+    static OCLintSensorPersistence create(@Nonnull final SensorContext context) {
+        return new OCLintSensorPersistence(context, context.fileSystem());
     }
 
-    void saveViolations(@Nonnull List<Violation> violations) {
-        violations.stream()
+    @Override
+    public void saveMeasures(@Nonnull Collection<Violation> measures) {
+        measures.stream()
                 .collect(Collectors.groupingBy(Violation::getPath))
                 .forEach(this::saveViolationsGroupedByFile);
     }

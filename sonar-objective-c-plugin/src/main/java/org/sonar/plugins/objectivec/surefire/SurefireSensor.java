@@ -17,35 +17,31 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.sensor.Sensor;
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SurefireSensor implements Sensor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
-
+public class SurefireSensor extends XmlReportSensor {
     private static final String NAME = "Surefire sensor";
     private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
     private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
-    private final Settings settings;
-
     @SuppressWarnings("WeakerAccess")
-    public SurefireSensor(final Settings config) {
-        this.settings = config;
+    public SurefireSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -56,38 +52,27 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<File> availableReports = ReportCollector.collect(getReportDirectoryPath());
+        File reportDirectory = new File(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH));
+        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
+        Collection<File> availableReports = reportFinder.findReportsMatching("TEST-*.xml");
         List<TestReport> testReports = parseFiles(availableReports);
 
-        ReportPersistor persistor = ReportPersistor.create(context);
-        persistor.saveReports(testReports);
+        SurefireSensorPersistence persistence = SurefireSensorPersistence.create(context);
+        persistence.saveMeasures(testReports);
     }
 
     @Nonnull
-    private String getReportDirectoryPath() {
-        String reportDirectoryPath = settings.getString(REPORT_PATH_KEY);
-        if (reportDirectoryPath == null) {
-            LOGGER.info("No 'sonar.junit.reportsPath' specified, using default path");
-            return DEFAULT_REPORT_PATH;
-        }
-
-        return reportDirectoryPath;
-    }
-
-    @Nonnull
-    private static List<TestReport> parseFiles(@Nonnull List<File> reports) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            ReportParser parser = ReportParser.create(factory.newDocumentBuilder());
-
-            return reports.stream()
-                    .map(parser::parse)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList());
-        } catch (ParserConfigurationException e) {
-            LOGGER.error("Unable to create new document builder", e);
+    private List<TestReport> parseFiles(@Nonnull Collection<File> reports) {
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
             return Collections.emptyList();
         }
+
+        SurefireXmlReportParser parser = SurefireXmlReportParser.create(documentBuilder.get());
+        return reports.stream()
+                .map(parser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 }

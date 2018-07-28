@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(JUnit4.class)
-public class ReportPersistorTest {
+public class CoberturaSensorPersistenceTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -48,12 +48,12 @@ public class ReportPersistorTest {
     private DefaultInputFile anotherTargetClassNameFile;
 
     private SensorContextTester context;
-    private ReportPersistor persistor;
+    private CoberturaSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        persistor = ReportPersistor.create(context);
+        persistence = CoberturaSensorPersistence.create(context);
 
         classNameFile = createFile("TargetName/ClassName.m");
         secondClassNameFile = createFile("TargetName/SecondClassName.m");
@@ -73,32 +73,32 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withoutPackages() {
+    public void saveMeasures_withoutPackages() {
         List<CoberturaPackage> packages = Collections.emptyList();
 
-        persistor.saveReports(packages);
+        persistence.saveMeasures(packages);
 
         // TODO: How can we verify that no coverage are added.
     }
 
     @Test
-    public void saveReports_withEmptyReports() {
+    public void saveMeasures_withEmptyReports() {
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.emptyList());
         List<CoberturaPackage> packages = Collections.singletonList(coberturaPackage);
 
-        persistor.saveReports(packages);
+        persistence.saveMeasures(packages);
 
         // TODO: How can we verify that no coverage are added.
     }
 
     @Test
-    public void saveReports_withoutClassFile() {
+    public void saveMeasures_withoutClassFile() {
         CoberturaLine line = CoberturaLine.from(1, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertNull(context.lineHits(classNameFile.key(), 1));
         assertNull(context.conditions(classNameFile.key(), 1));
@@ -106,14 +106,14 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withZeroLineNumber() {
+    public void saveMeasures_withZeroLineNumber() {
         CoberturaLine line = CoberturaLine.from(0, 0);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
         addFileToFs(classNameFile);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertNull(context.lineHits(classNameFile.key(), 0));
         assertNull(context.conditions(classNameFile.key(), 0));
@@ -121,14 +121,14 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withSimpleClass() {
+    public void saveMeasures_withSimpleClass() {
         CoberturaLine line = CoberturaLine.from(1, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
         addFileToFs(classNameFile);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertEquals(Integer.valueOf(1), context.lineHits(classNameFile.key(), 1));
         assertNull(context.conditions(classNameFile.key(), 1));
@@ -136,14 +136,14 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withConditions() {
+    public void saveMeasures_withConditions() {
         CoberturaLine line = CoberturaLine.from(1, 1, 2, 1);
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
         addFileToFs(classNameFile);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertEquals(Integer.valueOf(1), context.lineHits(classNameFile.key(), 1));
         assertEquals(Integer.valueOf(2), context.conditions(classNameFile.key(), 1));
@@ -151,7 +151,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withLines() {
+    public void saveMeasures_withLines() {
         List<CoberturaLine> lines = Arrays.asList(
                 CoberturaLine.from(1, 1),
                 CoberturaLine.from(2, 1)
@@ -161,7 +161,7 @@ public class ReportPersistorTest {
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
         addFileToFs(classNameFile);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertEquals(Integer.valueOf(1), context.lineHits(classNameFile.key(), 1));
         assertNull(context.conditions(classNameFile.key(), 1));
@@ -172,7 +172,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withFiles() {
+    public void saveMeasures_withFiles() {
         List<CoberturaLine> lines = Arrays.asList(
                 CoberturaLine.from(1, 1),
                 CoberturaLine.from(2, 2, 2, 2)
@@ -186,7 +186,7 @@ public class ReportPersistorTest {
         addFileToFs(classNameFile);
         addFileToFs(secondClassNameFile);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertEquals(Integer.valueOf(1), context.lineHits(classNameFile.key(), 1));
         assertNull(context.conditions(classNameFile.key(), 1));
@@ -203,7 +203,7 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withTargets() {
+    public void saveMeasures_withTargets() {
         List<CoberturaLine> lines = Arrays.asList(
                 CoberturaLine.from(1, 1),
                 CoberturaLine.from(2, 2, 2, 2)
@@ -225,7 +225,7 @@ public class ReportPersistorTest {
         addFileToFs(secondClassNameFile);
         addFileToFs(anotherTargetClassNameFile);
 
-        persistor.saveReports(coberturaPackages);
+        persistence.saveMeasures(coberturaPackages);
 
         assertEquals(Integer.valueOf(1), context.lineHits(classNameFile.key(), 1));
         assertNull(context.conditions(classNameFile.key(), 1));

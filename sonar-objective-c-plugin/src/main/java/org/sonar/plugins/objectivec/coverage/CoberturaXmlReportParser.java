@@ -16,91 +16,68 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import me.raatiniemi.sonarqube.XmlReportParser;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-final class ReportParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
+final class CoberturaXmlReportParser extends XmlReportParser<List<CoberturaPackage>> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaXmlReportParser.class);
 
-    private final DocumentBuilder documentBuilder;
+    private static final String PACKAGE = "package";
+    private static final String CLASS = "class";
+    private static final String LINE = "line";
 
-    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
-        this.documentBuilder = documentBuilder;
+    private CoberturaXmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
+        super(documentBuilder);
     }
 
     @Nonnull
-    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new ReportParser(documentBuilder);
+    static CoberturaXmlReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new CoberturaXmlReportParser(documentBuilder);
     }
 
     @Nonnull
-    List<CoberturaPackage> parse(@Nonnull File xmlReportFile) {
-        if (!xmlReportFile.exists()) {
-            LOGGER.warn("Coverage report do not exist at path: {}", xmlReportFile.getPath());
-            return Collections.emptyList();
-        }
-
-        try {
-            Document document = documentBuilder.parse(xmlReportFile);
-            return parseCoberturaReport(document);
-        } catch (IOException | SAXException e) {
-            LOGGER.error("Unable to process coverage report: {}", xmlReportFile, e);
-        }
-
-        return Collections.emptyList();
+    private static Collection<Element> getPackageElements(@Nonnull Document document) {
+        return getElements(document, PACKAGE);
     }
 
     @Nonnull
-    private List<CoberturaPackage> parseCoberturaReport(@Nonnull Document document) {
-        NodeList elements = document.getElementsByTagName("package");
-        if (elements.getLength() == 0) {
-            return Collections.emptyList();
-        }
+    private static Collection<Element> getClassElements(@Nonnull Element element) {
+        return getElements(element, CLASS);
+    }
 
-        List<CoberturaPackage> packages = new ArrayList<>();
-        for (int i = 0; i < elements.getLength(); i++) {
-            Node node = elements.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
+    @Nonnull
+    private static Collection<Element> getLineElements(@Nonnull Element classElement) {
+        return getElements(classElement, LINE);
+    }
 
-            Element element = (Element) node;
-            packages.add(parsePackage(element));
-        }
-
-        return packages;
+    @Nonnull
+    @Override
+    protected List<CoberturaPackage> parse(@Nonnull Document document) {
+        return getPackageElements(document)
+                .stream()
+                .map(this::parsePackage)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
     private CoberturaPackage parsePackage(@Nonnull Element packageElement) {
         String name = packageElement.getAttribute("name");
-
-        List<CoberturaClass> classes = new ArrayList<>();
-        NodeList classElements = packageElement.getElementsByTagName("class");
-        for (int i = 0; i < classElements.getLength(); i++) {
-            Node node = classElements.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            Element classElement = (Element) node;
-            classes.add(parseClass(classElement));
-        }
+        List<CoberturaClass> classes = getClassElements(packageElement)
+                .stream()
+                .map(this::parseClass)
+                .collect(Collectors.toList());
 
         return CoberturaPackage.from(name, classes);
     }
@@ -108,18 +85,10 @@ final class ReportParser {
     @Nonnull
     private CoberturaClass parseClass(@Nonnull Element classElement) {
         String filename = classElement.getAttribute("filename");
-
-        List<CoberturaLine> lines = new ArrayList<>();
-        NodeList lineElements = classElement.getElementsByTagName("line");
-        for (int i = 0; i < lineElements.getLength(); i++) {
-            Node node = lineElements.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            Element lineElement = (Element) node;
-            lines.add(parseLine(lineElement));
-        }
+        List<CoberturaLine> lines = getLineElements(classElement)
+                .stream()
+                .map(this::parseLine)
+                .collect(Collectors.toList());
 
         return CoberturaClass.from(filename, lines);
     }
@@ -162,12 +131,12 @@ final class ReportParser {
         return extractConditionCoverageValue(rawConditionCoverageValue);
     }
 
-    private boolean isConditionCoverageValueMissing(String rawConditionCoverageValue) {
+    private boolean isConditionCoverageValueMissing(@Nullable String rawConditionCoverageValue) {
         return rawConditionCoverageValue == null || rawConditionCoverageValue.isEmpty();
     }
 
     @Nonnull
-    private Optional<ConditionCoverage> extractConditionCoverageValue(String rawConditionCoverageValue) {
+    private Optional<ConditionCoverage> extractConditionCoverageValue(@Nonnull String rawConditionCoverageValue) {
         String conditionCoverage = StringUtils.substringBetween(rawConditionCoverageValue, "(", ")");
         String[] conditionCoverageValues = StringUtils.split(conditionCoverage, "/");
         if (isConditionCoverageValuesValid(conditionCoverageValues)) {
@@ -195,7 +164,7 @@ final class ReportParser {
         }
     }
 
-    private boolean isConditionCoverageValuesValid(String[] conditionCoverageValues) {
+    private boolean isConditionCoverageValuesValid(@Nullable String[] conditionCoverageValues) {
         return conditionCoverageValues == null || 2 != conditionCoverageValues.length;
     }
 

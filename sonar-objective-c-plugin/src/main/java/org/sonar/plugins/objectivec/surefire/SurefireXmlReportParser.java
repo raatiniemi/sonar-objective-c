@@ -16,25 +16,23 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import me.raatiniemi.sonarqube.XmlReportParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-final class ReportParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportParser.class);
+final class SurefireXmlReportParser extends XmlReportParser<TestReport> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireXmlReportParser.class);
 
     private static final String TEST_SUITE = "testsuite";
     private static final String TEST_CASE = "testcase";
@@ -42,15 +40,13 @@ final class ReportParser {
     private static final String NAME = "name";
     private static final String TIME = "time";
 
-    private final DocumentBuilder documentBuilder;
-
-    private ReportParser(@Nonnull DocumentBuilder documentBuilder) {
-        this.documentBuilder = documentBuilder;
+    private SurefireXmlReportParser(@Nonnull DocumentBuilder documentBuilder) {
+        super(documentBuilder);
     }
 
     @Nonnull
-    static ReportParser create(@Nonnull DocumentBuilder documentBuilder) {
-        return new ReportParser(documentBuilder);
+    static SurefireXmlReportParser create(@Nonnull DocumentBuilder documentBuilder) {
+        return new SurefireXmlReportParser(documentBuilder);
     }
 
     @Nonnull
@@ -60,40 +56,18 @@ final class ReportParser {
     }
 
     @Nonnull
-    private static NodeList getTestSuiteElements(@Nonnull Document document) {
-        return document.getElementsByTagName(TEST_SUITE);
-    }
-
-    private static boolean isNotElement(@Nonnull Node item) {
-        return item.getNodeType() != Node.ELEMENT_NODE;
+    private static Collection<Element> getTestSuiteElements(@Nonnull Document document) {
+        return getElements(document, TEST_SUITE);
     }
 
     @Nonnull
-    private static NodeList getTestCaseElements(@Nonnull Element element) {
-        return element.getElementsByTagName(TEST_CASE);
+    private static Collection<Element> getTestCaseElements(@Nonnull Element element) {
+        return getElements(element, TEST_CASE);
     }
 
     @Nonnull
-    Optional<TestReport> parse(@Nonnull File xmlReportFile) {
-        if (!xmlReportFile.exists()) {
-            LOGGER.warn("Surefire report do not exist at path: {}", xmlReportFile.getPath());
-            return Optional.empty();
-        }
-
-        try {
-            Document document = documentBuilder.parse(xmlReportFile);
-            TestReport testReport = parseTestReport(document);
-
-            return Optional.of(testReport);
-        } catch (IOException | SAXException e) {
-            LOGGER.error("Error processing file named {}", xmlReportFile, e);
-        }
-
-        return Optional.empty();
-    }
-
-    @Nonnull
-    private TestReport parseTestReport(@Nonnull Document document) {
+    @Override
+    protected TestReport parse(@Nonnull Document document) {
         String targetName = getTargetName(document.getDocumentElement());
         List<TestSuite> testSuites = parseTestSuites(document);
 
@@ -102,20 +76,10 @@ final class ReportParser {
 
     @Nonnull
     private List<TestSuite> parseTestSuites(@Nonnull Document document) {
-        List<TestSuite> testSuites = new ArrayList<>();
-
-        NodeList elements = getTestSuiteElements(document);
-        for (int i = 0; i < elements.getLength(); i++) {
-            Node node = elements.item(i);
-            if (isNotElement(node)) {
-                continue;
-            }
-
-            Element element = (Element) node;
-            testSuites.add(parseTestSuite(element));
-        }
-
-        return testSuites;
+        return getTestSuiteElements(document)
+                .stream()
+                .map(this::parseTestSuite)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
@@ -127,21 +91,12 @@ final class ReportParser {
 
     @Nonnull
     private List<TestCase> parseTestCasesFromTestSuite(@Nonnull Element testSuiteElement) {
-        List<TestCase> testCases = new ArrayList<>();
-
-        NodeList elements = getTestCaseElements(testSuiteElement);
-        for (int i = 0; i < elements.getLength(); i++) {
-            Node node = elements.item(i);
-            if (isNotElement(node)) {
-                continue;
-            }
-
-            Element element = (Element) node;
-            Optional<TestCase> value = parseTestCase(element);
-            value.ifPresent(testCases::add);
-        }
-
-        return testCases;
+        return getTestCaseElements(testSuiteElement)
+                .stream()
+                .map(this::parseTestCase)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Nonnull

@@ -17,31 +17,48 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class LizardReportParserTest {
+@RunWith(JUnit4.class)
+public class LizardXmlReportParserTest {
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     private final Path resourcePath = Paths.get("src", "test", "resources", "lizard");
-    private final LizardReportParser reportParser = new LizardReportParser();
+
+    private LizardXmlReportParser reportParser;
+
+    @Before
+    public void setup() throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        reportParser = LizardXmlReportParser.create(factory.newDocumentBuilder());
+    }
 
     @Test
     public void parse_withoutReport() {
         Path documentPath = Paths.get(resourcePath.toString(), "non-existing.xml");
 
-        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
+        Optional<Set<LizardMeasure>> actual = reportParser.parse(documentPath.toFile());
 
-        assertTrue(actual.isEmpty());
+        assertFalse(actual.isPresent());
     }
 
     @Test
-    public void parseReport_withCorrectFile() {
+    public void parse_withCorrectFile() {
         Path documentPath = Paths.get(resourcePath.toString(), "correctFile.xml");
         Set<LizardMeasure> expected = new LinkedHashSet<>();
         expected.add(LizardMeasure.builder()
@@ -55,18 +72,18 @@ public class LizardReportParserTest {
                 .setComplexity(6)
                 .build());
 
-        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
+        Optional<Set<LizardMeasure>> actual = reportParser.parse(documentPath.toFile());
 
-        assertFalse(actual.isEmpty());
-        assertEquals(expected, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 
     @Test
-    public void parseReport_withIncorrectFile() {
+    public void parse_withIncorrectFile() {
         Path documentPath = Paths.get(resourcePath.toString(), "incorrectFile.xml");
 
-        Collection<LizardMeasure> actual = reportParser.parseReport(documentPath.toFile());
+        Optional<Set<LizardMeasure>> actual = reportParser.parse(documentPath.toFile());
 
-        assertTrue(actual.isEmpty());
+        assertFalse(actual.isPresent());
     }
 }

@@ -25,7 +25,7 @@ final class Violation {
     private final String rule;
     private final String message;
 
-    private Violation(Builder builder) {
+    private Violation(@Nonnull Builder builder) {
         this.path = builder.path;
         this.startLine = builder.startLine;
         this.rule = builder.rule;

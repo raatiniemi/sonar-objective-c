@@ -16,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import me.raatiniemi.sonarqube.SensorPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -25,31 +26,31 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-final class ReportPersistor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
+final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackage> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensorPersistence.class);
     private static final Predicate<CoberturaLine> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private ReportPersistor(@Nonnull SensorContext context) {
+    private CoberturaSensorPersistence(@Nonnull SensorContext context) {
         this.context = context;
         fileSystem = context.fileSystem();
     }
 
     @Nonnull
-    static ReportPersistor create(@Nonnull SensorContext context) {
-        return new ReportPersistor(context);
+    static CoberturaSensorPersistence create(@Nonnull SensorContext context) {
+        return new CoberturaSensorPersistence(context);
     }
 
-
-    void saveReports(List<CoberturaPackage> coberturaPackages) {
-        for (CoberturaPackage coberturaPackage : coberturaPackages) {
+    @Override
+    public void saveMeasures(@Nonnull Collection<CoberturaPackage> measures) {
+        for (CoberturaPackage coberturaPackage : measures) {
             for (CoberturaClass coberturaClass : coberturaPackage.getClasses()) {
                 Optional<InputFile> value = buildInputFile(coberturaClass.getFilename());
                 if (value.isPresent()) {
@@ -76,7 +77,8 @@ final class ReportPersistor {
                 .forEach(saveCoverageForLine(inputFile));
     }
 
-    private Consumer<CoberturaLine> saveCoverageForLine(InputFile inputFile) {
+    @Nonnull
+    private Consumer<CoberturaLine> saveCoverageForLine(@Nonnull InputFile inputFile) {
         return line -> {
             NewCoverage newCoverage = context.newCoverage()
                     .onFile(inputFile)

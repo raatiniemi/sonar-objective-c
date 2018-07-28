@@ -38,7 +38,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class ReportPersistorTest {
+public class SurefireSensorPersistenceTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -47,12 +47,12 @@ public class ReportPersistorTest {
     private DefaultInputFile secondClassNameTestFile;
 
     private SensorContextTester context;
-    private ReportPersistor persistor;
+    private SurefireSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
-        persistor = ReportPersistor.create(context);
+        persistence = SurefireSensorPersistence.create(context);
 
         classNameTestFile = createFile("TestTarget/ClassNameTest.m");
         firstClassNameTestFile = createFile("TestTarget/FirstClassNameTest.m");
@@ -84,38 +84,38 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withoutReports() {
-        persistor.saveReports(Collections.emptyList());
+    public void saveMeasures_withoutReports() {
+        persistence.saveMeasures(Collections.emptyList());
 
         // TODO: How can we verify that no measures are added.
     }
 
     @Test
-    public void saveReports_withEmptyReport() {
+    public void saveMeasures_withEmptyReport() {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.emptyList());
         addFileToFs(classNameTestFile);
 
-        persistor.saveReports(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         // TODO: How can we verify that no measures are added.
     }
 
     @Test
-    public void saveReports_withOneTestCaseReport() {
+    public void saveMeasures_withOneTestCaseReport() {
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(classNameTestFile);
 
-        persistor.saveReports(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure(classNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(classNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(classNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
-    public void saveReports_withMultipleTestCasesReport() {
+    public void saveMeasures_withMultipleTestCasesReport() {
         List<TestCase> firstTestCases = new ArrayList<>();
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName_withCondition", 0.003));
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName", 0.001));
@@ -129,18 +129,18 @@ public class ReportPersistorTest {
         addFileToFs(firstClassNameTestFile);
         addFileToFs(secondClassNameTestFile);
 
-        persistor.saveReports(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
-    public void saveReports_withMultipleReports() {
+    public void saveMeasures_withMultipleReports() {
         List<TestCase> firstTestCases = new ArrayList<>();
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName_withCondition", 0.003));
         firstTestCases.add(TestCase.success("FirstClassNameTest", "testMethodName", 0.001));
@@ -153,24 +153,24 @@ public class ReportPersistorTest {
         addFileToFs(firstClassNameTestFile);
         addFileToFs(secondClassNameTestFile);
 
-        persistor.saveReports(testReports);
+        persistence.saveMeasures(testReports);
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:TestTarget/FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
-    public void saveReports_withErrorReport() {
+    public void saveMeasures_withErrorReport() {
         TestCase testCase = TestCase.failure("ClassNameTest", "testMethodName_withFailure");
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(classNameTestFile);
 
-        persistor.saveReports(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
@@ -178,27 +178,28 @@ public class ReportPersistorTest {
     }
 
     @Test
-    public void saveReports_withClassNameCategory() {
+    public void saveMeasures_withClassNameCategory() {
         TestCase testCase = TestCase.success("BaseClassName_CategoryNameTests", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("BaseClassName_CategoryNameTests", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        addFileToFs(createFile("TestTarget/BaseClassName+CategoryNameTests.m"));
+        DefaultInputFile categoryNameTestFile = createFile("TestTarget/BaseClassName+CategoryNameTests.m");
+        addFileToFs(categoryNameTestFile);
 
-        persistor.saveReports(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
-        assertEquals(Integer.valueOf(1), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:TestTarget/BaseClassName+CategoryNameTests.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(1), getMeasure(categoryNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(categoryNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(categoryNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
-    public void saveReports_withTestClassInRoot() {
+    public void saveMeasures_withTestClassInRoot() {
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
         addFileToFs(createFile("ClassNameTest.m"));
 
-        persistor.saveReports(Collections.singletonList(testReport));
+        persistence.saveMeasures(Collections.singletonList(testReport));
 
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));

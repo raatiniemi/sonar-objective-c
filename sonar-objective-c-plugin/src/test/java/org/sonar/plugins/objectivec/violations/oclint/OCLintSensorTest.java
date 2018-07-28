@@ -22,14 +22,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.config.MapSettings;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
-
-import java.io.File;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,13 +38,10 @@ public class OCLintSensorTest {
     private OCLintSensor sensor;
 
     @Before
-    public void prepare() throws IOException {
-        File baseDirectory = temporaryFolder.newFolder();
-
-        DefaultFileSystem fileSystem = new DefaultFileSystem(baseDirectory.toPath());
+    public void prepare() {
         Settings settings = new MapSettings();
 
-        sensor = new OCLintSensor(fileSystem, settings);
+        sensor = new OCLintSensor(settings);
     }
 
     @Test

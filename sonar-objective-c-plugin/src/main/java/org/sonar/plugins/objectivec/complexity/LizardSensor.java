@@ -17,10 +17,11 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -28,15 +29,17 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This sensor searches for the report generated from the tool Lizard
  * in order to save complexity metrics.
  */
-public class LizardSensor implements Sensor {
+public class LizardSensor extends XmlReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
 
     private static final String NAME = "Lizard complexity sensor";
@@ -44,15 +47,9 @@ public class LizardSensor implements Sensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 
-    private final LizardReportParser parser = new LizardReportParser();
-
-    private final Settings conf;
-    private final FileSystem fileSystem;
-
     @SuppressWarnings("WeakerAccess")
-    public LizardSensor(final FileSystem moduleFileSystem, final Settings config) {
-        this.conf = config;
-        this.fileSystem = moduleFileSystem;
+    public LizardSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -63,48 +60,29 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        Collection<LizardMeasure> measures = parseReportsIn(projectBaseDir, parser);
+        Set<LizardMeasure> measures = parseReportsIn(context.fileSystem().baseDir());
         if (measures.isEmpty()) {
             return;
         }
 
         LOGGER.info("Saving results of complexity analysis");
-        new LizardMeasurePersistor(context, fileSystem)
-                .saveMeasures(measures);
+        LizardSensorPersistence persistence = LizardSensorPersistence.create(context);
+        persistence.saveMeasures(measures);
     }
 
-    /**
-     *
-     * @param baseDir base directory of the project to search the report
-     * @param parser LizardReportParser to parse the report
-     * @return Map containing as key the name of the file and as value a list containing the measures for that file
-     */
-    private Collection<LizardMeasure> parseReportsIn(final String baseDir, LizardReportParser parser) {
-        final String reportFileName = buildReportPath(baseDir);
-        final File reportFile = new File(reportFileName);
-        if (reportFile.exists() && reportFile.isFile()) {
-            LOGGER.info("Processing complexity report");
-            return parser.parseReport(new File(reportFileName));
+    @Nonnull
+    private Set<LizardMeasure> parseReportsIn(@Nonnull File reportDirectory) {
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
+            return Collections.emptySet();
         }
 
-        LOGGER.warn("No complexity report is available for parsing");
-        return Collections.emptyList();
-    }
-
-    /**
-     * Build path for the report file using the {@code basePath} as prefix
-     * @param basePath Base path for the project.
-     * @return the default report path or the one specified in the sonar-project.properties
-     */
-    String buildReportPath(String basePath) {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-
-        if (reportPath == null) {
-            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-
-        return String.format("%s/%s",basePath, reportPath);
+        LizardXmlReportParser parser = LizardXmlReportParser.create(documentBuilder.get());
+        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
+        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+                .map(parser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(Collections.emptySet());
     }
 }

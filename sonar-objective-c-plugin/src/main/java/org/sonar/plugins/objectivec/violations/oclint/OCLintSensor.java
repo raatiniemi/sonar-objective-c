@@ -17,37 +17,31 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.tools.ant.DirectoryScanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.sensor.Sensor;
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.XmlReportSensor;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilder;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-public final class OCLintSensor implements Sensor {
+public final class OCLintSensor extends XmlReportSensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintSensor.class);
     private static final String NAME = "OCLint violation sensor";
 
-    private final ReportParser parser = new ReportParser();
-    private final Settings conf;
-    private final FileSystem fileSystem;
-
     @SuppressWarnings("WeakerAccess")
-    public OCLintSensor(final FileSystem fileSystem, final Settings config) {
-        this.conf = config;
-        this.fileSystem = fileSystem;
+    public OCLintSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -57,39 +51,26 @@ public final class OCLintSensor implements Sensor {
     }
 
     @Override
-    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
+    public void execute(@Nonnull SensorContext context) {
+        List<Violation> violations = parseReportIn(context.fileSystem().baseDir());
 
-        parseReportIn(projectBaseDir, ViolationPersistor.create(context));
+        OCLintSensorPersistence persistence = OCLintSensorPersistence.create(context);
+        persistence.saveMeasures(violations);
     }
 
-    private void parseReportIn(final String baseDir, ViolationPersistor persistor) {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{buildReportPath()});
-        scanner.setBasedir(baseDir);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-
-        List<Violation> violations = new ArrayList<>();
-
-        for(String filename : files) {
-            LOGGER.info("Processing OCLint report {}", filename);
-
-            violations.addAll(parser.parse(new File(filename)));
+    @Nonnull
+    private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
+            return Collections.emptyList();
         }
 
-        persistor.saveViolations(violations);
-    }
-
-    private String buildReportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-
-        if (reportPath == null) {
-            LOGGER.debug("No value specified for \"" + REPORT_PATH_KEY + "\" using default path");
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-
-        return reportPath;
+        OCLintXmlReportParser parser = OCLintXmlReportParser.create(documentBuilder.get());
+        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+                .map(parser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(Collections.emptyList());
     }
 }

@@ -17,9 +17,9 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.sensor.Sensor;
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
@@ -27,26 +27,23 @@ import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class CoberturaSensor implements Sensor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
+public final class CoberturaSensor extends XmlReportSensor {
     private static final String NAME = "Cobertura sensor";
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
             + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
 
-    private final Settings settings;
-
     @SuppressWarnings("WeakerAccess")
-    public CoberturaSensor(final Settings settings) {
-        this.settings = settings;
+    public CoberturaSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -57,42 +54,34 @@ public final class CoberturaSensor implements Sensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<CoberturaPackage> availableReports = collectAndParseAvailableReports(context);
+        List<CoberturaPackage> availableReports = collectAndParseAvailableReports(context.fileSystem().baseDir());
 
-        ReportPersistor reportPersistor = ReportPersistor.create(context);
-        reportPersistor.saveReports(availableReports);
+        CoberturaSensorPersistence persistence = CoberturaSensorPersistence.create(context);
+        persistence.saveMeasures(availableReports);
     }
 
     @Nonnull
-    private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull SensorContext context) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            ReportParser reportParser = ReportParser.create(factory.newDocumentBuilder());
-
-            return collectAvailableReports(context)
-                    .map(reportParser::parse)
-                    .flatMap(List::stream)
-                    .collect(Collectors.toList());
-        } catch (ParserConfigurationException e) {
-            LOGGER.error("Unable to create document builder", e);
+    private List<CoberturaPackage> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
             return Collections.emptyList();
         }
+
+        CoberturaXmlReportParser reportParser = CoberturaXmlReportParser.create(documentBuilder.get());
+        return collectAvailableReports(projectDirectory)
+                .map(reportParser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     @Nonnull
-    private Stream<File> collectAvailableReports(@Nonnull SensorContext context) {
-        return ReportCollector.collect(context.fileSystem().baseDir().getAbsolutePath(), getReportFilePattern()).stream();
-    }
+    private Stream<File> collectAvailableReports(@Nonnull File projectDirectory) {
+        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
 
-    @Nonnull
-    private String getReportFilePattern() {
-        String reportPath = settings.getString(REPORT_PATTERN_KEY);
-
-        if (reportPath == null) {
-            LOGGER.debug("No value specified for \"" + REPORT_PATTERN_KEY + "\" using default report pattern");
-            reportPath = DEFAULT_REPORT_PATTERN;
-        }
-
-        return reportPath;
+        return reportFinder
+                .findReportsMatching(getSetting(REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN))
+                .stream();
     }
 }

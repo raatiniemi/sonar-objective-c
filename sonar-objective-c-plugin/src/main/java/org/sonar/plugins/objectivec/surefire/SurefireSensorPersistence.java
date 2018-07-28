@@ -16,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import me.raatiniemi.sonarqube.SensorPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -27,27 +28,28 @@ import org.sonar.api.measures.Metric;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
-final class ReportPersistor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportPersistor.class);
+final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensorPersistence.class);
 
     private final SensorContext context;
     private final FileSystem fileSystem;
 
-    private ReportPersistor(@Nonnull SensorContext context) {
+    private SurefireSensorPersistence(@Nonnull SensorContext context) {
         this.context = context;
         fileSystem = context.fileSystem();
     }
 
     @Nonnull
-    static ReportPersistor create(@Nonnull SensorContext sensorContext) {
-        return new ReportPersistor(sensorContext);
+    static SurefireSensorPersistence create(@Nonnull SensorContext sensorContext) {
+        return new SurefireSensorPersistence(sensorContext);
     }
 
-    void saveReports(@Nonnull List<TestReport> testReports) {
-        for (TestReport testReport : testReports) {
+    @Override
+    public void saveMeasures(@Nonnull Collection<TestReport> measures) {
+        for (TestReport testReport : measures) {
             for (TestSuite testSuite : testReport.getTestSuites()) {
                 Optional<InputFile> value = buildInputFile(testSuite.getClassName());
                 if (value.isPresent()) {
