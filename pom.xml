@@ -42,7 +42,7 @@
 
     <groupId>me.raatiniemi.sonarqube</groupId>
     <artifactId>objective-c</artifactId>
-    <version>0.6.3-SNAPSHOT</version>
+    <version>0.6.3</version>
 
     <packaging>pom</packaging>
 
