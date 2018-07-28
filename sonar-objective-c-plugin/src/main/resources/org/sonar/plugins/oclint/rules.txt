@@ -7,6 +7,91 @@ avoid branching statement as last in loop
 ----------
 
 Summary: Name: avoid branching statement as last in loop
+<p>Having branching statement as the last statement inside a loop is very confusing, and could largely be forgetting of something and turning into a bug.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/AvoidBranchingStatementAsLastInLoopRule.cpp">oclint-rules/rules/convention/AvoidBranchingStatementAsLastInLoopRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (foo(i))
+        {
+            continue;
+        }
+        break;      // this break is confusing
+    }
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+avoid default arguments on virtual methods
+----------
+
+Summary: Name: avoid default arguments on virtual methods
+<p>Giving virtual functions default argument initializers tends to defeat polymorphism and introduce unnecessary complexity into a class hierarchy.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/design/AvoidDefaultArgumentsOnVirtualMethodsRule.cpp">oclint-rules/rules/design/AvoidDefaultArgumentsOnVirtualMethodsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class Foo
+{
+public:
+    virtual ~Foo();
+    virtual void a(int b = 3);
+    // ...
+};
+
+class Bar : public Foo
+{
+public:
+    void a(int b);
+    // ...
+};
+
+Bar *bar = new Bar;
+Foo *foo = bar;
+foo->a();   // default of 3
+bar->a();   // compile time error!</pre>
+
+Severity: 2
+Category: OCLint
+
+avoid private static members
+----------
+
+Summary: Name: avoid private static members
+<p>Having static members is easier to harm encapsulation.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/design/AvoidPrivateStaticMembersRule.cpp">oclint-rules/rules/design/AvoidPrivateStaticMembersRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class Foo
+{
+    static int a;       // static field
+};
+class Bar
+{
+    static int b();     // static method
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+base class destructor should be virtual or protected
+----------
+
+Summary: Name: base class destructor should be virtual or protected
+<p>Make base class destructor public and virtual, or protected and nonvirtual</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/BaseClassDestructorShouldBeVirtualOrProtectedRule.cpp">oclint-rules/rules/convention/BaseClassDestructorShouldBeVirtualOrProtectedRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class Base
+{
+public:
+    ~Base(); // this should be either protected or virtual
+}
+class C : public Base
+{
+    virtual ~C();
+}</pre>
+<p><strong>References:</strong></p>
+<p>Sutter &amp; Alexandrescu (November 2004). <a class="reference external" href="http://gotw.ca/publications/c++cs.htm">“C++ Coding Standards: 101 Rules, Guidelines, and Best Practices”</a>. <em>Addison-Wesley Professional</em></p>
 
 Severity: 2
 Category: OCLint
@@ -15,6 +100,39 @@ bitwise operator in conditional
 ----------
 
 Summary: Name: bitwise operator in conditional
+<p>Checks for bitwise operations in conditionals. Although being written on purpose in some rare cases, bitwise operations are considered to be too “smart”. Smart code is not easy to understand.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/BitwiseOperatorInConditionalRule.cpp">oclint-rules/rules/basic/BitwiseOperatorInConditionalRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a, int b)
+{
+    if (a | b)
+    {
+    }
+    if (a & b)
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+broken nil check
+----------
+
+Summary: Name: broken nil check
+<p>The broken nil check in Objective-C in some cases returns just the opposite result.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/BrokenNullCheckRule.cpp">oclint-rules/rules/basic/BrokenNullCheckRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>+ (void)compare:(A *)obj1 withOther:(A *)obj2
+{
+    if (obj1 || [obj1 isEqualTo:obj2])
+    {
+    }
+
+    if (!obj1 && ![obj1 isEqualTo:obj2])
+    {
+    }
+}</pre>
 
 Severity: 3
 Category: OCLint
@@ -23,30 +141,107 @@ broken null check
 ----------
 
 Summary: Name: broken null check
+<p>The broken null check itself will crash the program.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/BrokenNullCheckRule.cpp">oclint-rules/rules/basic/BrokenNullCheckRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void m(A *a, B *b)
+{
+    if (a != NULL || a->bar(b))
+    {
+    }
+
+    if (a == NULL && a->bar(b))
+    {
+    }
+}</pre>
 
 Severity: 3
-Category: OCLint
-
-broken nil check
-----------
-
-Summary: 
-
-Severity: 4
 Category: OCLint
 
 broken oddness check
 ----------
 
 Summary: Name: broken oddness check
+<p>Checking oddness by <code class="docutils literal"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">2</span> <span class="pre">==</span> <span class="pre">1</span></code> won’t work for negative numbers. Use <code class="docutils literal"><span class="pre">x</span> <span class="pre">&amp;</span> <span class="pre">1</span> <span class="pre">==</span> <span class="pre">1</span></code>, or <code class="docutils literal"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">2</span> <span class="pre">!=</span> <span class="pre">0</span></code> instead.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/BrokenOddnessCheckRule.cpp">oclint-rules/rules/basic/BrokenOddnessCheckRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    if (x % 2 == 1)         // violation
+    {
+    }
+
+    if (foo() % 2 == 1)     // violation
+    {
+    }
+}</pre>
 
 Severity: 3
+Category: OCLint
+
+calling prohibited method
+----------
+
+Summary: Name: calling prohibited method
+<p>When a method is declared with <code class="docutils literal"><span class="pre">__attribute__((annotate("oclint:enforce[prohibited</span> <span class="pre">method]")))</span></code> annotation, all of its usages will be prohibited.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/cocoa/ObjCVerifyProhibitedCallRule.cpp">oclint-rules/rules/cocoa/ObjCVerifyProhibitedCallRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>@interface A : NSObject
+- (void)foo __attribute__((annotate("oclint:enforce[prohibited method]")));
+@end
+
+@implementation A
+- (void)foo {
+}
+- (void)bar {
+    [self foo]; // calling method `foo` is prohibited.
+}
+@end</pre>
+
+Severity: 1
+Category: OCLint
+
+calling protected method
+----------
+
+Summary: Name: calling protected method
+<p>Even though there is no <code class="docutils literal"><span class="pre">protected</span></code> in Objective-C language level, in a design’s perspective, we sometimes hope to enforce a method only be used inside the class itself or by its subclass. This rule mimics the <code class="docutils literal"><span class="pre">protected</span></code> behavior, and alerts developers when a method is called outside its access scope.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/cocoa/ObjCVerifyProtectedMethodRule.cpp">oclint-rules/rules/cocoa/ObjCVerifyProtectedMethodRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>@interface A : NSObject
+- (void)foo __attribute__((annotate("oclint:enforce[protected method]")));
+@end
+
+@interface B : NSObject
+@property (strong, nonatomic) A* a;
+@end
+
+@implementation B
+- (void)bar {
+    [self.a foo]; // calling protected method foo from outside A and its subclasses
+}
+@end</pre>
+
+Severity: 1
 Category: OCLint
 
 collapsible if statements
 ----------
 
 Summary: Name: collapsible if statements
+<p>This rule detects instances where the conditions of two consecutive if statements can be combined into one in order to increase code cleanness and readability.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/CollapsibleIfStatementsRule.cpp">oclint-rules/rules/basic/CollapsibleIfStatementsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(bool x, bool y)
+{
+    if (x)              // these two if statements can be
+    {
+        if (y)          // combined to if (x && y)
+        {
+            foo();
+        }
+    }
+}</pre>
 
 Severity: 3
 Category: OCLint
@@ -55,6 +250,13 @@ constant conditional operator
 ----------
 
 Summary: Name: constant conditional operator
+<p><code class="docutils literal"><span class="pre">conditional</span> <span class="pre">operator</span></code> whose conditionals are always true or always false are confusing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/ConstantConditionalOperatorRule.cpp">oclint-rules/rules/basic/ConstantConditionalOperatorRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    int a = 1 == 1 ? 1 : 0;     // 1 == 1 is actually always true
+}</pre>
 
 Severity: 3
 Category: OCLint
@@ -63,222 +265,41 @@ constant if expression
 ----------
 
 Summary: Name: constant if expression
+<p><code class="docutils literal"><span class="pre">if</span></code> statements whose conditionals are always true or always false are confusing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/ConstantIfExpressionRule.cpp">oclint-rules/rules/basic/ConstantIfExpressionRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    if (true)       // always true
+    {
+        foo();
+    }
+    if (1 == 0)     // always false
+    {
+        bar();
+    }
+}</pre>
 
 Severity: 3
-Category: OCLint
-
-high cyclomatic complexity
-----------
-
-Summary: 
-
-Severity: 2
 Category: OCLint
 
 dead code
 ----------
 
 Summary: Name: dead code
-
-Severity: 3
-Category: OCLint
-
-double negative
-----------
-
-Summary: Name: double negative
-
-Severity: 3
-Category: OCLint
-
-empty catch statement
-----------
-
-Summary: Name: empty catch statement
-
-Severity: 3
-Category: OCLint
-
-empty do/while statement
-----------
-
-Summary: Name: empty do/while statement
-
-Severity: 3
-Category: OCLint
-
-empty else block
-----------
-
-Summary: Name: empty else block
-
-Severity: 3
-Category: OCLint
-
-empty finally statement
-----------
-
-Summary: Name: empty finally statement
-
-Severity: 3
-Category: OCLint
-
-empty for statement
-----------
-
-Summary: Name: empty for statement
-
-Severity: 3
-Category: OCLint
-
-empty if statement
-----------
-
-Summary: Name: empty if statement
-
-Severity: 3
-Category: OCLint
-
-empty switch statement
-----------
-
-Summary: Name: empty switch statement
-
-Severity: 3
-Category: OCLint
-
-empty try statement
-----------
-
-Summary: Name: empty try statement
-
-Severity: 3
-Category: OCLint
-
-empty while statement
-----------
-
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-feature envy
-----------
-
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-for loop should be while loop
-----------
-
-Summary: Name: for loop should be while loop
-
-Severity: 3
-Category: OCLint
-
-goto statement
-----------
-
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-inverted logic
-----------
-
-Summary: Name: inverted logic
-
-Severity: 2
-Category: OCLint
-
-jumbled incrementer
-----------
-
-Summary: Name: jumbled incrementer
-
-Severity: 3
-Category: OCLint
-
-long class
-----------
-
-Summary: Name: long class
-
-Severity: 3
-Category: OCLint
-
-long line
-----------
-
-Summary: Name: long line
-
-Severity: 3
-Category: OCLint
-
-long method
-----------
-
-Summary: Name: long method
-
-Severity: 3
-Category: OCLint
-
-long variable name
-----------
-
-Summary: Name: long variable name
-
-Severity: 2
-Category: OCLint
-
-misplaced null check
-----------
-
-Summary: Name: misplaced null check
-
-Severity: 3
-Category: OCLint
-
-misplaced nil check
-----------
-
-Summary: 
-
-Severity: 4
-Category: OCLint
-
-missing break in switch statement
-----------
-
-Summary: Name: missing break in switch statement
-
-Severity: 2
-Category: OCLint
-
-multiple unary operator
-----------
-
-Summary: Name: multiple unary operator
-
-Severity: 3
-Category: OCLint
-
-must override hash with isEqual
-----------
-
-Summary: 
-
-Severity: 1
-Category: OCLint
-
-high ncss method
-----------
-
-Summary: Name: high ncss method
+<p>Code after <code class="docutils literal"><span class="pre">return</span></code>, <code class="docutils literal"><span class="pre">break</span></code>, <code class="docutils literal"><span class="pre">continue</span></code>, and <code class="docutils literal"><span class="pre">throw</span></code> statements is unreachable and will never be executed.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/DeadCodeRule.cpp">oclint-rules/rules/basic/DeadCodeRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(id collection)
+{
+    for (id it in collection)
+    {
+        continue;
+        int i1;                 // dead code
+    }
+    return;
+    int i2;                     // dead code
+}</pre>
 
 Severity: 3
 Category: OCLint
@@ -287,6 +308,692 @@ deep nested block
 ----------
 
 Summary: Name: deep nested block
+<p>This rule indicates blocks nested more deeply than the upper limit.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/NestedBlockDepthRule.cpp">oclint-rules/rules/size/NestedBlockDepthRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>if (1)
+{               // 1
+    {           // 2
+        {       // 3
+        }
+    }
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> NESTED_BLOCK_DEPTH</dt> <dd> The depth of a block or compound statement reporting threshold, default value is 5.</dd></dl>
+
+Severity: 3
+Category: OCLint
+
+destructor of virtual class
+----------
+
+Summary: Name: destructor of virtual class
+<p>This rule enforces the destructor of a virtual class must be virtual.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/DestructorOfVirtualClassRule.cpp">oclint-rules/rules/convention/DestructorOfVirtualClassRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class Base { // class Base should have a virtual destructor ~Base()
+    public: virtual void f();
+};
+class Child : public Base {
+    public: ~Child();  // destructor ~Child() should be virtual
+};</pre>
+
+Severity: 2
+Category: OCLint
+
+double negative
+----------
+
+Summary: Name: double negative
+<p>There is no point in using a double negative, it is always positive.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/DoubleNegativeRule.cpp">oclint-rules/rules/basic/DoubleNegativeRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    int b1 = !!1;
+    int b2 = ~~1;
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty catch statement
+----------
+
+Summary: Name: empty catch statement
+<p>This rule detects instances where an exception is caught, but nothing is done about it.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyCatchStatementRule.cpp">oclint-rules/rules/empty/EmptyCatchStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    try
+    {
+        int* m= new int[1000];
+    }
+    catch(...)                  // empty catch statement, this swallows an exception
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty do/while statement
+----------
+
+Summary: Name: empty do/while statement
+<p>This rule detects instances where do-while statement does nothing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyDoWhileStatementRule.cpp">oclint-rules/rules/empty/EmptyDoWhileStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    do
+    {                           // empty do-while statement
+    } while(1);
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty else block
+----------
+
+Summary: Name: empty else block
+<p>This rule detects instances where a else statement does nothing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyElseBlockRule.cpp">oclint-rules/rules/empty/EmptyElseBlockRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int example(int a)
+{
+    if (1)
+    {
+        return a + 1;
+    }
+    else                // empty else statement, can be safely removed
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty finally statement
+----------
+
+Summary: Name: empty finally statement
+<p>This rule detects instances where a finally statement does nothing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyFinallyStatementRule.cpp">oclint-rules/rules/empty/EmptyFinallyStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    Foo *foo;
+    @try
+    {
+        [foo bar];
+    }
+    @catch(NSException *e)
+    {
+        NSLog(@"Exception occurred: %@", [e description]);
+    }
+    @finally            // empty finally statement, probably forget to clean up?
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty for statement
+----------
+
+Summary: Name: empty for statement
+<p>This rule detects instances where a for statement does nothing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyForStatementRule.cpp">oclint-rules/rules/empty/EmptyForStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(NSArray *array)
+{
+    for (;;)                // empty for statement
+    {
+    }
+
+    for (id it in array)    // empty for-each statement
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty if statement
+----------
+
+Summary: Name: empty if statement
+<p>This rule detects instances where a condition is checked, but nothing is done about it.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyIfStatementRule.cpp">oclint-rules/rules/empty/EmptyIfStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    if (a == 1)                  // empty if statement
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty switch statement
+----------
+
+Summary: Name: empty switch statement
+<p>This rule detects instances where a switch statement does nothing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptySwitchStatementRule.cpp">oclint-rules/rules/empty/EmptySwitchStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int i)
+{
+    switch (i)              // empty switch statement
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty try statement
+----------
+
+Summary: Name: empty try statement
+<p>This rule detects instances where a try statement is empty.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyTryStatementRule.cpp">oclint-rules/rules/empty/EmptyTryStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    try                     // but this try statement is empty
+    {
+    }
+    catch(...)
+    {
+        cout << "Exception is caught!";
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+empty while statement
+----------
+
+Summary: Name: empty while statement
+<p>This rule detects instances where a while statement does nothing.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/empty/EmptyWhileStatementRule.cpp">oclint-rules/rules/empty/EmptyWhileStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    while(a--)              // empty while statement
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+for loop should be while loop
+----------
+
+Summary: Name: for loop should be while loop
+<p>Under certain circumstances, some <code class="docutils literal"><span class="pre">for</span></code> loops can be simplified to while loops to make code more concise.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/ForLoopShouldBeWhileLoopRule.cpp">oclint-rules/rules/basic/ForLoopShouldBeWhileLoopRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    for (; a < 100;)
+    {
+        foo(a);
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+goto statement
+----------
+
+Summary: Name: goto statement
+<p><a class="reference external" href="http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF">“Go To Statement Considered Harmful”</a></p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/GotoStatementRule.cpp">oclint-rules/rules/basic/GotoStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    A:
+        a();
+    goto A;     // Considered Harmful
+}</pre>
+<p><strong>References:</strong></p>
+<p>Edsger Dijkstra (March 1968). <a class="reference external" href="http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF">“Go To Statement Considered Harmful”</a>. <em>Communications of the ACM</em> (PDF) 11 (3): 147–148. doi:10.1145/362929.362947.</p>
+
+Severity: 3
+Category: OCLint
+
+high cyclomatic complexity
+----------
+
+Summary: Name: high cyclomatic complexity
+<p>Cyclomatic complexity is determined by the number of linearly independent paths through a program’s source code. In other words, cyclomatic complexity of a method is measured by the number of decision points, like <code class="docutils literal"><span class="pre">if</span></code>, <code class="docutils literal"><span class="pre">while</span></code>, and <code class="docutils literal"><span class="pre">for</span></code> statements, plus one for the method entry.</p>
+<p>The experiments McCabe, the author of cyclomatic complexity, conclude that methods in the 3 to 7 complexity range are quite well structured. He also suggest the cyclomatic complexity of 10 is a reasonable upper limit.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/CyclomaticComplexityRule.cpp">oclint-rules/rules/size/CyclomaticComplexityRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a, int b, int c) // 1
+{
+    if (a == b)                   // 2
+    {
+        if (b == c)               // 3
+        {
+        }
+        else if (a == c)          // 3
+        {
+        }
+        else
+        {
+        }
+    }
+    for (int i = 0; i < c; i++)   // 4
+    {
+    }
+    switch(c)
+    {
+        case 1:                   // 5
+            break;
+        case 2:                   // 6
+            break;
+        default:                  // 7
+            break;
+    }
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> CYCLOMATIC_COMPLEXITY</dt> <dd> The cyclomatic complexity reporting threshold, default value is 10.</dd></dl>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[high cyclomatic complexity]")))</pre>
+<p><strong>References:</strong></p>
+<p>McCabe (December 1976). <a class="reference external" href="http://www.literateprogramming.com/mccabe.pdf">“A Complexity Measure”</a>. <em>IEEE Transactions on Software Engineering: 308–320</em></p>
+
+Severity: 3
+Category: OCLint
+
+high ncss method
+----------
+
+Summary: Name: high ncss method
+<p>This rule counts number of lines for a method by counting Non Commenting Source Statements (NCSS). NCSS only takes actual statements into consideration, in other words, ignores empty statements, empty blocks, closing brackets or semicolons after closing brackets. Meanwhile, a statement that is broken into multiple lines contribute only one count.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/NcssMethodCountRule.cpp">oclint-rules/rules/size/NcssMethodCountRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()          // 1
+{
+    if (1)              // 2
+    {
+    }
+    else                // 3
+    {
+    }
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> NCSS_METHOD</dt> <dd> The high NCSS method reporting threshold, default value is 30.</dd></dl>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[high ncss method]")))</pre>
+
+Severity: 3
+Category: OCLint
+
+high npath complexity
+----------
+
+Summary: Name: high npath complexity
+<p>NPath complexity is determined by the number of execution paths through that method. Compared to cyclomatic complexity, NPath complexity has two outstanding characteristics: first, it distinguishes between different kinds of control flow structures; second, it takes the various type of acyclic paths in a flow graph into consideration.</p>
+<p>Based on studies done by the original author in AT&amp;T Bell Lab, an NPath threshold value of 200 has been established for a method.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/NPathComplexityRule.cpp">oclint-rules/rules/size/NPathComplexityRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    // complicated code that is hard to understand
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> NPATH_COMPLEXITY</dt> <dd> The NPath complexity reporting threshold, default value is 200.</dd></dl>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[high npath complexity]")))</pre>
+<p><strong>References:</strong></p>
+<p>Brian A. Nejmeh (1988). <a class="reference external" href="http://dl.acm.org/citation.cfm?id=42379">“NPATH: a measure of execution path complexity and its applications”</a>. <em>Communications of the ACM 31 (2) p. 188-200</em></p>
+
+Severity: 3
+Category: OCLint
+
+ill-placed default label in switch statement
+----------
+
+Summary: Name: ill-placed default label in switch statement
+<p>It is very confusing when default label is not the last label in a switch statement.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/DefaultLabelNotLastInSwitchStatementRule.cpp">oclint-rules/rules/convention/DefaultLabelNotLastInSwitchStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    switch (a) {
+        case 1:
+            break;
+        default:  // the default case should be last
+            break;
+        case 2:
+            break;
+    }
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+inverted logic
+----------
+
+Summary: Name: inverted logic
+<p>An inverted logic is hard to understand.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/InvertedLogicRule.cpp">oclint-rules/rules/convention/InvertedLogicRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int example(int a)
+{
+    int i;
+    if (a != 0)             // if (a == 0)
+    {                       // {
+        i = 1;              //      i = 0;
+    }                       // }
+    else                    // else
+    {                       // {
+        i = 0;              //      i = 1;
+    }                       // }
+
+    return !i ? -1 : 1;     // return i ? 1 : -1;
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+ivar assignment outside accessors or init
+----------
+
+Summary: Name: ivar assignment outside accessors or init
+<p>This rule prevents assigning an ivar outside of getters, setters, and <code class="docutils literal"><span class="pre">init</span></code> method.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/ObjCAssignIvarOutsideAccessorsRule.cpp">oclint-rules/rules/convention/ObjCAssignIvarOutsideAccessorsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>@interface Foo : NSObject
+{
+    int _bar;
+}
+@property (assign, nonatomic) int bar;
+@end
+@implementation Foo
+@synthesize bar = _bar;
+- (void)doSomething {
+    _bar = 3; // access _bar outside its getter, setter or init
+}
+@end</pre>
+
+Severity: 2
+Category: OCLint
+
+jumbled incrementer
+----------
+
+Summary: Name: jumbled incrementer
+<p>Jumbled incrementers are usually typos. If it’s done on purpose, it’s very confusing for code readers.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/JumbledIncrementerRule.cpp">oclint-rules/rules/basic/JumbledIncrementerRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod(int a) {
+    for (int i = 0; i < a; i++) {
+        for (int j = 0; j < a; i++) { // references both 'i' and 'j'
+        }
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+long class
+----------
+
+Summary: Name: long class
+<p>Long class generally indicates that this class tries to do many things. Each class should do one thing and that one thing well.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/LongClassRule.cpp">oclint-rules/rules/size/LongClassRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class Foo
+{
+    void bar()
+    {
+        // 1001 lines of code
+    }
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_CLASS</dt> <dd> The class size reporting threshold, default value is 1000.</dd></dl>
+
+Severity: 3
+Category: OCLint
+
+long line
+----------
+
+Summary: Name: long line
+<p>When the number of characters for one line of code is very high, it largely harms the readability. Break long lines of code into multiple lines.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/LongLineRule.cpp">oclint-rules/rules/size/LongLineRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    int a012345678901234567890123456789...1234567890123456789012345678901234567890123456789;
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_LINE</dt> <dd> The long line reporting threshold, default value is 100.</dd></dl>
+
+Severity: 3
+Category: OCLint
+
+long method
+----------
+
+Summary: Name: long method
+<p>Long method generally indicates that this method tries to do many things. Each method should do one thing and that one thing well.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/LongMethodRule.cpp">oclint-rules/rules/size/LongMethodRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    cout << "hello world";
+    cout << "hello world";
+    // repeat 48 times
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_METHOD</dt> <dd> The long method reporting threshold, default value is 50.</dd></dl>
+
+Severity: 3
+Category: OCLint
+
+long variable name
+----------
+
+Summary: Name: long variable name
+<p>Variables with long names harm readability.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/naming/LongVariableNameRule.cpp">oclint-rules/rules/naming/LongVariableNameRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod()
+{
+    int reallyReallyLongIntegerName;
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> LONG_VARIABLE_NAME</dt> <dd> The long variable name reporting threshold, default value is 20.</dd></dl>
+
+Severity: 2
+Category: OCLint
+
+misplaced nil check
+----------
+
+Summary: Name: misplaced nil check
+<p>The nil check is misplaced. In Objective-C, sending a message to a nil pointer simply does nothing. But code readers may be confused about the misplaced nil check.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/MisplacedNullCheckRule.cpp">oclint-rules/rules/basic/MisplacedNullCheckRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>+ (void)compare:(A *)obj1 withOther:(A *)obj2
+{
+    if ([obj1 isEqualTo:obj2] && obj1)
+    {
+    }
+
+    if (![obj1 isEqualTo:obj2] || obj1 == nil)
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+misplaced null check
+----------
+
+Summary: Name: misplaced null check
+<p>The null check is misplaced. In C and C++, sending a message to a null pointer could crash the program. When null is misplaced, either the check is useless or it’s incorrect.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/MisplacedNullCheckRule.cpp">oclint-rules/rules/basic/MisplacedNullCheckRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void m(A *a, B *b)
+{
+    if (a->bar(b) && a != NULL) // violation
+    {
+    }
+
+    if (a->bar(b) || !a)        // violation
+    {
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+missing abstract method implementation
+----------
+
+Summary: Name: missing abstract method implementation
+<p>Due to the Objective-C language tries to postpone the decision makings to the runtime as much as possible, an abstract method is okay to be declared but without implementations. This rule tries to verify the subclass implement the correct abstract method.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/cocoa/ObjCVerifySubclassMustImplementRule.cpp">oclint-rules/rules/cocoa/ObjCVerifySubclassMustImplementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>@interface Parent
+
+- (void)anAbstractMethod __attribute__((annotate("oclint:enforce[abstract method]")));
+
+@end
+
+@interface Child : Parent
+@end
+
+@implementation Child
+
+/*
+// Child, as a subclass of Parent, must implement anAbstractMethod
+- (void)anAbstractMethod {}
+*/
+
+@end</pre>
+
+Severity: 1
+Category: OCLint
+
+missing break in switch statement
+----------
+
+Summary: Name: missing break in switch statement
+<p>A switch statement without a break statement has a very large chance to contribute a bug.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/MissingBreakInSwitchStatementRule.cpp">oclint-rules/rules/convention/MissingBreakInSwitchStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    switch (a) {
+        case 1:
+            break;
+        case 2:
+            // do something
+        default:
+            break;
+    }
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+missing call to base method
+----------
+
+Summary: Name: missing call to base method
+<p>When a method is declared with <code class="docutils literal"><span class="pre">__attribute__((annotate("oclint:enforce[base</span> <span class="pre">method]")))</span></code> annotation, all of its implementations (including its own and its sub classes) must call the method implementation in super class.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/cocoa/ObjCVerifyMustCallSuperRule.cpp">oclint-rules/rules/cocoa/ObjCVerifyMustCallSuperRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>@interface UIView (OCLintStaticChecks)
+- (void)layoutSubviews __attribute__((annotate("oclint:enforce[base method]")));
+@end
+
+@interface CustomView : UIView
+@end
+
+@implementation CustomView
+
+- (void)layoutSubviews {
+    // [super layoutSubviews]; is enforced here
+}
+
+@end</pre>
+
+Severity: 1
+Category: OCLint
+
+missing default in switch statements
+----------
+
+Summary: Name: missing default in switch statements
+<p>Switch statements should have a default statement.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/SwitchStatementsShouldHaveDefaultRule.cpp">oclint-rules/rules/convention/SwitchStatementsShouldHaveDefaultRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    switch (a) {
+        case 1:
+            break;
+        case 2:
+            break;
+        // should have a default
+    }
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+missing hash method
+----------
+
+Summary: Name: missing hash method
+<p>When <code class="docutils literal"><span class="pre">isEqual</span></code> method is overridden, <code class="docutils literal"><span class="pre">hash</span></code> method must be overridden, too.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/cocoa/ObjCVerifyIsEqualHashRule.cpp">oclint-rules/rules/cocoa/ObjCVerifyIsEqualHashRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>@implementation BaseObject
+
+- (BOOL)isEqual:(id)obj {
+    return YES;
+}
+
+/*
+- (int)hash is missing; If you override isEqual you must override hash too.
+*/
+
+@end</pre>
+
+Severity: 1
+Category: OCLint
+
+multiple unary operator
+----------
+
+Summary: Name: multiple unary operator
+<p>Multiple unary operator can always be confusing and should be simplified.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/MultipleUnaryOperatorRule.cpp">oclint-rules/rules/basic/MultipleUnaryOperatorRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    int b = -(+(!(~1)));
+}</pre>
 
 Severity: 3
 Category: OCLint
@@ -295,14 +1002,20 @@ non case label in switch statement
 ----------
 
 Summary: Name: non case label in switch statement
-
-Severity: 2
-Category: OCLint
-
-high npath complexity
-----------
-
-Summary: 
+<p>It is very confusing when label becomes part of the switch statement.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/NonCaseLabelInSwitchStatementRule.cpp">oclint-rules/rules/convention/NonCaseLabelInSwitchStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    switch (a) {
+        case 1:
+            break;
+        label1:     // label in a switch statement in really confusing
+            break;
+        default:
+            break;
+    }
+}</pre>
 
 Severity: 2
 Category: OCLint
@@ -311,174 +1024,16 @@ parameter reassignment
 ----------
 
 Summary: Name: parameter reassignment
-
-Severity: 2
-Category: OCLint
-
-redundant conditional operator
-----------
-
-Summary: Name: redundant conditional operator
-
-Severity: 1
-Category: OCLint
-
-redundant if statement
-----------
-
-Summary: Name: redundant if statement
-
-Severity: 1
-Category: OCLint
-
-redundant local variable
-----------
-
-Summary: Name: redundant local variable
-
-Severity: 1
-Category: OCLint
-
-redundant nil check
-----------
-
-Summary: Name: redundant nil check
-
-Severity: 1
-Category: OCLint
-
-return from finally block
-----------
-
-Summary: Name: return from finally block
-
-Severity: 3
-Category: OCLint
-
-short variable name
-----------
-
-Summary: 
-
-Severity: 2
-Category: OCLint
-
-switch statements don't need default when fully covered
-----------
-
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-throw exception from finally block
-----------
-
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-too few branches in switch statement
-----------
-
-Summary: 
-
-Severity: 2
-Category: OCLint
-
-too many fields
-----------
-
-Summary: Name: too many fields
-
-Severity: 3
-Category: OCLint
-
-too many methods
-----------
-
-Summary: Name: too many methods
-
-Severity: 3
-Category: OCLint
-
-too many parameters
-----------
-
-Summary: 
-
-Severity: 3
-Category: OCLint
-
-unnecessary else statement
-----------
-
-Summary: Name: unnecessary else statement
-
-Severity: 1
-Category: OCLint
-
-unused local variable
-----------
-
-Summary: Name: unused local variable
-
-Severity: 0
-Category: OCLint
-
-unused method parameter
-----------
-
-Summary: 
-
-Severity: 0
-Category: OCLint
-
-useless parentheses
-----------
-
-Summary: 
-
-Severity: 1
-Category: OCLint
-
-ivar assignment outside accessors or init
-----------
-
-Summary: Name: ivar assignment outside accessors or init
-
-Severity: 2
-Category: OCLint
-
-class
-----------
-
-Summary: Name: destructor of virtual class
-
-Severity: 2
-Category: OCLint
-
-unnecessary null check for dealloc
-----------
-
-Summary: Name: unnecessary null check for dealloc
-
-Severity: 1
-Category: OCLint
-
-unnecessary default statement in covered switch statement
-----------
-
-Summary: Name: unnecessary default statement in covered switch statement
-
-Severity: 2
-Category: OCLint
-
-ill-placed default label in switch statement
-----------
-
-Summary: Name: ill-placed default label in switch statement
+<p>Reassigning values to parameters is very problematic in most cases.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/ParameterReassignmentRule.cpp">oclint-rules/rules/convention/ParameterReassignmentRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    if (a < 0)
+    {
+        a = 0; // reassign parameter a to 0
+    }
+}</pre>
 
 Severity: 2
 Category: OCLint
@@ -487,22 +1042,393 @@ prefer early exits and continue
 ----------
 
 Summary: Name: prefer early exits and continue
+<p>Early exits can reduce the indentation of a block of code, so that reader do not have to remember all the previous decisions, therefore, makes it easier to understand the code.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/PreferEarlyExitRule.cpp">oclint-rules/rules/convention/PreferEarlyExitRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int *doSomething(int a) {
+  if (!foo(a) && bar(a) && doOtherThing(a)) {
+    // ... some really long code ....
+  }
+
+  return 0;
+}
+
+// is preferred as
+
+int *doSomething(int a) {
+  if (foo(a)) {
+    return 0;
+  }
+
+  if (!bar(a)) {
+    return 0;
+  }
+
+  if (!doOtherThing(a)) {
+    return 0;
+  }
+
+  // ... some long code ....
+}</pre>
 
 Severity: 2
 Category: OCLint
 
-missing default in switch statements
+redundant conditional operator
 ----------
 
-Summary: Name: missing default in switch statements
+Summary: Name: redundant conditional operator
+<p>This rule detects three types of redundant conditional operators:</p>
+<p>They are usually introduced by mistake, and should be simplified.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/RedundantConditionalOperatorRule.cpp">oclint-rules/rules/redundant/RedundantConditionalOperatorRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a, int b, int c)
+{
+    bool b1 = a > b ? true : false;     // true/false: bool b1 = a > b;
+    bool b2 = a > b ? false : true;     // false/true: bool b2 = !(a > b);
+    int i1 = a > b ? 1 : 1;             // same constant: int i1 = 1;
+    float f1 = a > b ? 1.0 : 1.00;      // equally constant: float f1 = 1.0;
+    int i2 = a > b ? c : c;             // same variable: int i2 = c;
+}</pre>
+
+Severity: 1
+Category: OCLint
+
+redundant if statement
+----------
+
+Summary: Name: redundant if statement
+<p>This rule detects unnecessary if statements.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/RedundantIfStatementRule.cpp">oclint-rules/rules/redundant/RedundantIfStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>bool example(int a, int b)
+{
+    if (a == b)             // this if statement is redundant
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }                       // the entire method can be simplified to return a == b;
+}</pre>
+
+Severity: 1
+Category: OCLint
+
+redundant local variable
+----------
+
+Summary: Name: redundant local variable
+<p>This rule detects cases where a variable declaration is immediately followed by a return of that variable.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/RedundantLocalVariableRule.cpp">oclint-rules/rules/redundant/RedundantLocalVariableRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int example(int a)
+{
+    int b = a * 2;
+    return b;   // variable b is returned immediately after its declaration,
+}               // can be simplified to return a * 2;</pre>
+
+Severity: 1
+Category: OCLint
+
+redundant nil check
+----------
+
+Summary: Name: redundant nil check
+<p>C/C++-style null check in Objective-C like <code class="docutils literal"><span class="pre">foo</span> <span class="pre">!=</span> <span class="pre">nil</span> <span class="pre">&amp;&amp;</span> <span class="pre">[foo</span> <span class="pre">bar]</span></code> is redundant, since sending a message to a nil object in this case simply returns a false-y value.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/RedundantNilCheckRule.cpp">oclint-rules/rules/redundant/RedundantNilCheckRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>+ (void)compare:(A *)obj1 withOther:(A *)obj2
+{
+    if (obj1 && [obj1 isEqualTo:obj2]) // if ([obj1 isEqualTo:obj2]) is okay
+    {
+    }
+}</pre>
+
+Severity: 1
+Category: OCLint
+
+return from finally block
+----------
+
+Summary: Name: return from finally block
+<p>Returning from a <code class="docutils literal"><span class="pre">finally</span></code> block is not recommended.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/ReturnFromFinallyBlockRule.cpp">oclint-rules/rules/basic/ReturnFromFinallyBlockRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    @try
+    {
+        foo();
+    }
+    @catch(id ex)
+    {
+        bar();
+    }
+    @finally
+    {
+        return;         // this can discard exceptions.
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+short variable name
+----------
+
+Summary: Name: short variable name
+<p>A variable with a short name is hard to understand what it stands for. Variable with name, but the name has number of characters less than the threshold will be emitted.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/naming/ShortVariableNameRule.cpp">oclint-rules/rules/naming/ShortVariableNameRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod(int i)  // i is short
+{
+    int ii;          // ii is short
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> SHORT_VARIABLE_NAME</dt> <dd> The short variable name reporting threshold, default value is 3.</dd></dl>
 
 Severity: 2
+Category: OCLint
+
+throw exception from finally block
+----------
+
+Summary: Name: throw exception from finally block
+<p>Throwing exceptions within a <code class="docutils literal"><span class="pre">finally</span></code> block may mask other exceptions or code defects.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/basic/ThrowExceptionFromFinallyBlockRule.cpp">oclint-rules/rules/basic/ThrowExceptionFromFinallyBlockRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example()
+{
+    @try {;}
+    @catch(id ex) {;}
+    @finally {
+        id ex1;
+        @throw ex1;                              // this throws an exception
+        NSException *ex2 = [NSException new];
+        [ex2 raise];                             // this throws an exception, too
+    }
+}</pre>
+
+Severity: 3
+Category: OCLint
+
+too few branches in switch statement
+----------
+
+Summary: Name: too few branches in switch statement
+<p>To increase code readability, when a switch consists of only a few branches, it’s much better to use an if statement instead.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/TooFewBranchesInSwitchStatementRule.cpp">oclint-rules/rules/convention/TooFewBranchesInSwitchStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a)
+{
+    switch (a) {
+        case 1:
+            break;
+        default:
+            break;
+    } // Better to use an if statement and check if variable a equals 1.
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> MINIMUM_CASES_IN_SWITCH</dt> <dd> The reporting threshold for count of case statements in a switch statement, default value is 3.</dd></dl>
+
+Severity: 2
+Category: OCLint
+
+too many fields
+----------
+
+Summary: Name: too many fields
+<p>A class with too many fields indicates it does too many things and lacks proper abstraction. It can be redesigned to have fewer fields.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/TooManyFieldsRule.cpp">oclint-rules/rules/size/TooManyFieldsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class c
+{
+    int a, b;
+    int c;
+    // ...
+    int l;
+    int m, n;
+    // ...
+    int x, y, z;
+
+    void m() {}
+};</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> TOO_MANY_FIELDS</dt> <dd> The reporting threshold for too many fields, default value is 20.</dd></dl>
+
+Severity: 3
+Category: OCLint
+
+too many methods
+----------
+
+Summary: Name: too many methods
+<p>A class with too many methods indicates it does too many things and is hard to read and understand. It usually contains complicated code, and should be refactored.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/TooManyMethodsRule.cpp">oclint-rules/rules/size/TooManyMethodsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>class c
+{
+    int a();
+    int b();
+    int c();
+    // ...
+    int l();
+    int m();
+    int n();
+    // ...
+    int x();
+    int y();
+    int z();
+    int aa();
+    int ab();
+    int ac();
+    int ad();
+    int ae();
+};</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> TOO_MANY_METHODS</dt> <dd> The reporting threshold for too many methods, default value is 30.</dd></dl>
+
+Severity: 3
+Category: OCLint
+
+too many parameters
+----------
+
+Summary: Name: too many parameters
+<p>Methods with too many parameters are hard to understand and maintain, and are thirsty for refactorings, like <a class="reference external" href="http://www.refactoring.com/catalog/replaceParameterWithMethod.html">Replace Parameter With method</a>, <a class="reference external" href="http://www.refactoring.com/catalog/introduceParameterObject.html">Introduce Parameter Object</a>, or <a class="reference external" href="http://www.refactoring.com/catalog/preserveWholeObject.html">Preserve Whole Object</a>.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/size/TooManyParametersRule.cpp">oclint-rules/rules/size/TooManyParametersRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void example(int a, int b, int c, int d, int e, int f,
+    int g, int h, int i, int j, int k, int l)
+{
+}</pre>
+<p><strong>Thresholds:</strong></p>
+<dl><dt> TOO_MANY_PARAMETERS</dt> <dd> The reporting threshold for too many parameters, default value is 10.</dd></dl>
+<p><strong>References:</strong></p>
+<p>Fowler, Martin (1999). <em>Refactoring: Improving the design of existing code.</em> Addison Wesley.</p>
+
+Severity: 3
+Category: OCLint
+
+unnecessary default statement in covered switch statement
+----------
+
+Summary: Name: unnecessary default statement in covered switch statement
+<p>When a switch statement covers all possible cases, a default label is not needed and should be removed. If the switch is not fully covered, the SwitchStatementsShouldHaveDefault rule will report.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/convention/CoveredSwitchStatementsDontNeedDefaultRule.cpp">oclint-rules/rules/convention/CoveredSwitchStatementsDontNeedDefaultRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>typedef enum {
+    value1 = 0,
+    value2 = 1
+} eValues;
+
+void aMethod(eValues a)
+{
+    switch(a)
+    {
+        case value1:
+            break;
+        case value2:
+            break;
+        default:          // this break is obsolete because all
+            break;        // values of variable a are already covered.
+    }
+}</pre>
+
+Severity: 2
+Category: OCLint
+
+unnecessary else statement
+----------
+
+Summary: Name: unnecessary else statement
+<p>When an if statement block ends with a return statement, or all branches in the if statement block end with return statements, then the else statement is unnecessary. The code in the else statement can be run without being in the block.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/UnnecessaryElseStatementRule.cpp">oclint-rules/rules/redundant/UnnecessaryElseStatementRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>bool example(int a)
+{
+    if (a == 1)                 // if (a == 1)
+    {                           // {
+        cout << "a is 1.";      //     cout << "a is 1.";
+        return true;            //     return true;
+    }                           // }
+    else                        //
+    {                           //
+        cout << "a is not 1."   // cout << "a is not 1."
+    }                           //
+}</pre>
+
+Severity: 1
+Category: OCLint
+
+unnecessary null check for dealloc
+----------
+
+Summary: Name: unnecessary null check for dealloc
+<p><code class="docutils literal"><span class="pre">char*</span> <span class="pre">p</span> <span class="pre">=</span> <span class="pre">0;</span> <span class="pre">delete</span> <span class="pre">p;</span></code> is valid. This rule locates unnecessary <code class="docutils literal"><span class="pre">if</span> <span class="pre">(p)</span></code> checks.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/UnnecessaryNullCheckForCXXDeallocRule.cpp">oclint-rules/rules/redundant/UnnecessaryNullCheckForCXXDeallocRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void m(char* c) {
+    if (c != nullptr) { // and be simplified to delete c;
+        delete c;
+    }
+}</pre>
+
+Severity: 1
+Category: OCLint
+
+unused local variable
+----------
+
+Summary: Name: unused local variable
+<p>This rule detects local variables that are declared, but not used.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/unused/UnusedLocalVariableRule.cpp">oclint-rules/rules/unused/UnusedLocalVariableRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int example(int a)
+{
+    int i;          // variable i is declared, but not used
+    return 0;
+}</pre>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[unused local variable]")))</pre>
+
+Severity: 0
+Category: OCLint
+
+unused method parameter
+----------
+
+Summary: Name: unused method parameter
+<p>This rule detects parameters that are not used in the method.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/unused/UnusedMethodParameterRule.cpp">oclint-rules/rules/unused/UnusedMethodParameterRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int example(int a)  // parameter a is not used
+{
+    return 0;
+}</pre>
+<p><strong>Suppress:</strong></p>
+<pre>__attribute__((annotate("oclint:suppress[unused method parameter]")))</pre>
+
+Severity: 0
 Category: OCLint
 
 use boxed expression
 ----------
 
 Summary: Name: use boxed expression
+<p>This rule locates the places that can be migrated to the new Objective-C literals with boxed expressions.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/migration/ObjCBoxedExpressionsRule.cpp">oclint-rules/rules/migration/ObjCBoxedExpressionsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod()
+{
+    NSNumber *fortyTwo = [NSNumber numberWithInt:(43 - 1)];
+    // NSNumber *fortyTwo = @(43 - 1);
+
+    NSString *env = [NSString stringWithUTF8String:getenv("PATH")];
+    // NSString *env = @(getenv("PATH"));
+}</pre>
 
 Severity: 1
 Category: OCLint
@@ -511,6 +1437,17 @@ use container literal
 ----------
 
 Summary: Name: use container literal
+<p>This rule locates the places that can be migrated to the new Objective-C literals with container literals.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/migration/ObjCContainerLiteralsRule.cpp">oclint-rules/rules/migration/ObjCContainerLiteralsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod()
+{
+    NSArray *a = [NSArray arrayWithObjects:@1, @2, @3, nil];
+    // NSArray *a = @[ @1, @2, @3 ];
+
+    NSDictionary *d = [NSDictionary dictionaryWithObjects:@[@2,@4] forKeys:@[@1,@3]];
+    // NSDictionary *d = @{ @1 : @2, @3 : @4 };
+}</pre>
 
 Severity: 1
 Category: OCLint
@@ -519,6 +1456,17 @@ use number literal
 ----------
 
 Summary: Name: use number literal
+<p>This rule locates the places that can be migrated to the new Objective-C literals with number literals.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/migration/ObjCNSNumberLiteralsRule.cpp">oclint-rules/rules/migration/ObjCNSNumberLiteralsRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod()
+{
+    NSNumber *fortyTwo = [NSNumber numberWithInt:42];
+    // NSNumber *fortyTwo = @42;
+
+    NSNumber *yesBool = [NSNumber numberWithBool:YES];
+    // NSNumber *yesBool = @YES;
+}</pre>
 
 Severity: 1
 Category: OCLint
@@ -526,39 +1474,38 @@ Category: OCLint
 use object subscripting
 ----------
 
-Summary: 
+Summary: Name: use object subscripting
+<p>This rule locates the places that can be migrated to the new Objective-C literals with object subscripting.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/migration/ObjCObjectSubscriptingRule.cpp">oclint-rules/rules/migration/ObjCObjectSubscriptingRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>void aMethod(NSArray *a, NSDictionary *d)
+{
+    id item = [a objectAtIndex:0];
+    // id item = a[0];
+
+    id item = [d objectForKey:@1];
+    // id item = d[@1];
+}</pre>
 
 Severity: 1
 Category: OCLint
 
-missing hash method
+useless parentheses
 ----------
 
-Summary: Name: missing hash method
-
-Severity: 1
-Category: OCLint
-
-missing call to base method
-----------
-
-Summary: Name: missing call to base method
-
-Severity: 1
-Category: OCLint
-
-calling prohibited method
-----------
-
-Summary: Name: calling prohibited method
-
-Severity: 1
-Category: OCLint
-
-missing abstract method implementation
-----------
-
-Summary: Name: missing abstract method implementation
+Summary: Name: useless parentheses
+<p>This rule detects useless parentheses.</p>
+<p>This rule is defined by the following class: <a class="reference external" href="https://github.com/oclint/oclint/blob/master/oclint-rules/rules/redundant/UselessParenthesesRule.cpp">oclint-rules/rules/redundant/UselessParenthesesRule.cpp</a></p>
+<p><strong>Example:</strong></p>
+<pre>int example(int a)
+{
+    int y = (a + 1);    // int y = a + 1;
+    if ((y > 0))        // if (y > 0)
+    {
+        return a;
+    }
+    return (0);         // return 0;
+}</pre>
 
 Severity: 1
 Category: OCLint

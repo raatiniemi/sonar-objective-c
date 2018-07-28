@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by gillesgrousset on 18/02/2016.
@@ -67,7 +68,7 @@ public class FauxPasRulesDefinition implements RulesDefinition {
     private void loadRules(NewRepository repository) throws IOException {
 
         Reader reader = new BufferedReader(new InputStreamReader(getClass()
-                .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
+                .getResourceAsStream(RULES_FILE), StandardCharsets.UTF_8));
 
         String jsonString = IOUtils.toString(reader);
 

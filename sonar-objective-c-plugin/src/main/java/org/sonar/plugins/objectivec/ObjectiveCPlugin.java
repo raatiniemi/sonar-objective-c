@@ -32,7 +32,6 @@ import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintRulesDefinition;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
 import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
-import org.sonar.plugins.objectivec.colorizer.ObjectiveCColorizerFormat;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.plugins.objectivec.cpd.ObjectiveCCpdMapping;
 

@@ -1,0 +1,26 @@
+image: maven:3.5.3-jdk-8-alpine
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - mvn clean install
+  artifacts:
+    paths:
+      - sonar-objective-c-plugin/target
+    expire_in: 1 day
+
+test:
+  stage: test
+  script:
+    - mvn test
+
+analyse:
+  stage: test
+  script:
+    - mvn sonar:sonar
+  only:
+    - tags

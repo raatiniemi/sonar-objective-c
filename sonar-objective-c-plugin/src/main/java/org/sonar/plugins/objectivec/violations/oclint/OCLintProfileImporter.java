@@ -1,5 +1,4 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,21 +27,20 @@ import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 public final class OCLintProfileImporter extends ProfileImporter {
-
-    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default OCLint profile";
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintProfileImporter.class);
+    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default OCLint profile";
 
     private final XMLProfileParser profileParser;
 
     public OCLintProfileImporter(final XMLProfileParser xmlProfileParser) {
-        super(OCLintRulesDefinition.REPOSITORY_KEY, OCLintRulesDefinition.REPOSITORY_KEY);
+        super(OCLintRulesDefinition.REPOSITORY_KEY, OCLintRulesDefinition.REPOSITORY_NAME);
+
         setSupportedLanguages(ObjectiveC.KEY);
         profileParser = xmlProfileParser;
     }
 
     @Override
-    public RulesProfile importProfile(final Reader reader,
-            final ValidationMessages messages) {
+    public RulesProfile importProfile(final Reader reader, final ValidationMessages messages) {
         final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {

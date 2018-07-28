@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,67 +17,60 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import java.io.File;
-
-import org.apache.tools.ant.DirectoryScanner;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.component.ResourcePerspectives;
+import me.raatiniemi.sonarqube.ReportFinder;
+import me.raatiniemi.sonarqube.ReportPatternFinder;
+import me.raatiniemi.sonarqube.XmlReportSensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
-public final class OCLintSensor implements Sensor {
+import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilder;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+public final class OCLintSensor extends XmlReportSensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
 
-    private final Settings conf;
-    private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
+    private static final String NAME = "OCLint violation sensor";
 
-    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
-        this.conf = config;
-        this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
+    @SuppressWarnings("WeakerAccess")
+    public OCLintSensor(@Nonnull Settings settings) {
+        super(settings);
     }
 
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
-
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(NAME);
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
     }
 
-    public void analyse(final Project project, final SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        final OCLintParser parser = new OCLintParser(project, context, resourcePerspectives, fileSystem);
+    @Override
+    public void execute(@Nonnull SensorContext context) {
+        List<Violation> violations = parseReportIn(context.fileSystem().baseDir());
 
-        parseReportIn(projectBaseDir, parser);
-
+        OCLintSensorPersistence persistence = OCLintSensorPersistence.create(context);
+        persistence.saveMeasures(violations);
     }
 
-    private void parseReportIn(final String baseDir, final OCLintParser parser) {
-
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{reportPath()});
-        scanner.setBasedir(baseDir);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-
-        for(String filename : files) {
-            LoggerFactory.getLogger(getClass()).info("Processing OCLint report {}", filename);
-            parser.parseReport(new File(filename));
+    @Nonnull
+    private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
+        Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
+        if (!documentBuilder.isPresent()) {
+            return Collections.emptyList();
         }
-    }
 
-    private String reportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-        if (reportPath == null) {
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-        return reportPath;
+        OCLintXmlReportParser parser = OCLintXmlReportParser.create(documentBuilder.get());
+        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+                .map(parser::parse)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(Collections.emptyList());
     }
 }

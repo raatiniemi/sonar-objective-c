@@ -213,9 +213,6 @@ appScheme=''; readParameter appScheme 'sonar.objectivec.appScheme'
 testScheme=''; readParameter testScheme 'sonar.objectivec.testScheme'
 # The file patterns to exclude from coverage report
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.objectivec.excludedPathsFromCoverage'
-# Read coverage type
-coverageType=''; readParameter coverageType 'sonar.objectivec.coverageType'
-
 
 # Check for mandatory parameters
 if [ -z "$projectFile" -o "$projectFile" = " " ]; then
@@ -290,17 +287,9 @@ else
 
     echo -n 'Running surefire'
 
-    if [ "$coverageType" = "profdata" -o "$coverageType" = "" ]; then
-    	# profdata
-    	buildCmd=($XCODEBUILD_CMD test $buildCmdPrefix -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
-        xcode8BuildForTestingCmd=($XCODEBUILD_CMD build-for-testing $buildCmdPrefix -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
-        xcode8TestCmd=($XCODEBUILD_CMD test-without-building $buildCmdPrefix -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
-    else
-    	# Legacy coverage
-    	buildCmd=($XCODEBUILD_CMD test $buildCmdPrefix -scheme "$testScheme" -configuration Debug)
-    	xcode8BuildForTestingCmd=($XCODEBUILD_CMD build-for-testing $buildCmdPrefix -scheme "$testScheme" -configuration Debug)
-        xcode8TestCmd=($XCODEBUILD_CMD test-without-building $buildCmdPrefix -scheme "$testScheme" -configuration Debug)
-    fi
+    buildCmd=($XCODEBUILD_CMD test $buildCmdPrefix -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
+    xcode8BuildForTestingCmd=($XCODEBUILD_CMD build-for-testing $buildCmdPrefix -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
+    xcode8TestCmd=($XCODEBUILD_CMD test-without-building $buildCmdPrefix -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
 
     if [[ ! -z "$destinationSimulator" ]]; then
         buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360)
@@ -322,66 +311,30 @@ else
 
 	echo -n 'Computing coverage report'
 
-	if [ "$coverageType" = "profdata" -o "$coverageType" = "" ]; then
-
-	    # profdata = use slather
-
-	    echo 'Using profdata'
-
-	    # Build the --exclude flags
-        excludedCommandLineFlags=""
-        if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
-            echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
-            while read word; do
-                excludedCommandLineFlags+=" -i $word"
-            done < tmpFileRunSonarSh2
-            rm -rf tmpFileRunSonarSh2
-        fi
-        if [ "$vflag" = "on" ]; then
-            echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
-        fi
+    # Build the --exclude flags
+    excludedCommandLineFlags=""
+    if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
+        echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
+        while read word; do
+            excludedCommandLineFlags+=" -i $word"
+        done < tmpFileRunSonarSh2
+        rm -rf tmpFileRunSonarSh2
+    fi
+    if [ "$vflag" = "on" ]; then
+        echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
+    fi
 
 
-		firstProject=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | head -n 1)
+    firstProject=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | head -n 1)
 
-        slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
-		if [[ ! -z "$workspaceFile" ]]; then
-			slatherCmd+=( --workspace "$workspaceFile")
-		fi
-		slatherCmd+=( --scheme "$appScheme" "$firstProject")
+    slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+    if [[ ! -z "$workspaceFile" ]]; then
+        slatherCmd+=( --workspace "$workspaceFile")
+    fi
+    slatherCmd+=( --scheme "$appScheme" "$firstProject")
 
-		runCommand /dev/stdout "${slatherCmd[@]}"
-		mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
-
-	else
-
-	    # Legacy mode = use gcovr
-
-		# Build the --exclude flags
-		excludedCommandLineFlags=""
-		if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
-			echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
-			while read word; do
-				excludedCommandLineFlags+=" --exclude $word"
-			done < tmpFileRunSonarSh2
-			rm -rf tmpFileRunSonarSh2
-		fi
-		if [ "$vflag" = "on" ]; then
-			echo "Command line exclusion flags for gcovr is:$excludedCommandLineFlags"
-		fi
-
-		# Create symlink on the build directory to enable its access from the workspace
-		coverageFilesPath=$(grep 'command' compile_commands.json | sed 's#^.*-o \\/#\/#;s#",##' | grep "${projectName%%.*}.build" | awk 'NR<2' | sed 's/\\\//\//g' | sed 's/\\\\//g' | xargs -0 dirname)
-		splitIndex=$(awk -v a="$coverageFilesPath" -v b="/Intermediates" 'BEGIN{print index(a,b)}')
-		coverageFilesPath=$(echo ${coverageFilesPath:0:$splitIndex}Intermediates)
-		ln -s $coverageFilesPath sonar-reports/build
-
-		# Run gcovr with the right options
-		runCommand "sonar-reports/coverage.xml" gcovr -r . $excludedCommandLineFlags --xml
-
-	fi
-
-
+    runCommand /dev/stdout "${slatherCmd[@]}"
+    mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
 fi
 
 if [ "$oclint" = "on" ]; then

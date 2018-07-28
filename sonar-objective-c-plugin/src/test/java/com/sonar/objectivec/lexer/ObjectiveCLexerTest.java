@@ -17,11 +17,6 @@
  */
 package com.sonar.objectivec.lexer;
 
-import static com.sonar.sslr.test.lexer.LexerMatchers.hasComment;
-import static com.sonar.sslr.test.lexer.LexerMatchers.hasToken;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.util.List;
 
