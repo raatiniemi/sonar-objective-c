@@ -21,6 +21,6 @@ test:
 analyse:
   stage: test
   script:
-    - mvn sonar:sonar
+    - mvn cobertura:cobertura -Dcobertura.report.format=xml sonar:sonar
   only:
     - tags
