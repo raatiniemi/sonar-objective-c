@@ -81,10 +81,6 @@ To install the fixed version, follow those steps :
 
 **The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
 
-### Analysis
-- Run the script ```run-sonar.sh``` in your Xcode project root folder
-- Enjoy or file an issue!
-
 ### Contributing
 
 Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
