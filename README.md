@@ -79,8 +79,6 @@ To install the fixed version, follow those steps :
 - Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
 - Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
 
-**The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
-
 ### Contributing
 
 Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
