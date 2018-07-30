@@ -85,12 +85,6 @@ To install the fixed version, follow those steps :
 - Run the script ```run-sonar.sh``` in your Xcode project root folder
 - Enjoy or file an issue!
 
-### Update (once per plugin update)
-- Install the lastest plugin version
-- Copy ```run-sonar.sh``` somewhere in your PATH
-
-If you still have *run-sonar.sh* file in each of your project (not recommended), you will need to update all those files.
-
 ### Contributing
 
 Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
