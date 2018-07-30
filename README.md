@@ -77,6 +77,7 @@ To install the fixed version, follow those steps :
 ### Configuration (once per project)
 - Copy [sonar-project.properties](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
 - Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
+- Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
 
 **The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
 
