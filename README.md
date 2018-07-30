@@ -33,6 +33,9 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.6.4
+* Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
+
 ### 0.6.3 (detached from backelite project)
 - Detached from backelite project (no active maintainers)
 - Ensure compatibility with SonarQube 7.0
