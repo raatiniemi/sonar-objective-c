@@ -16,13 +16,13 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
@@ -47,6 +47,7 @@ public class CoberturaSensorTest {
     private final MapSettings settings = new MapSettings();
 
     private SensorContextTester context;
+    private FileSystemHelpers helpers;
     private CoberturaSensor sensor;
 
     private DefaultInputFile classNameFile;
@@ -54,21 +55,10 @@ public class CoberturaSensorTest {
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
+        helpers = FileSystemHelpers.create(context);
         sensor = new CoberturaSensor(settings);
 
-        classNameFile = createFile();
-    }
-
-    @Nonnull
-    private DefaultInputFile createFile() {
-        return new DefaultInputFile(context.module().key(), "TargetName/ClassName.m")
-                .setLanguage("bla")
-                .setType(InputFile.Type.MAIN)
-                .initMetadata("1\n2\n3\n4\n5\n6");
-    }
-
-    private void addFileToFs(@Nonnull DefaultInputFile inputFile) {
-        context.fileSystem().add(inputFile);
+        classNameFile = helpers.createFile("TargetName/ClassName.m");
     }
 
     private void createReportFile(@Nonnull String relativePath) {
@@ -96,7 +86,7 @@ public class CoberturaSensorTest {
 
     @Test
     public void execute_withDefaultReportPattern() {
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
         createReportFile("sonar-reports/coverage.xml");
 
         sensor.execute(context);
@@ -107,7 +97,7 @@ public class CoberturaSensorTest {
     @Test
     public void execute_withReportPattern() {
         settings.setProperty("sonar.objectivec.coverage.reportPattern", "cobertura.xml");
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
         createReportFile("cobertura.xml");
 
         sensor.execute(context);

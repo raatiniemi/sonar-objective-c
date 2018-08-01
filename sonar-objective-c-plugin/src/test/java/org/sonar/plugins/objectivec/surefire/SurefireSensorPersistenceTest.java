@@ -16,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +24,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
@@ -47,33 +47,23 @@ public class SurefireSensorPersistenceTest {
     private DefaultInputFile secondClassNameTestFile;
 
     private SensorContextTester context;
+    private FileSystemHelpers helpers;
     private SurefireSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
+        helpers = FileSystemHelpers.create(context);
         persistence = SurefireSensorPersistence.create(context);
 
-        classNameTestFile = createFile("TestTarget/ClassNameTest.m");
-        firstClassNameTestFile = createFile("TestTarget/FirstClassNameTest.m");
-        secondClassNameTestFile = createFile("TestTarget/SecondClassNameTest.m");
+        classNameTestFile = helpers.createTestFile("TestTarget/ClassNameTest.m");
+        firstClassNameTestFile = helpers.createTestFile("TestTarget/FirstClassNameTest.m");
+        secondClassNameTestFile = helpers.createTestFile("TestTarget/SecondClassNameTest.m");
     }
 
     @After
     public void tearDown() {
         temporaryFolder.delete();
-    }
-
-    @Nonnull
-    private DefaultInputFile createFile(@Nonnull String relativePath) {
-        return new DefaultInputFile(context.module().key(), relativePath)
-                .setLanguage("bla")
-                .setType(InputFile.Type.TEST)
-                .initMetadata("1\n2\n3\n4\n5\n6");
-    }
-
-    private void addFileToFs(@Nonnull DefaultInputFile inputFile) {
-        context.fileSystem().add(inputFile);
     }
 
     @Nonnull
@@ -93,7 +83,7 @@ public class SurefireSensorPersistenceTest {
     @Test
     public void saveMeasures_withEmptyReport() {
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.emptyList());
-        addFileToFs(classNameTestFile);
+        helpers.addToFileSystem(classNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
@@ -105,7 +95,7 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        addFileToFs(classNameTestFile);
+        helpers.addToFileSystem(classNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
@@ -126,8 +116,8 @@ public class SurefireSensorPersistenceTest {
         testSuites.add(TestSuite.create("FirstClassNameTest", firstTestCases));
         testSuites.add(TestSuite.create("SecondClassNameTest", secondTestCases));
         TestReport testReport = TestReport.create("TestTarget.xctest", testSuites);
-        addFileToFs(firstClassNameTestFile);
-        addFileToFs(secondClassNameTestFile);
+        helpers.addToFileSystem(firstClassNameTestFile);
+        helpers.addToFileSystem(secondClassNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
@@ -150,8 +140,8 @@ public class SurefireSensorPersistenceTest {
         List<TestReport> testReports = new ArrayList<>();
         testReports.add(TestReport.create("FirstTestTarget.xctest", Collections.singletonList(TestSuite.create("FirstClassNameTest", firstTestCases))));
         testReports.add(TestReport.create("SecondTestTarget.xctest", Collections.singletonList(TestSuite.create("SecondClassNameTest", secondTestCases))));
-        addFileToFs(firstClassNameTestFile);
-        addFileToFs(secondClassNameTestFile);
+        helpers.addToFileSystem(firstClassNameTestFile);
+        helpers.addToFileSystem(secondClassNameTestFile);
 
         persistence.saveMeasures(testReports);
 
@@ -168,7 +158,7 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.failure("ClassNameTest", "testMethodName_withFailure");
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        addFileToFs(classNameTestFile);
+        helpers.addToFileSystem(classNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
@@ -182,8 +172,8 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.success("BaseClassName_CategoryNameTests", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("BaseClassName_CategoryNameTests", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        DefaultInputFile categoryNameTestFile = createFile("TestTarget/BaseClassName+CategoryNameTests.m");
-        addFileToFs(categoryNameTestFile);
+        DefaultInputFile categoryNameTestFile = helpers.createTestFile("TestTarget/BaseClassName+CategoryNameTests.m");
+        helpers.addToFileSystem(categoryNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
@@ -197,7 +187,7 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        addFileToFs(createFile("ClassNameTest.m"));
+        helpers.addToFileSystem(helpers.createTestFile("ClassNameTest.m"));
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 

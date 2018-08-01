@@ -16,13 +16,13 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
@@ -51,6 +51,7 @@ public class LizardSensorTest {
     private final MapSettings settings = new MapSettings();
 
     private SensorContextTester context;
+    private FileSystemHelpers helpers;
     private LizardSensor sensor;
 
     private DefaultInputFile firstClassNameFile;
@@ -59,22 +60,11 @@ public class LizardSensorTest {
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
+        helpers = FileSystemHelpers.create(context);
         sensor = new LizardSensor(settings);
 
-        firstClassNameFile = createFile("TargetName/FirstClassNameTest.m");
-        secondClassNameFile = createFile("TargetName/SecondClassNameTest.m");
-    }
-
-    @Nonnull
-    private DefaultInputFile createFile(@Nonnull String relativePath) {
-        return new DefaultInputFile(context.module().key(), relativePath)
-                .setLanguage("bla")
-                .setType(InputFile.Type.MAIN)
-                .initMetadata("1\n2\n3\n4\n5\n6");
-    }
-
-    private void addFileToFs(@Nonnull DefaultInputFile inputFile) {
-        context.fileSystem().add(inputFile);
+        firstClassNameFile = helpers.createFile("TargetName/FirstClassNameTest.m");
+        secondClassNameFile = helpers.createFile("TargetName/SecondClassNameTest.m");
     }
 
     private void createReportFile(@Nonnull String relativePath) {
@@ -112,8 +102,8 @@ public class LizardSensorTest {
 
     @Test
     public void execute_withDefaultReportPattern() {
-        addFileToFs(firstClassNameFile);
-        addFileToFs(secondClassNameFile);
+        helpers.addToFileSystem(firstClassNameFile);
+        helpers.addToFileSystem(secondClassNameFile);
         createReportFile("sonar-reports/lizard-report.xml");
 
         sensor.execute(context);
@@ -127,8 +117,8 @@ public class LizardSensorTest {
     @Test
     public void execute_withReportPattern() {
         settings.setProperty("sonar.objectivec.lizard.report", "lizard.xml");
-        addFileToFs(firstClassNameFile);
-        addFileToFs(secondClassNameFile);
+        helpers.addToFileSystem(firstClassNameFile);
+        helpers.addToFileSystem(secondClassNameFile);
         createReportFile("lizard.xml");
 
         sensor.execute(context);
@@ -141,8 +131,8 @@ public class LizardSensorTest {
 
     @Test
     public void execute_withoutReport() {
-        addFileToFs(firstClassNameFile);
-        addFileToFs(secondClassNameFile);
+        helpers.addToFileSystem(firstClassNameFile);
+        helpers.addToFileSystem(secondClassNameFile);
 
         sensor.execute(context);
 

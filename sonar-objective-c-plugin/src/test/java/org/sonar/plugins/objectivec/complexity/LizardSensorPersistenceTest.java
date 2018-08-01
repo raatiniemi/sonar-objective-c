@@ -1,12 +1,12 @@
 package org.sonar.plugins.objectivec.complexity;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
@@ -29,26 +29,16 @@ public class LizardSensorPersistenceTest {
     private DefaultInputFile classNameFile;
 
     private SensorContextTester context;
+    private FileSystemHelpers helpers;
     private LizardSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
+        helpers = FileSystemHelpers.create(context);
         persistence = LizardSensorPersistence.create(context);
 
-        classNameFile = createFile();
-    }
-
-    @Nonnull
-    private DefaultInputFile createFile() {
-        return new DefaultInputFile(context.module().key(), "TargetName/ClassName.m")
-                .setLanguage("bla")
-                .setType(InputFile.Type.MAIN)
-                .initMetadata("1\n2\n3\n4\n5\n6");
-    }
-
-    private void addFileToFs(@Nonnull DefaultInputFile inputFile) {
-        context.fileSystem().add(inputFile);
+        classNameFile = helpers.createFile("TargetName/ClassName.m");
     }
 
     @Nullable
@@ -84,7 +74,7 @@ public class LizardSensorPersistenceTest {
                 .setComplexity(5)
                 .build();
         List<LizardMeasure> measures = Collections.singletonList(measure);
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
 
         persistence.saveMeasures(measures);
 

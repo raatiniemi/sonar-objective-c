@@ -16,18 +16,17 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.utils.log.LogTester;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,28 +47,18 @@ public class CoberturaSensorPersistenceTest {
     private DefaultInputFile anotherTargetClassNameFile;
 
     private SensorContextTester context;
+    private FileSystemHelpers helpers;
     private CoberturaSensorPersistence persistence;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
+        helpers = FileSystemHelpers.create(context);
         persistence = CoberturaSensorPersistence.create(context);
 
-        classNameFile = createFile("TargetName/ClassName.m");
-        secondClassNameFile = createFile("TargetName/SecondClassName.m");
-        anotherTargetClassNameFile = createFile("AnotherTargetName/ClassName.m");
-    }
-
-    @Nonnull
-    private DefaultInputFile createFile(@Nonnull String relativePath) {
-        return new DefaultInputFile(context.module().key(), relativePath)
-                .setLanguage("bla")
-                .setType(InputFile.Type.MAIN)
-                .initMetadata("1\n2\n3\n4\n5\n6");
-    }
-
-    private void addFileToFs(@Nonnull DefaultInputFile inputFile) {
-        context.fileSystem().add(inputFile);
+        classNameFile = helpers.createFile("TargetName/ClassName.m");
+        secondClassNameFile = helpers.createFile("TargetName/SecondClassName.m");
+        anotherTargetClassNameFile = helpers.createFile("AnotherTargetName/ClassName.m");
     }
 
     @Test
@@ -111,7 +100,7 @@ public class CoberturaSensorPersistenceTest {
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
 
         persistence.saveMeasures(coberturaPackages);
 
@@ -126,7 +115,7 @@ public class CoberturaSensorPersistenceTest {
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
 
         persistence.saveMeasures(coberturaPackages);
 
@@ -141,7 +130,7 @@ public class CoberturaSensorPersistenceTest {
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", Collections.singletonList(line));
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
 
         persistence.saveMeasures(coberturaPackages);
 
@@ -159,7 +148,7 @@ public class CoberturaSensorPersistenceTest {
         CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.m", lines);
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
-        addFileToFs(classNameFile);
+        helpers.addToFileSystem(classNameFile);
 
         persistence.saveMeasures(coberturaPackages);
 
@@ -183,8 +172,8 @@ public class CoberturaSensorPersistenceTest {
         );
         CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", coberturaClasses);
         List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
-        addFileToFs(classNameFile);
-        addFileToFs(secondClassNameFile);
+        helpers.addToFileSystem(classNameFile);
+        helpers.addToFileSystem(secondClassNameFile);
 
         persistence.saveMeasures(coberturaPackages);
 
@@ -221,9 +210,9 @@ public class CoberturaSensorPersistenceTest {
                         Collections.singletonList(CoberturaClass.from("AnotherTargetName/ClassName.m", lines))
                 )
         );
-        addFileToFs(classNameFile);
-        addFileToFs(secondClassNameFile);
-        addFileToFs(anotherTargetClassNameFile);
+        helpers.addToFileSystem(classNameFile);
+        helpers.addToFileSystem(secondClassNameFile);
+        helpers.addToFileSystem(anotherTargetClassNameFile);
 
         persistence.saveMeasures(coberturaPackages);
 
