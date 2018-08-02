@@ -24,21 +24,21 @@ public final class FileSystemHelpers {
     }
 
     @Nonnull
-    private DefaultInputFile buildInputFile(@Nonnull String relativePath) {
+    private DefaultInputFile buildInputFile(@Nonnull String relativePath, @Nonnull String language) {
         return new DefaultInputFile(context.module().key(), relativePath)
-                .setLanguage("bla")
+                .setLanguage(language)
                 .initMetadata("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n");
     }
 
     @Nonnull
-    public DefaultInputFile createFile(@Nonnull String relativePath) {
-        return buildInputFile(relativePath)
+    public DefaultInputFile createFile(@Nonnull String relativePath, @Nonnull String language) {
+        return buildInputFile(relativePath, language)
                 .setType(InputFile.Type.MAIN);
     }
 
     @Nonnull
-    public DefaultInputFile createTestFile(@Nonnull String relativePath) {
-        return buildInputFile(relativePath)
+    public DefaultInputFile createTestFile(@Nonnull String relativePath, @Nonnull String language) {
+        return buildInputFile(relativePath, language)
                 .setType(InputFile.Type.TEST);
     }
 

@@ -63,8 +63,8 @@ public class LizardSensorTest {
         helpers = FileSystemHelpers.create(context);
         sensor = new LizardSensor(settings);
 
-        firstClassNameFile = helpers.createFile("TargetName/FirstClassNameTest.m");
-        secondClassNameFile = helpers.createFile("TargetName/SecondClassNameTest.m");
+        firstClassNameFile = helpers.createFile("TargetName/FirstClassNameTest.m", ObjectiveC.KEY);
+        secondClassNameFile = helpers.createFile("TargetName/SecondClassNameTest.m", ObjectiveC.KEY);
     }
 
     private void createReportFile(@Nonnull String relativePath) {

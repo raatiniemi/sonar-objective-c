@@ -11,6 +11,7 @@ import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +39,7 @@ public class LizardSensorPersistenceTest {
         helpers = FileSystemHelpers.create(context);
         persistence = LizardSensorPersistence.create(context);
 
-        classNameFile = helpers.createFile("TargetName/ClassName.m");
+        classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
     }
 
     @Nullable

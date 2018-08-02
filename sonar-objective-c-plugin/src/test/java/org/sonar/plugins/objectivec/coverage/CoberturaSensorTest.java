@@ -58,7 +58,7 @@ public class CoberturaSensorTest {
         helpers = FileSystemHelpers.create(context);
         sensor = new CoberturaSensor(settings);
 
-        classNameFile = helpers.createFile("TargetName/ClassName.m");
+        classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
     }
 
     private void createReportFile(@Nonnull String relativePath) {
