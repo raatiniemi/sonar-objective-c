@@ -35,11 +35,11 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensorPersistence.class);
     private static final Predicate<CoberturaLine> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
-    private final SensorContext context;
     private final FileSystem fileSystem;
 
     private CoberturaSensorPersistence(@Nonnull SensorContext context) {
-        this.context = context;
+        super(context);
+
         fileSystem = context.fileSystem();
     }
 
@@ -80,7 +80,7 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
     @Nonnull
     private Consumer<CoberturaLine> saveCoverageForLine(@Nonnull InputFile inputFile) {
         return line -> {
-            NewCoverage newCoverage = context.newCoverage()
+            NewCoverage newCoverage = getContext().newCoverage()
                     .onFile(inputFile)
                     .lineHits(line.getNumber(), line.getHits());
 

@@ -34,11 +34,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 final class OCLintSensorPersistence extends SensorPersistence<Violation> {
-    private final SensorContext context;
     private final FileSystem fileSystem;
 
     private OCLintSensorPersistence(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
-        this.context = context;
+        super(context);
+
         this.fileSystem = fileSystem;
     }
 
@@ -59,7 +59,7 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
         value.ifPresent(inputFile -> {
             for (Violation violation : violations) {
                 RuleKey rule = RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, violation.getRule());
-                NewIssue newIssue = context.newIssue().forRule(rule);
+                NewIssue newIssue = getContext().newIssue().forRule(rule);
 
                 NewIssueLocation location = newIssue.newLocation()
                         .on(inputFile)

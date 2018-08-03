@@ -39,12 +39,12 @@ import java.util.Optional;
 final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensorPersistence.class);
 
-    private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    private LizardSensorPersistence(@Nonnull SensorContext sensorContext) {
-        this.sensorContext = sensorContext;
-        this.fileSystem = sensorContext.fileSystem();
+    private LizardSensorPersistence(@Nonnull SensorContext context) {
+        super(context);
+
+        this.fileSystem = getContext().fileSystem();
     }
 
     @Nonnull
@@ -83,7 +83,7 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
 
     private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, @Nonnull Serializable value) {
         //noinspection unchecked
-        sensorContext.newMeasure()
+        getContext().newMeasure()
                 .on(inputFile)
                 .forMetric(metric)
                 .withValue(value)

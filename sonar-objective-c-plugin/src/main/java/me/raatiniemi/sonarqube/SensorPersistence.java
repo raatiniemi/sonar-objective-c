@@ -16,5 +16,19 @@
  */
 package me.raatiniemi.sonarqube;
 
+import org.sonar.api.batch.sensor.SensorContext;
+
+import javax.annotation.Nonnull;
+
 public abstract class SensorPersistence<T> implements SensorMeasurePersistence<T> {
+    private final SensorContext context;
+
+    protected SensorPersistence(@Nonnull SensorContext context) {
+        this.context = context;
+    }
+
+    @Nonnull
+    protected SensorContext getContext() {
+        return context;
+    }
 }
