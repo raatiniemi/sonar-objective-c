@@ -82,4 +82,21 @@ public class LizardSensorPersistenceTest {
         assertEquals(Integer.valueOf(2), getMeasure(CoreMetrics.FUNCTIONS_KEY));
         assertEquals(Integer.valueOf(5), getMeasure(CoreMetrics.COMPLEXITY_KEY));
     }
+
+    @Test
+    public void saveMeasures_withFileForAnotherLanguage() {
+        LizardMeasure measure = LizardMeasure.builder()
+                .setPath("TargetName/ClassName.swift")
+                .setNumberOfFunctions(2)
+                .setComplexity(5)
+                .build();
+        List<LizardMeasure> measures = Collections.singletonList(measure);
+        DefaultInputFile classNameFile = helpers.createFile("TargetName/ClassName.swift", "swift");
+        helpers.addToFileSystem(classNameFile);
+
+        persistence.saveMeasures(measures);
+
+        assertNull(context.measure(classNameFile.key(), CoreMetrics.FUNCTIONS_KEY));
+        assertNull(context.measure(classNameFile.key(), CoreMetrics.COMPLEXITY_KEY));
+    }
 }

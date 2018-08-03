@@ -31,12 +31,14 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(JUnit4.class)
 public class SurefireSensorPersistenceTest {
@@ -67,9 +69,12 @@ public class SurefireSensorPersistenceTest {
         temporaryFolder.delete();
     }
 
-    @Nonnull
+    @Nullable
     private <T extends Serializable> T getMeasure(@Nonnull String componentKey, @Nonnull String testKey) {
         Measure<T> measure = context.measure(componentKey, testKey);
+        if (null == measure) {
+            return null;
+        }
 
         return measure.value();
     }
@@ -195,5 +200,20 @@ public class SurefireSensorPersistenceTest {
         assertEquals(Integer.valueOf(1), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TESTS_KEY));
         assertEquals(Integer.valueOf(0), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
         assertEquals(Long.valueOf(2), getMeasure("projectKey:ClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+    }
+
+    @Test
+    public void saveMeasures_withFileForAnotherLanguage() {
+        TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
+        TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
+        TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
+        DefaultInputFile classNameFile = helpers.createTestFile("TestTarget/ClassNameTest.swift", "swift");
+        helpers.addToFileSystem(classNameFile);
+
+        persistence.saveMeasures(Collections.singletonList(testReport));
+
+        assertNull(getMeasure(classNameFile.key(), CoreMetrics.TESTS_KEY));
+        assertNull(getMeasure(classNameFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertNull(getMeasure(classNameFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 }

@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
@@ -138,5 +139,23 @@ public class OCLintSensorPersistenceTest {
 
         assertTrue(isIssuePresent("deep nested block"));
         assertTrue(isIssuePresent("unused method parameter"));
+    }
+
+    @Test
+    public void saveMeasures_withFileForAnotherLanguage() {
+        Set<Violation> violations = new LinkedHashSet<>();
+        violations.add(
+                Violation.builder()
+                        .setPath("TargetName/ClassName.swift")
+                        .setStartLine(1)
+                        .setMessage("Block depth of 6 exceeds limit of 5")
+                        .setRule("deep nested block")
+                        .build()
+        );
+        helpers.addToFileSystem(helpers.createFile("TargetName/ClassName.swift", "swift"));
+
+        persistence.saveMeasures(violations);
+
+        assertFalse(isIssuePresent("deep nested block"));
     }
 }

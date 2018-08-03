@@ -25,6 +25,7 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -73,7 +74,10 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
 
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String path) {
-        FilePredicate predicate = fileSystem.predicates().hasPath(path);
+        FilePredicate predicate = fileSystem.predicates().and(
+                fileSystem.predicates().hasLanguage(ObjectiveC.KEY),
+                fileSystem.predicates().hasPath(path)
+        );
 
         return Optional.ofNullable(fileSystem.inputFile(predicate));
     }

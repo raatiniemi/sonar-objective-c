@@ -236,4 +236,20 @@ public class CoberturaSensorPersistenceTest {
         assertEquals(Integer.valueOf(2), context.conditions(anotherTargetClassNameFile.key(), 2));
         assertEquals(Integer.valueOf(2), context.coveredConditions(anotherTargetClassNameFile.key(), 2));
     }
+
+    @Test
+    public void saveMeasures_withFileForAnotherLanguage() {
+        CoberturaLine line = CoberturaLine.from(1, 1);
+        CoberturaClass coberturaClass = CoberturaClass.from("TargetName/ClassName.swift", Collections.singletonList(line));
+        CoberturaPackage coberturaPackage = CoberturaPackage.from("TargetName", Collections.singletonList(coberturaClass));
+        List<CoberturaPackage> coberturaPackages = Collections.singletonList(coberturaPackage);
+        DefaultInputFile classNameFile = helpers.createFile("TargetName/ClassName.swift", "swift");
+        helpers.addToFileSystem(classNameFile);
+
+        persistence.saveMeasures(coberturaPackages);
+
+        assertNull(context.lineHits(classNameFile.key(), 1));
+        assertNull(context.conditions(classNameFile.key(), 1));
+        assertNull(context.coveredConditions(classNameFile.key(), 1));
+    }
 }

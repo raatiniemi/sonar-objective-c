@@ -25,6 +25,7 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
@@ -66,9 +67,12 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
     private Optional<InputFile> buildInputFile(@Nonnull String className) {
         String filename = buildFilename(className);
 
-        FilePredicate predicate = fileSystem.predicates().matchesPathPattern("**/" + filename);
-        InputFile inputFile = fileSystem.inputFile(predicate);
-        return Optional.ofNullable(inputFile);
+        FilePredicate predicate = fileSystem.predicates().and(
+                fileSystem.predicates().hasLanguage(ObjectiveC.KEY),
+                fileSystem.predicates().matchesPathPattern("**/" + filename)
+        );
+
+        return Optional.ofNullable(fileSystem.inputFile(predicate));
     }
 
     @Nonnull
@@ -84,7 +88,7 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
 
     @Nonnull
     private String appendFileExtension(@Nonnull String className) {
-        return className + ".m";
+        return className + ".*";
     }
 
     private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull TestSuite testSuite) {

@@ -24,6 +24,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -65,10 +66,12 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
 
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String filename) {
-        FilePredicate predicate = fileSystem.predicates().hasPath(filename);
-        InputFile inputFile = fileSystem.inputFile(predicate);
+        FilePredicate predicate = fileSystem.predicates().and(
+                fileSystem.predicates().hasLanguage(ObjectiveC.KEY),
+                fileSystem.predicates().hasPath(filename)
+        );
 
-        return Optional.ofNullable(inputFile);
+        return Optional.ofNullable(fileSystem.inputFile(predicate));
     }
 
     private void saveReportForClass(@Nonnull InputFile inputFile, @Nonnull CoberturaClass coberturaClass) {
