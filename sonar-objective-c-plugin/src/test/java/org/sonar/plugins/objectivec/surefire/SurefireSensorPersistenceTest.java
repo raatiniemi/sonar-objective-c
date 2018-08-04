@@ -64,11 +64,6 @@ public class SurefireSensorPersistenceTest {
         secondClassNameTestFile = helpers.createTestFile("TestTarget/SecondClassNameTest.m", ObjectiveC.KEY);
     }
 
-    @After
-    public void tearDown() {
-        temporaryFolder.delete();
-    }
-
     @Nullable
     private <T extends Serializable> T getMeasure(@Nonnull String componentKey, @Nonnull String testKey) {
         Measure<T> measure = context.measure(componentKey, testKey);

@@ -58,11 +58,6 @@ public class SurefireSensorTest {
         helpers = FileSystemHelpers.create(context);
     }
 
-    @After
-    public void tearDown() {
-        temporaryFolder.delete();
-    }
-
     @Nonnull
     private <T extends Serializable> T getMeasure(@Nonnull String componentKey, @Nonnull String testKey) {
         Measure<T> measure = context.measure(componentKey, testKey);
