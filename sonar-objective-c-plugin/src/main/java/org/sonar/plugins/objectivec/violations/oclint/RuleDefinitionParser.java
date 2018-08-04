@@ -50,7 +50,11 @@ final class RuleDefinitionParser {
         return line.matches("Severity:.*");
     }
 
-    RuleDefinitionParser() {
+    private RuleDefinitionParser() {
+    }
+
+    static RuleDefinitionParser create() {
+        return new RuleDefinitionParser();
     }
 
     @Nonnull

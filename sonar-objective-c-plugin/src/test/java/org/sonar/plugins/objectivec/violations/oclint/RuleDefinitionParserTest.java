@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 public class RuleDefinitionParserTest {
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
 
-    private final RuleDefinitionParser parser = new RuleDefinitionParser();
+    private final RuleDefinitionParser parser = RuleDefinitionParser.create();
 
     @Test
     public void parseRuleDefinitionsFromLines() throws IOException {

@@ -38,7 +38,7 @@ public final class OCLintRulesDefinition implements RulesDefinition {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/oclint/rules.txt";
 
-    private static final RuleDefinitionParser parser = new RuleDefinitionParser();
+    private static final RuleDefinitionParser parser = RuleDefinitionParser.create();
 
     @Override
     public void define(@Nonnull Context context) {
