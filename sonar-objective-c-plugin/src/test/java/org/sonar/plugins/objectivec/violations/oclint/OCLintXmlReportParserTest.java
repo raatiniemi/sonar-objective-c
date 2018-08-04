@@ -72,7 +72,7 @@ public class OCLintXmlReportParserTest {
 
         violation = Violation.builder()
                 .setPath("RASqlite/RASqlite.m")
-                .setStartLine(281)
+                .setStartLine(1)
                 .setRule("deep nested block")
                 .setMessage("Block depth of 6 exceeds limit of 5")
                 .build();
@@ -80,14 +80,14 @@ public class OCLintXmlReportParserTest {
 
         violation = Violation.builder()
                 .setPath("RASqlite/RASqlite.m")
-                .setStartLine(305)
+                .setStartLine(1)
                 .setRule("ivar assignment outside accessors or init")
                 .build();
         expected.add(violation);
 
         violation = Violation.builder()
                 .setPath("RASqlite/RASqlite.m")
-                .setStartLine(707)
+                .setStartLine(1)
                 .setRule("unused method parameter")
                 .setMessage("The parameter 'commit' is unused.")
                 .build();

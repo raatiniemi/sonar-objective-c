@@ -16,5 +16,35 @@
  */
 package me.raatiniemi.sonarqube;
 
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
+
 public abstract class SensorPersistence<T> implements SensorMeasurePersistence<T> {
+    private final SensorContext context;
+    private final FilePredicate languagePredicate;
+
+    protected SensorPersistence(@Nonnull SensorContext context) {
+        this.context = context;
+
+        languagePredicate = context.fileSystem().predicates().hasLanguage(ObjectiveC.KEY);
+    }
+
+    @Nonnull
+    protected SensorContext getContext() {
+        return context;
+    }
+
+    @Nonnull
+    protected Optional<InputFile> buildInputFile(@Nonnull FilePredicate filePredicate) {
+        FilePredicate predicates = context.fileSystem()
+                .predicates()
+                .and(languagePredicate, filePredicate);
+
+        return Optional.ofNullable(context.fileSystem().inputFile(predicates));
+    }
 }

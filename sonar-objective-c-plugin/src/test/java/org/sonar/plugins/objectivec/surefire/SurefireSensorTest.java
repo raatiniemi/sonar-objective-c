@@ -16,6 +16,7 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,8 +24,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
@@ -50,28 +49,13 @@ public class SurefireSensorTest {
 
     private SurefireSensor sensor;
     private SensorContextTester context;
+    private FileSystemHelpers helpers;
 
     @Before
     public void setUp() {
         sensor = new SurefireSensor(settings);
         context = SensorContextTester.create(temporaryFolder.getRoot());
-    }
-
-    @After
-    public void tearDown() {
-        temporaryFolder.delete();
-    }
-
-    @Nonnull
-    private DefaultInputFile createFile(@Nonnull String relativePath) {
-        return new DefaultInputFile(context.module().key(), relativePath)
-                .setLanguage("bla")
-                .setType(InputFile.Type.TEST)
-                .initMetadata("1\n2\n3\n4\n5\n6");
-    }
-
-    private void addFileToFs(@Nonnull DefaultInputFile inputFile) {
-        context.fileSystem().add(inputFile);
+        helpers = FileSystemHelpers.create(context);
     }
 
     @Nonnull
@@ -94,8 +78,8 @@ public class SurefireSensorTest {
     @Test
     public void execute() {
         settings.setProperty("sonar.junit.reportsPath", resourcePath.toString());
-        addFileToFs(createFile("FirstClassNameTest.m"));
-        addFileToFs(createFile("SecondClassNameTest.m"));
+        helpers.addToFileSystem(helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY));
+        helpers.addToFileSystem(helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY));
 
         sensor.execute(context);
 
