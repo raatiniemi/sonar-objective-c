@@ -27,7 +27,6 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -54,8 +53,8 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
                 .forEach(this::saveViolationsGroupedByFile);
     }
 
-    private void saveViolationsGroupedByFile(@Nonnull String absoluteFilePath, @Nonnull List<Violation> violations) {
-        Optional<InputFile> value = buildInputFile(absoluteFilePath);
+    private void saveViolationsGroupedByFile(@Nonnull String path, @Nonnull List<Violation> violations) {
+        Optional<InputFile> value = buildInputFile(path);
         value.ifPresent(inputFile -> {
             for (Violation violation : violations) {
                 RuleKey rule = RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, violation.getRule());
@@ -73,9 +72,8 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
     }
 
     @Nonnull
-    private Optional<InputFile> buildInputFile(@Nonnull String absoluteFilePath) {
-        File file = new File(absoluteFilePath);
-        FilePredicate predicate = fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath());
+    private Optional<InputFile> buildInputFile(@Nonnull String path) {
+        FilePredicate predicate = fileSystem.predicates().hasPath(path);
 
         return Optional.ofNullable(fileSystem.inputFile(predicate));
     }
