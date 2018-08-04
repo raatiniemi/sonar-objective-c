@@ -26,7 +26,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -72,12 +71,11 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String relativeFilePath) {
         File file = new File(fileSystem.baseDir(), relativeFilePath);
-        FilePredicate predicate = fileSystem.predicates().and(
-                fileSystem.predicates().hasLanguage(ObjectiveC.KEY),
-                fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath())
-        );
 
-        return Optional.ofNullable(fileSystem.inputFile(predicate));
+        FilePredicate predicate = fileSystem.predicates()
+                .hasAbsolutePath(file.getAbsolutePath());
+
+        return buildInputFile(predicate);
     }
 
     private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull LizardMeasure measure) {
