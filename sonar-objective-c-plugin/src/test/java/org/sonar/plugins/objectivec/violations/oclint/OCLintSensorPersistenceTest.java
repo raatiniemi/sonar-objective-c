@@ -23,64 +23,44 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
-import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
-import org.sonar.api.config.MapSettings;
-import org.sonar.api.config.Settings;
-import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(JUnit4.class)
-public class OCLintSensorTest {
+public class OCLintSensorPersistenceTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
-    private final Settings settings = new MapSettings();
-
     private SensorContextTester context;
     private FileSystemHelpers helpers;
+    private OCLintSensorPersistence persistence;
 
-    private OCLintSensor sensor;
+    private DefaultInputFile classNameFile;
 
     @Before
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
 
-        sensor = new OCLintSensor(settings);
+        persistence = OCLintSensorPersistence.create(context);
+
+        classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
 
         ActiveRulesBuilder rules = new ActiveRulesBuilder();
         rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block"));
         rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "unused method parameter"));
         context.setActiveRules(rules.build());
-    }
-
-    private void createReportFile(@Nonnull String relativePath) {
-        try {
-            List<String> reportLines = Files.readAllLines(Paths.get(resourcePath.toString(), "oclint.xml"));
-
-            Path destination = Paths.get(temporaryFolder.getRoot().getAbsolutePath(), relativePath);
-            Files.createDirectories(destination.getParent());
-            Files.createFile(destination);
-            Files.write(destination, reportLines);
-        } catch (IOException e) {
-            fail(String.format("Unable to create report file: %s", e.getMessage()));
-        }
     }
 
     private boolean isIssuePresent(@Nonnull String ruleKey) {
@@ -94,37 +74,69 @@ public class OCLintSensorTest {
     }
 
     @Test
-    public void describe() {
-        DefaultSensorDescriptor descriptor = new DefaultSensorDescriptor();
+    public void saveMeasures_withoutMeasures() {
+        helpers.addToFileSystem(classNameFile);
 
-        sensor.describe(descriptor);
+        persistence.saveMeasures(Collections.emptyList());
 
-        assertEquals("OCLint violation sensor", descriptor.name());
-        assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+        assertTrue(context.allIssues().isEmpty());
     }
 
     @Test
-    public void execute_withDefaultReport() {
-        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
-        createReportFile("sonar-reports/oclint.xml");
+    public void saveMeasures_withoutMatchingFile() {
+        Violation violation = Violation.builder()
+                .setPath("TargetName/ClassName.m")
+                .setStartLine(1)
+                .setMessage("Block depth of 6 exceeds limit of 5")
+                .setRule("deep nested block")
+                .build();
+        Set<Violation> violations = Collections.singleton(violation);
 
-        sensor.execute(context);
+        persistence.saveMeasures(violations);
 
-        assertTrue(isIssuePresent("deep nested block"));
-        assertTrue(isIssuePresent("ivar assignment outside accessors or init"));
-        assertTrue(isIssuePresent("unused method parameter"));
+        assertTrue(context.allIssues().isEmpty());
     }
 
     @Test
-    public void execute_withReport() {
-        settings.setProperty("sonar.objectivec.oclint.report", "oclint.xml");
-        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
-        createReportFile("oclint.xml");
+    public void saveMeasures_withMeasure() {
+        Violation violation = Violation.builder()
+                .setPath("TargetName/ClassName.m")
+                .setStartLine(1)
+                .setMessage("Block depth of 6 exceeds limit of 5")
+                .setRule("deep nested block")
+                .build();
+        Set<Violation> violations = Collections.singleton(violation);
+        helpers.addToFileSystem(classNameFile);
 
-        sensor.execute(context);
+        persistence.saveMeasures(violations);
 
         assertTrue(isIssuePresent("deep nested block"));
-        assertTrue(isIssuePresent("ivar assignment outside accessors or init"));
+    }
+
+    @Test
+    public void saveMeasures_withMeasures() {
+        Set<Violation> violations = new LinkedHashSet<>();
+        violations.add(
+                Violation.builder()
+                        .setPath("TargetName/ClassName.m")
+                        .setStartLine(1)
+                        .setMessage("Block depth of 6 exceeds limit of 5")
+                        .setRule("deep nested block")
+                        .build()
+        );
+        violations.add(
+                Violation.builder()
+                        .setPath("TargetName/ClassName.m")
+                        .setStartLine(1)
+                        .setMessage("The parameter 'commit' is unused.")
+                        .setRule("unused method parameter")
+                        .build()
+        );
+        helpers.addToFileSystem(classNameFile);
+
+        persistence.saveMeasures(violations);
+
+        assertTrue(isIssuePresent("deep nested block"));
         assertTrue(isIssuePresent("unused method parameter"));
     }
 }

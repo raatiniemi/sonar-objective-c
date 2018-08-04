@@ -9,11 +9,11 @@
         <property name="number of priority 3 violations">2</property>
     </summary>
     <violations>
-        <violation path="RASqlite/RASqlite.m" startline="281" startcolumn="28" endline="336" endcolumn="5" rule="deep nested block" category="size" priority="3" message="Block depth of 6 exceeds limit of 5">
+        <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="28" endline="1" endcolumn="5" rule="deep nested block" category="size" priority="3" message="Block depth of 6 exceeds limit of 5">
         </violation>
-        <violation path="RASqlite/RASqlite.m" startline="305" startcolumn="17" endline="305" endcolumn="17" rule="ivar assignment outside accessors or init" category="convention" priority="2" message="">
+        <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="17" endline="1" endcolumn="17" rule="ivar assignment outside accessors or init" category="convention" priority="2" message="">
         </violation>
-        <violation path="RASqlite/RASqlite.m" startline="707" startcolumn="59" endline="707" endcolumn="65" rule="unused method parameter" category="unused" priority="3" message="The parameter 'commit' is unused.">
+        <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="59" endline="1" endcolumn="65" rule="unused method parameter" category="unused" priority="3" message="The parameter 'commit' is unused.">
         </violation>
     </violations>
     <clangstaticanalyzer>
