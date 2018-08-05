@@ -38,15 +38,15 @@ import java.util.List;
         @Property(
                 key = CoberturaSensor.REPORT_PATH_KEY,
                 defaultValue = CoberturaSensor.DEFAULT_REPORT_PATH,
-                name = "Path to unit test coverage report(s)",
-                description = "Relative to projects' root. Ant patterns are accepted",
+                name = "Path to Cobertura test coverage report(s)",
+                description = "Relative to projects' root.",
                 global = false,
                 project = true
         ),
         @Property(
                 key = OCLintSensor.REPORT_PATH_KEY,
                 defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
-                name = "Path to oclint pmd formatted report",
+                name = "Path to OCLint violation report",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true
@@ -54,7 +54,7 @@ import java.util.List;
         @Property(
                 key = LizardSensor.REPORT_PATH_KEY,
                 defaultValue = LizardSensor.DEFAULT_REPORT_PATH,
-                name = "Path to lizard report",
+                name = "Path to Lizard complexity report",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true
@@ -62,7 +62,7 @@ import java.util.List;
         @Property(
                 key = SurefireSensor.REPORT_PATH_KEY,
                 defaultValue = SurefireSensor.DEFAULT_REPORT_PATH,
-                name = "Path to surefire report(s)",
+                name = "Path to Surefire test report(s)",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true
