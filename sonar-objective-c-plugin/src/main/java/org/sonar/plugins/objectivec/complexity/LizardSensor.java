@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -48,8 +48,8 @@ public class LizardSensor extends XmlReportSensor {
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 
     @SuppressWarnings("WeakerAccess")
-    public LizardSensor(@Nonnull Settings settings) {
-        super(settings);
+    public LizardSensor(@Nonnull Configuration configuration) {
+        super(configuration);
     }
 
     @Override

@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
-import org.sonar.api.config.MapSettings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -53,7 +53,7 @@ public class SurefireSensorTest {
 
     @Before
     public void setUp() {
-        sensor = new SurefireSensor(settings);
+        sensor = new SurefireSensor(settings.asConfig());
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
     }

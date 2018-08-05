@@ -20,7 +20,7 @@ package me.raatiniemi.sonarqube;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.Sensor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
@@ -31,22 +31,22 @@ import java.util.Optional;
 public abstract class XmlReportSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(XmlReportSensor.class);
 
-    private final Settings settings;
+    private final Configuration configuration;
 
-    protected XmlReportSensor(@Nonnull Settings settings) {
-        this.settings = settings;
+    protected XmlReportSensor(@Nonnull Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Nonnull
     protected final String getSetting(@Nonnull String key, @Nonnull String defaultValue) {
-        String value = settings.getString(key);
+        Optional<String> value = configuration.get(key);
 
-        if (value == null) {
-            LOGGER.debug("No value specified for \"{}\" using default value", key);
-            return defaultValue;
+        if (value.isPresent()) {
+            return value.get();
         }
 
-        return value;
+        LOGGER.debug("No value specified for \"{}\" using default value", key);
+        return defaultValue;
     }
 
     @Nonnull

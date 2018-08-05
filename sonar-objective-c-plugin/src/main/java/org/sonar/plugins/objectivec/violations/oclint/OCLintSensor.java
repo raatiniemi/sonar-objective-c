@@ -22,7 +22,7 @@ import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -40,8 +40,8 @@ public final class OCLintSensor extends XmlReportSensor {
     private static final String NAME = "OCLint violation sensor";
 
     @SuppressWarnings("WeakerAccess")
-    public OCLintSensor(@Nonnull Settings settings) {
-        super(settings);
+    public OCLintSensor(@Nonnull Configuration configuration) {
+        super(configuration);
     }
 
     @Override

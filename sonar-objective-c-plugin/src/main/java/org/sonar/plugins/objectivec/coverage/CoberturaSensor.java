@@ -22,7 +22,7 @@ import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -42,8 +42,8 @@ public final class CoberturaSensor extends XmlReportSensor {
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
 
     @SuppressWarnings("WeakerAccess")
-    public CoberturaSensor(@Nonnull Settings settings) {
-        super(settings);
+    public CoberturaSensor(@Nonnull Configuration configuration) {
+        super(configuration);
     }
 
     @Override
