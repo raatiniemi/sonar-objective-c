@@ -27,8 +27,7 @@ import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
-import org.sonar.api.config.MapSettings;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
@@ -50,7 +49,7 @@ public class OCLintSensorTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
-    private final Settings settings = new MapSettings();
+    private final MapSettings settings = new MapSettings();
 
     private SensorContextTester context;
     private FileSystemHelpers helpers;
@@ -62,7 +61,7 @@ public class OCLintSensorTest {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
 
-        sensor = new OCLintSensor(settings);
+        sensor = new OCLintSensor(settings.asConfig());
 
         ActiveRulesBuilder rules = new ActiveRulesBuilder();
         rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block"));

@@ -22,7 +22,7 @@ import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
@@ -40,8 +40,8 @@ public class SurefireSensor extends XmlReportSensor {
     private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     @SuppressWarnings("WeakerAccess")
-    public SurefireSensor(@Nonnull Settings settings) {
-        super(settings);
+    public SurefireSensor(@Nonnull Configuration configuration) {
+        super(configuration);
     }
 
     @Override

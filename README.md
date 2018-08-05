@@ -18,7 +18,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 
 ### Compatibility
 
-Releases available from this repository are compliant with SonarQube 5.6.x and above.
+Releases available from this repository are compliant with SonarQube 7.1, and above.
 
 ### Download
 
@@ -29,6 +29,7 @@ Binary packages are available in the release section.
 
 ### 0.7.0
 * Remove support for FauxPas
+* Drop support for SonarQube versions prior to 7.1
 
 ### 0.6.4
 * Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
