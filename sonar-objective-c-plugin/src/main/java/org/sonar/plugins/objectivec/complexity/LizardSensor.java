@@ -45,7 +45,7 @@ public class LizardSensor extends XmlReportSensor {
     private static final String NAME = "Lizard complexity sensor";
 
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard.xml";
 
     @SuppressWarnings("WeakerAccess")
     public LizardSensor(@Nonnull Configuration configuration) {

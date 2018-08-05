@@ -104,7 +104,7 @@ public class LizardSensorTest {
     public void execute_withDefaultReportPattern() {
         helpers.addToFileSystem(firstClassNameFile);
         helpers.addToFileSystem(secondClassNameFile);
-        createReportFile("sonar-reports/lizard-report.xml");
+        createReportFile("sonar-reports/lizard.xml");
 
         sensor.execute(context);
 
