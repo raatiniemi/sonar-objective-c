@@ -17,8 +17,6 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import me.raatiniemi.sonarqube.ReportFinder;
-import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -33,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class CoberturaSensor extends XmlReportSensor {
     private static final String NAME = "Cobertura sensor";
@@ -76,11 +73,14 @@ public final class CoberturaSensor extends XmlReportSensor {
     }
 
     @Nonnull
-    private Stream<File> collectAvailableReports(@Nonnull File projectDirectory) {
-        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+    @Override
+    protected String getReportPathKey() {
+        return REPORT_PATH_KEY;
+    }
 
-        return reportFinder
-                .findReportsMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
-                .stream();
+    @Nonnull
+    @Override
+    protected String getDefaultReportPath() {
+        return DEFAULT_REPORT_PATH;
     }
 }

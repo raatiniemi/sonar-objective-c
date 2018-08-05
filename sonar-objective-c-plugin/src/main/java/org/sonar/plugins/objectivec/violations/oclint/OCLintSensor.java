@@ -17,8 +17,6 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import me.raatiniemi.sonarqube.ReportFinder;
-import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -66,11 +64,23 @@ public final class OCLintSensor extends XmlReportSensor {
         }
 
         OCLintXmlReportParser parser = OCLintXmlReportParser.create(documentBuilder.get());
-        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
-        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+        return collectAvailableReports(projectDirectory)
+                .findFirst()
                 .map(parser::parse)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(Collections.emptyList());
+    }
+
+    @Nonnull
+    @Override
+    protected String getReportPathKey() {
+        return REPORT_PATH_KEY;
+    }
+
+    @Nonnull
+    @Override
+    protected String getDefaultReportPath() {
+        return DEFAULT_REPORT_PATH;
     }
 }

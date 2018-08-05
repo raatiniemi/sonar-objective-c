@@ -17,8 +17,6 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import me.raatiniemi.sonarqube.ReportFinder;
-import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,11 +76,23 @@ public class LizardSensor extends XmlReportSensor {
         }
 
         LizardXmlReportParser parser = LizardXmlReportParser.create(documentBuilder.get());
-        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
-        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+        return collectAvailableReports(reportDirectory)
+                .findFirst()
                 .map(parser::parse)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(Collections.emptySet());
+    }
+
+    @Nonnull
+    @Override
+    protected String getReportPathKey() {
+        return REPORT_PATH_KEY;
+    }
+
+    @Nonnull
+    @Override
+    protected String getDefaultReportPath() {
+        return DEFAULT_REPORT_PATH;
     }
 }
