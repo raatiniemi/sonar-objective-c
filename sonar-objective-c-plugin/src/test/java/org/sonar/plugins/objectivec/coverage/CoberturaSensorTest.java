@@ -85,7 +85,7 @@ public class CoberturaSensorTest {
     }
 
     @Test
-    public void execute_withDefaultReportPattern() {
+    public void execute_withDefaultReportPath() {
         helpers.addToFileSystem(classNameFile);
         createReportFile("sonar-reports/cobertura.xml");
 
@@ -95,8 +95,8 @@ public class CoberturaSensorTest {
     }
 
     @Test
-    public void execute_withReportPattern() {
-        settings.setProperty("sonar.objectivec.coverage.reportPattern", "cobertura.xml");
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.cobertura.reportPath", "cobertura.xml");
         helpers.addToFileSystem(classNameFile);
         createReportFile("cobertura.xml");
 
