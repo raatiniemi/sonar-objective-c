@@ -101,7 +101,7 @@ public class LizardSensorTest {
     }
 
     @Test
-    public void execute_withDefaultReportPattern() {
+    public void execute_withDefaultReportPath() {
         helpers.addToFileSystem(firstClassNameFile);
         helpers.addToFileSystem(secondClassNameFile);
         createReportFile("sonar-reports/lizard.xml");
@@ -115,8 +115,8 @@ public class LizardSensorTest {
     }
 
     @Test
-    public void execute_withReportPattern() {
-        settings.setProperty("sonar.objectivec.lizard.report", "lizard.xml");
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.lizard.reportPath", "lizard.xml");
         helpers.addToFileSystem(firstClassNameFile);
         helpers.addToFileSystem(secondClassNameFile);
         createReportFile("lizard.xml");
