@@ -24,10 +24,8 @@ import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
-import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasProfile;
-import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasProfileImporter;
+import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
 
 import java.io.InputStreamReader;
@@ -38,11 +36,9 @@ public class ObjectiveCProfile extends ProfileDefinition {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCProfile.class);
 
     private final OCLintProfileImporter ocLintProfileImporter;
-    private final FauxPasProfileImporter fauxPasProfileImporter;
 
-    public ObjectiveCProfile(final OCLintProfileImporter ocLintProfileImporter, final FauxPasProfileImporter fauxPasProfileImporter) {
+    public ObjectiveCProfile(final OCLintProfileImporter ocLintProfileImporter) {
         this.ocLintProfileImporter = ocLintProfileImporter;
-        this.fauxPasProfileImporter = fauxPasProfileImporter;
     }
 
     @Override
@@ -61,13 +57,6 @@ public class ObjectiveCProfile extends ProfileDefinition {
             for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
                 profile.addActiveRule(rule);
             }
-
-            config = new InputStreamReader(getClass().getResourceAsStream(FauxPasProfile.PROFILE_PATH));
-            RulesProfile fauxPasRulesProfile = fauxPasProfileImporter.importProfile(config, messages);
-            for (ActiveRule rule : fauxPasRulesProfile.getActiveRules()) {
-                profile.addActiveRule(rule);
-            }
-
 
             return profile;
         } finally {

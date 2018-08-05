@@ -17,33 +17,26 @@
  */
 package org.sonar.plugins.objectivec;
 
-import java.util.List;
-
+import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.objectivec.complexity.LizardSensor;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
+import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
+import org.sonar.plugins.objectivec.cpd.ObjectiveCCpdMapping;
 import org.sonar.plugins.objectivec.surefire.SurefireSensor;
 import org.sonar.plugins.objectivec.violations.ObjectiveCProfile;
-import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasProfile;
-import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasRulesDefinition;
-import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasSensor;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
+import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintRulesDefinition;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
-import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
-import org.sonar.plugins.objectivec.cpd.ObjectiveCCpdMapping;
 
-import com.google.common.collect.ImmutableList;
-
-import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasProfileImporter;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
+import java.util.List;
 
 @Properties({
         @Property(key = CoberturaSensor.REPORT_PATTERN_KEY, defaultValue = CoberturaSensor.DEFAULT_REPORT_PATTERN, name = "Path to unit test coverage report(s)", description = "Relative to projects' root. Ant patterns are accepted", global = false, project = true),
         @Property(key = OCLintSensor.REPORT_PATH_KEY, defaultValue = OCLintSensor.DEFAULT_REPORT_PATH, name = "Path to oclint pmd formatted report", description = "Relative to projects' root.", global = false, project = true),
-        @Property(key = FauxPasSensor.REPORT_PATH_KEY, defaultValue = FauxPasSensor.DEFAULT_REPORT_PATH, name = "Path to fauxpas json formatted report", description = "Relative to projects' root.", global = false, project = true),
         @Property(key = LizardSensor.REPORT_PATH_KEY, defaultValue = LizardSensor.DEFAULT_REPORT_PATH, name = "Path to lizard report", description = "Relative to projects' root.", global = false, project = true)
 })
 public class ObjectiveCPlugin extends SonarPlugin {
@@ -62,11 +55,6 @@ public class ObjectiveCPlugin extends SonarPlugin {
                 OCLintSensor.class,
                 OCLintProfile.class,
                 OCLintProfileImporter.class,
-
-                FauxPasSensor.class,
-                FauxPasRulesDefinition.class,
-                FauxPasProfile.class,
-                FauxPasProfileImporter.class,
 
                 LizardSensor.class
                 );
