@@ -20,6 +20,8 @@ package com.sonar.objectivec.api;
 import com.sonar.sslr.api.AstNode;
 import com.sonar.sslr.api.TokenType;
 
+import javax.annotation.Nonnull;
+
 public enum ObjectiveCPunctuator implements TokenType {
 
     // these are really only c operators
@@ -103,7 +105,7 @@ public enum ObjectiveCPunctuator implements TokenType {
         return value;
     }
 
-    public boolean hasToBeSkippedFromAst(AstNode node) {
+    public boolean hasToBeSkippedFromAst(@Nonnull AstNode node) {
         return false;
     }
 

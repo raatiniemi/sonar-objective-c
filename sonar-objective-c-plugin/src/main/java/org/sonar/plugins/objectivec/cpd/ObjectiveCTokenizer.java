@@ -33,6 +33,8 @@ import com.sonar.objectivec.lexer.ObjectiveCLexer;
 import com.sonar.sslr.api.Token;
 import com.sonar.sslr.impl.Lexer;
 
+import javax.annotation.Nonnull;
+
 public class ObjectiveCTokenizer implements Tokenizer {
 
     private final Charset charset;
@@ -41,7 +43,7 @@ public class ObjectiveCTokenizer implements Tokenizer {
         this.charset = charset;
     }
 
-    public void tokenize(SourceCode source, Tokens cpdTokens) throws IOException {
+    public void tokenize(@Nonnull SourceCode source, @Nonnull Tokens cpdTokens) throws IOException {
         Lexer lexer = ObjectiveCLexer.create(new ObjectiveCConfiguration(charset));
         String fileName = source.getFileName();
         List<Token> tokens = lexer.lex(new File(fileName));

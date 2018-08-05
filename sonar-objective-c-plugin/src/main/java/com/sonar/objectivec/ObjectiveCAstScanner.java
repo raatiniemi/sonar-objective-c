@@ -37,6 +37,8 @@ import org.sonar.squidbridge.metrics.LinesVisitor;
 
 import com.sonar.sslr.impl.Parser;
 
+import javax.annotation.Nonnull;
+
 public class ObjectiveCAstScanner {
 
     private ObjectiveCAstScanner() {
@@ -71,7 +73,7 @@ public class ObjectiveCAstScanner {
         builder.setCommentAnalyser(
                 new CommentAnalyser() {
                     @Override
-                    public boolean isBlank(String line) {
+                    public boolean isBlank(@Nonnull String line) {
                         for (int i = 0; i < line.length(); i++) {
                             if (Character.isLetterOrDigit(line.charAt(i))) {
                                 return false;
@@ -81,7 +83,7 @@ public class ObjectiveCAstScanner {
                     }
 
                     @Override
-                    public String getContents(String comment) {
+                    public String getContents(@Nonnull String comment) {
                         return comment.startsWith("//") ? comment.substring(2) : comment.substring(2, comment.length() - 2);
                     }
                 });
