@@ -20,7 +20,6 @@ package org.sonar.plugins.objectivec.complexity;
 import me.raatiniemi.sonarqube.SensorPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
@@ -28,7 +27,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
@@ -39,12 +37,12 @@ import java.util.Optional;
 final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensorPersistence.class);
 
-    private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    private LizardSensorPersistence(@Nonnull SensorContext sensorContext) {
-        this.sensorContext = sensorContext;
-        this.fileSystem = sensorContext.fileSystem();
+    private LizardSensorPersistence(@Nonnull SensorContext context) {
+        super(context);
+
+        this.fileSystem = getContext().fileSystem();
     }
 
     @Nonnull
@@ -69,11 +67,8 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
     }
 
     @Nonnull
-    private Optional<InputFile> buildInputFile(@Nonnull String relativeFilePath) {
-        File file = new File(fileSystem.baseDir(), relativeFilePath);
-        FilePredicate predicate = fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath());
-
-        return Optional.ofNullable(fileSystem.inputFile(predicate));
+    private Optional<InputFile> buildInputFile(@Nonnull String path) {
+        return buildInputFile(fileSystem.predicates().hasPath(path));
     }
 
     private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull LizardMeasure measure) {
@@ -83,7 +78,7 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
 
     private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, @Nonnull Serializable value) {
         //noinspection unchecked
-        sensorContext.newMeasure()
+        getContext().newMeasure()
                 .on(inputFile)
                 .forMetric(metric)
                 .withValue(value)

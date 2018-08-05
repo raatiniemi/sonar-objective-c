@@ -50,18 +50,22 @@ final class RuleDefinitionParser {
         return line.matches("Severity:.*");
     }
 
-    RuleDefinitionParser() {
+    private RuleDefinitionParser() {
+    }
+
+    static RuleDefinitionParser create() {
+        return new RuleDefinitionParser();
     }
 
     @Nonnull
-    Set<RuleDefinition> parseRuleDefinitionsFromLines(@Nonnull List<String> listLines) {
+    Set<RuleDefinition> parseRuleDefinitionsFromLines(@Nonnull List<String> lines) {
         Set<RuleDefinition> rulesDefinitions = new LinkedHashSet<>();
 
         String previousLine = null;
         boolean inDescription = false;
 
         RuleDefinition.Builder builder = RuleDefinition.builder();
-        for (String line : listLines) {
+        for (String line : lines) {
             if (isLineIgnored(line)) {
                 inDescription = false;
                 previousLine = line;

@@ -16,32 +16,81 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
+import me.raatiniemi.sonarqube.FileSystemHelpers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
+import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.config.MapSettings;
 import org.sonar.api.config.Settings;
+import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(JUnit4.class)
 public class OCLintSensorTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+    private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
+    private final Settings settings = new MapSettings();
+
+    private SensorContextTester context;
+    private FileSystemHelpers helpers;
+
     private OCLintSensor sensor;
 
     @Before
-    public void prepare() {
-        Settings settings = new MapSettings();
+    public void setUp() {
+        context = SensorContextTester.create(temporaryFolder.getRoot());
+        helpers = FileSystemHelpers.create(context);
 
         sensor = new OCLintSensor(settings);
+
+        ActiveRulesBuilder rules = new ActiveRulesBuilder();
+        rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block"));
+        rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "unused method parameter"));
+        context.setActiveRules(rules.build());
+    }
+
+    private void createReportFile(@Nonnull String relativePath) {
+        try {
+            List<String> reportLines = Files.readAllLines(Paths.get(resourcePath.toString(), "oclint.xml"));
+
+            Path destination = Paths.get(temporaryFolder.getRoot().getAbsolutePath(), relativePath);
+            Files.createDirectories(destination.getParent());
+            Files.createFile(destination);
+            Files.write(destination, reportLines);
+        } catch (IOException e) {
+            fail(String.format("Unable to create report file: %s", e.getMessage()));
+        }
+    }
+
+    private boolean isIssuePresent(@Nonnull String ruleKey) {
+        String ruleKeyWithRepository = "OCLint:" + ruleKey;
+
+        return context.allIssues()
+                .stream()
+                .map(Issue::ruleKey)
+                .map(RuleKey::toString)
+                .anyMatch(rk -> rk.equalsIgnoreCase(ruleKeyWithRepository));
     }
 
     @Test
@@ -52,5 +101,30 @@ public class OCLintSensorTest {
 
         assertEquals("OCLint violation sensor", descriptor.name());
         assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+    }
+
+    @Test
+    public void execute_withDefaultReport() {
+        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
+        createReportFile("sonar-reports/oclint.xml");
+
+        sensor.execute(context);
+
+        assertTrue(isIssuePresent("deep nested block"));
+        assertTrue(isIssuePresent("ivar assignment outside accessors or init"));
+        assertTrue(isIssuePresent("unused method parameter"));
+    }
+
+    @Test
+    public void execute_withReport() {
+        settings.setProperty("sonar.objectivec.oclint.report", "oclint.xml");
+        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
+        createReportFile("oclint.xml");
+
+        sensor.execute(context);
+
+        assertTrue(isIssuePresent("deep nested block"));
+        assertTrue(isIssuePresent("ivar assignment outside accessors or init"));
+        assertTrue(isIssuePresent("unused method parameter"));
     }
 }

@@ -1,0 +1,13 @@
+source 'https://rubygems.org'
+
+# The versions for each of the dependencies is obmitted in this sample file to
+# "remain up-to-date", in a real project these should be defined.
+gem 'fastlane'
+
+# Dependency for generating cobertura test coverage report from Xcode, can be
+# removed if tests are not used.
+gem 'slather'
+
+# Dependency for generating lizard complexity report, can be removed if lizard
+# complexity report is not used.
+gem 'fastlane-plugin-lizard'

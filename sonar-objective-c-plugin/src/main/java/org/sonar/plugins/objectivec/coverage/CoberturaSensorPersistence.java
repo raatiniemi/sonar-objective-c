@@ -19,7 +19,6 @@ package org.sonar.plugins.objectivec.coverage;
 import me.raatiniemi.sonarqube.SensorPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -35,11 +34,11 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensorPersistence.class);
     private static final Predicate<CoberturaLine> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
-    private final SensorContext context;
     private final FileSystem fileSystem;
 
     private CoberturaSensorPersistence(@Nonnull SensorContext context) {
-        this.context = context;
+        super(context);
+
         fileSystem = context.fileSystem();
     }
 
@@ -65,10 +64,7 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
 
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String filename) {
-        FilePredicate predicate = fileSystem.predicates().hasPath(filename);
-        InputFile inputFile = fileSystem.inputFile(predicate);
-
-        return Optional.ofNullable(inputFile);
+        return buildInputFile(fileSystem.predicates().hasPath(filename));
     }
 
     private void saveReportForClass(@Nonnull InputFile inputFile, @Nonnull CoberturaClass coberturaClass) {
@@ -80,7 +76,7 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
     @Nonnull
     private Consumer<CoberturaLine> saveCoverageForLine(@Nonnull InputFile inputFile) {
         return line -> {
-            NewCoverage newCoverage = context.newCoverage()
+            NewCoverage newCoverage = getContext().newCoverage()
                     .onFile(inputFile)
                     .lineHits(line.getNumber(), line.getHits());
 

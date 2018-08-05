@@ -115,7 +115,7 @@ final class SurefireXmlReportParser extends XmlReportParser<TestReport> {
             return Optional.of(testCase);
         }
 
-        LOGGER.error("Unable to parse element: " + element);
+        LOGGER.error("Unable to parse element: {}", element);
         return Optional.empty();
     }
 

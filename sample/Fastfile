@@ -1,0 +1,149 @@
+default_platform(:ios)
+
+project_name = 'ProjectName'
+project = "#{project_name}.xcodeproj"
+target_name = project_name
+scheme_default = project_name
+source_directory = project_name
+
+path_to_reports_directory = 'sonar-reports'
+path_to_compile_commands = "#{path_to_reports_directory}/compile_commands.json"
+path_to_oclint_report = "#{path_to_reports_directory}/oclint.xml"
+path_to_lizard_report = "#{path_to_reports_directory}/lizard.xml"
+
+environment_sonar_login = 'SONAR_LOGIN'
+environment_sonar_host_url = 'SONAR_HOST_URL'
+
+platform :ios do
+  lane :metrics do
+    # Only the lanes for the installed supporting applications, e.g. oclint,
+    # lizard, etc., should be used since using an lane with the supporting
+    # application not installed will generate an error.
+    #
+    # Also, depending on what supporting applications are installed the data
+    # sent to SonarQube may vary, i.e. if not all applications are installed
+    # and reports generated data will be missing.
+
+    # Generate violation report
+    generate_oclint_report
+
+    # Generate complexity report
+    generate_lizard_report
+
+    # Generate test report
+    generate_surefire_report
+
+    # Generate test coverage report
+    generate_cobertura_report
+
+    send_generated_reports_to_sonarqube
+  end
+
+  private_lane :generate_compile_commands_for_oclint do
+    # Depending on whether an application or a framework is to be analysed,
+    # different fastlane actions should be used.
+
+    # Build an application
+    #
+    # To generate the compile commands when building an application, use the
+    # `gym`-action with the `xcpretty_report_json` configuration pointing to
+    # the location of the compile commands.
+    #
+    # Note that additional configuration may be needed to actually build the
+    # application, this depends on the project configuration.
+    gym(
+      project: project,
+      scheme: scheme_default,
+      configuration: 'Release',
+      xcpretty_report_json: path_to_compile_commands
+    )
+
+    # Build a framework
+    #
+    # To generate the compile commands when building a framework, use the
+    # `xcodebuild`-action with the `xcpretty_output` configuration as below.
+    xcodebuild(
+      scheme: scheme_default,
+      configuration: 'Release',
+      clean: true,
+      build: true,
+      build_settings: [['ONLY_ACTIVE_ARCH', 'NO']],
+      buildlog_path: 'build',
+      xcpretty_output: "simple -r json-compilation-database -o #{path_to_compile_commands}"
+    )
+  end
+
+  private_lane :generate_oclint_report do
+    # In order to generate the OCLint violation report we need to export the
+    # compile commands, which is done via a clean release build with additional
+    # configuration.
+    generate_compile_commands_for_oclint
+    oclint(
+      compile_commands: path_to_compile_commands,
+      report_path: path_to_oclint_report,
+      report_type: 'xml'
+    )
+  end
+
+  private_lane :generate_lizard_report do
+    lizard(
+      source_folder: source_directory,
+      language: 'objectivec',
+      export_type: 'xml',
+      report_file: path_to_lizard_report,
+      # Depending on the environment and how lizard have been installed, the
+      # path to the lizard executable may need to be specified.
+      #
+      # Using `pip install --user lizard` as the user executing fastlane will
+      # install lizard in the following directory.
+      # executable: "#{ENV["HOME"]}/Library/Python/2.7/bin/lizard"
+    )
+  end
+
+  private_lane :generate_surefire_report do
+    # This will run the available tests and generate the test report, i.e. the
+    # report for the number of tests executed.
+    scan(
+      scheme: scheme_default,
+      code_coverage: true,
+      output_directory: path_to_reports_directory,
+      output_types: 'junit',
+      output_files: 'TEST-report.xml'
+    )
+  end
+
+  private_lane :generate_cobertura_report do
+    # This will analyse the coverage report from Xcode and generate a cobertura
+    # report, i.e. test coverage report.
+    slather(
+      proj: project,
+      scheme: scheme_default,
+      output_directory: path_to_reports_directory,
+      cobertura_xml: true,
+      source_directory: source_directory
+    )
+  end
+
+  private_lane :send_generated_reports_to_sonarqube do
+    # When running in a CI environment it's not recommended to hard code either
+    # credentials or addresses to private services, i.e. we should read the
+    # credentials and host url to SonarQube from environment variables.
+    login = ENV[environment_sonar_login]
+    if login.nil? || login.empty?
+      UI.user_error!("No login credentials have been supplied via environment variable `#{environment_sonar_login}`")
+    end
+
+    host_url = ENV[environment_sonar_host_url]
+    if host_url.nil? || host_url.empty?
+      UI.user_error!("No host URL have been supplied via environment variable `#{environment_sonar_host_url}`")
+    end
+
+    sonar(
+      # In order to keep the version number accurate when sending the report to
+      # SonarQube, we should read the version number from the project target.
+      project_version: get_version_number(target: target_name),
+      sonar_login: login,
+      sonar_runner_args: "-Dsonar.host.url=#{host_url}"
+    )
+  end
+end

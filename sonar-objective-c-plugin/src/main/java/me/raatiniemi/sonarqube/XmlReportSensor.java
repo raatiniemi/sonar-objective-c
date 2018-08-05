@@ -42,7 +42,7 @@ public abstract class XmlReportSensor implements Sensor {
         String value = settings.getString(key);
 
         if (value == null) {
-            LOGGER.debug("No value specified for \"" + key + "\" using default value");
+            LOGGER.debug("No value specified for \"{}\" using default value", key);
             return defaultValue;
         }
 

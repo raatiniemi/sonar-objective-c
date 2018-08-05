@@ -42,7 +42,7 @@
 
     <groupId>me.raatiniemi.sonarqube</groupId>
     <artifactId>objective-c</artifactId>
-    <version>0.6.3</version>
+    <version>0.6.4-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -255,6 +255,13 @@
                     <artifactId>ojdbc6</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.cobertura</groupId>
+            <artifactId>cobertura</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Provided dependencies -->

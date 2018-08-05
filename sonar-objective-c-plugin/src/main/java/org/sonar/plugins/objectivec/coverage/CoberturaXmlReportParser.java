@@ -95,8 +95,8 @@ final class CoberturaXmlReportParser extends XmlReportParser<List<CoberturaPacka
 
     @Nonnull
     private CoberturaLine parseLine(@Nonnull Element lineElement) {
-        int number = Integer.valueOf(lineElement.getAttribute("number"));
-        int hits = Integer.valueOf(lineElement.getAttribute("hits"));
+        int number = Integer.parseInt(lineElement.getAttribute("number"));
+        int hits = Integer.parseInt(lineElement.getAttribute("hits"));
 
         Optional<ConditionCoverage> conditionCoverageValue = parseConditionCoverage(lineElement);
         if (conditionCoverageValue.isPresent()) {
@@ -144,8 +144,8 @@ final class CoberturaXmlReportParser extends XmlReportParser<List<CoberturaPacka
         }
 
         try {
-            int conditionsCovered = Integer.valueOf(conditionCoverageValues[0]);
-            int conditions = Integer.valueOf(conditionCoverageValues[1]);
+            int conditionsCovered = Integer.parseInt(conditionCoverageValues[0]);
+            int conditions = Integer.parseInt(conditionCoverageValues[1]);
 
             if (0 == conditions) {
                 LOGGER.warn("Condition coverage exists but number conditions are zero");

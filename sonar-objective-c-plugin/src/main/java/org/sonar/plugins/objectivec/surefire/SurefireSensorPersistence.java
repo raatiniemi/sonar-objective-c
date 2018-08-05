@@ -34,11 +34,11 @@ import java.util.Optional;
 final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensorPersistence.class);
 
-    private final SensorContext context;
     private final FileSystem fileSystem;
 
     private SurefireSensorPersistence(@Nonnull SensorContext context) {
-        this.context = context;
+        super(context);
+
         fileSystem = context.fileSystem();
     }
 
@@ -66,9 +66,10 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
     private Optional<InputFile> buildInputFile(@Nonnull String className) {
         String filename = buildFilename(className);
 
-        FilePredicate predicate = fileSystem.predicates().matchesPathPattern("**/" + filename);
-        InputFile inputFile = fileSystem.inputFile(predicate);
-        return Optional.ofNullable(inputFile);
+        FilePredicate predicate = fileSystem.predicates()
+                .matchesPathPattern("**/" + filename);
+
+        return buildInputFile(predicate);
     }
 
     @Nonnull
@@ -84,7 +85,7 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
 
     @Nonnull
     private String appendFileExtension(@Nonnull String className) {
-        return className + ".m";
+        return className + ".*";
     }
 
     private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull TestSuite testSuite) {
@@ -95,7 +96,7 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
 
     private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, Serializable value) {
         //noinspection unchecked
-        context.newMeasure()
+        getContext().newMeasure()
                 .forMetric(metric)
                 .on(inputFile)
                 .withValue(value)

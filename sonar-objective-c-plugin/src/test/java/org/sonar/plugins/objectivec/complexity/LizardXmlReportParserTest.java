@@ -18,9 +18,7 @@
 package org.sonar.plugins.objectivec.complexity;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -35,9 +33,6 @@ import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class LizardXmlReportParserTest {
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-
     private final Path resourcePath = Paths.get("src", "test", "resources", "lizard");
 
     private LizardXmlReportParser reportParser;

@@ -33,6 +33,9 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.6.4
+* Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
+
 ### 0.6.3 (detached from backelite project)
 - Detached from backelite project (no active maintainers)
 - Ensure compatibility with SonarQube 7.0
@@ -72,24 +75,12 @@ To install the fixed version, follow those steps :
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Copy [run-sonar.sh](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sonar-objective-c-plugin/src/main/shell/run-sonar.sh) somewhere in your PATH
 - Restart the SonarQube server.
 
 ### Configuration (once per project)
-- Copy [sonar-project.properties](https://gitlab.com/raatiniemi/sonar-objective-c/blob/develop/sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
+- Copy [sonar-project.properties](sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
 - Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
-
-**The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
-
-### Analysis
-- Run the script ```run-sonar.sh``` in your Xcode project root folder
-- Enjoy or file an issue!
-
-### Update (once per plugin update)
-- Install the lastest plugin version
-- Copy ```run-sonar.sh``` somewhere in your PATH
-
-If you still have *run-sonar.sh* file in each of your project (not recommended), you will need to update all those files.
+- Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
 
 ### Contributing
 
