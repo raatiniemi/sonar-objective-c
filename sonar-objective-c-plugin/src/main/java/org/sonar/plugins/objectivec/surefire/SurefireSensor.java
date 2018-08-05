@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class SurefireSensor extends XmlReportSensor {
     public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".surefire.reportPath";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/TEST-*.xml";
 
     private static final String NAME = "Surefire sensor";
 
@@ -54,9 +54,8 @@ public class SurefireSensor extends XmlReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        File reportDirectory = new File(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH));
-        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
-        Collection<File> availableReports = reportFinder.findReportsMatching("TEST-*.xml");
+        ReportPatternFinder reportFinder = ReportFinder.create(context.fileSystem().baseDir());
+        Collection<File> availableReports = reportFinder.findReportsMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH));
         List<TestReport> testReports = parseFiles(availableReports);
 
         SurefireSensorPersistence persistence = SurefireSensorPersistence.create(context);
