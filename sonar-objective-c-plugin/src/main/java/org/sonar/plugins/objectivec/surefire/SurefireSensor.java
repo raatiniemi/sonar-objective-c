@@ -36,9 +36,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SurefireSensor extends XmlReportSensor {
+    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".surefire.reportPath";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
+
     private static final String NAME = "Surefire sensor";
-    private static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".surefire.reportPath";
-    private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     @SuppressWarnings("WeakerAccess")
     public SurefireSensor(@Nonnull Configuration configuration) {

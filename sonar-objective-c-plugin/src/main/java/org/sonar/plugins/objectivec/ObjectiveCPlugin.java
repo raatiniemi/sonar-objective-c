@@ -37,7 +37,8 @@ import java.util.List;
 @Properties({
         @Property(key = CoberturaSensor.REPORT_PATH_KEY, defaultValue = CoberturaSensor.DEFAULT_REPORT_PATH, name = "Path to unit test coverage report(s)", description = "Relative to projects' root. Ant patterns are accepted", global = false, project = true),
         @Property(key = OCLintSensor.REPORT_PATH_KEY, defaultValue = OCLintSensor.DEFAULT_REPORT_PATH, name = "Path to oclint pmd formatted report", description = "Relative to projects' root.", global = false, project = true),
-        @Property(key = LizardSensor.REPORT_PATH_KEY, defaultValue = LizardSensor.DEFAULT_REPORT_PATH, name = "Path to lizard report", description = "Relative to projects' root.", global = false, project = true)
+        @Property(key = LizardSensor.REPORT_PATH_KEY, defaultValue = LizardSensor.DEFAULT_REPORT_PATH, name = "Path to lizard report", description = "Relative to projects' root.", global = false, project = true),
+        @Property(key = SurefireSensor.REPORT_PATH_KEY, defaultValue = SurefireSensor.DEFAULT_REPORT_PATH, name = "Path to surefire report(s)", description = "Relative to projects' root.", global = false, project = true)
 })
 public class ObjectiveCPlugin extends SonarPlugin {
 
