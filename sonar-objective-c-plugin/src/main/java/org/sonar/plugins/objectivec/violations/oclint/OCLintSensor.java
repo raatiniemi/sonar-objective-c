@@ -50,14 +50,14 @@ public final class OCLintSensor extends XmlReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<Violation> violations = parseReportIn(context.fileSystem().baseDir());
+        List<Violation> violations = collectAndParseAvailableReports(context.fileSystem().baseDir());
 
         OCLintSensorPersistence persistence = OCLintSensorPersistence.create(context);
         persistence.saveMeasures(violations);
     }
 
     @Nonnull
-    private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
+    private List<Violation> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
         Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
         if (!documentBuilder.isPresent()) {
             return Collections.emptyList();

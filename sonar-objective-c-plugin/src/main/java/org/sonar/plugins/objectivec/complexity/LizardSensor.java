@@ -58,7 +58,7 @@ public class LizardSensor extends XmlReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        Set<LizardMeasure> measures = parseReportsIn(context.fileSystem().baseDir());
+        Set<LizardMeasure> measures = collectAndParseAvailableReports(context.fileSystem().baseDir());
         if (measures.isEmpty()) {
             return;
         }
@@ -69,7 +69,7 @@ public class LizardSensor extends XmlReportSensor {
     }
 
     @Nonnull
-    private Set<LizardMeasure> parseReportsIn(@Nonnull File reportDirectory) {
+    private Set<LizardMeasure> collectAndParseAvailableReports(@Nonnull File reportDirectory) {
         Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
         if (!documentBuilder.isPresent()) {
             return Collections.emptySet();

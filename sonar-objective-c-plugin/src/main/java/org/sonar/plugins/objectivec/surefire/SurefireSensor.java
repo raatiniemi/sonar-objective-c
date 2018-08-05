@@ -51,21 +51,21 @@ public class SurefireSensor extends XmlReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<TestReport> testReports = parseFiles(context.fileSystem().baseDir());
+        List<TestReport> testReports = collectAndParseAvailableReports(context.fileSystem().baseDir());
 
         SurefireSensorPersistence persistence = SurefireSensorPersistence.create(context);
         persistence.saveMeasures(testReports);
     }
 
     @Nonnull
-    private List<TestReport> parseFiles(File file) {
+    private List<TestReport> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
         Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
         if (!documentBuilder.isPresent()) {
             return Collections.emptyList();
         }
 
         SurefireXmlReportParser parser = SurefireXmlReportParser.create(documentBuilder.get());
-        return collectAvailableReports(file)
+        return collectAvailableReports(projectDirectory)
                 .map(parser::parse)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
