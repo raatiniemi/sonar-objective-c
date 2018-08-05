@@ -35,6 +35,8 @@ Binary packages are available in the release section.
 
 ### 0.6.4
 * Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
+* Only include Objective-C language files from Lizard, Cobertura, Surefire, and OCLint
+* Include test coverage for project to SonarQube analysis
 
 ### 0.6.3 (detached from backelite project)
 - Detached from backelite project (no active maintainers)
