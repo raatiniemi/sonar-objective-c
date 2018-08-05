@@ -27,6 +27,9 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.7.0
+* Remove support for FauxPas
+
 ### 0.6.4
 * Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
 * Only include Objective-C language files from Lizard, Cobertura, Surefire, and OCLint
