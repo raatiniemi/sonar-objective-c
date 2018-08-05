@@ -100,7 +100,7 @@ public class OCLintSensorTest {
     }
 
     @Test
-    public void execute_withDefaultReport() {
+    public void execute_withDefaultReportPath() {
         helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
         createReportFile("sonar-reports/oclint.xml");
 
@@ -112,8 +112,8 @@ public class OCLintSensorTest {
     }
 
     @Test
-    public void execute_withReport() {
-        settings.setProperty("sonar.objectivec.oclint.report", "oclint.xml");
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.oclint.reportPath", "oclint.xml");
         helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
         createReportFile("oclint.xml");
 
