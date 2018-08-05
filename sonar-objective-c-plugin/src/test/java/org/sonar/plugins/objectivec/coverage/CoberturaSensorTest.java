@@ -87,7 +87,7 @@ public class CoberturaSensorTest {
     @Test
     public void execute_withDefaultReportPattern() {
         helpers.addToFileSystem(classNameFile);
-        createReportFile("sonar-reports/coverage.xml");
+        createReportFile("sonar-reports/cobertura.xml");
 
         sensor.execute(context);
 

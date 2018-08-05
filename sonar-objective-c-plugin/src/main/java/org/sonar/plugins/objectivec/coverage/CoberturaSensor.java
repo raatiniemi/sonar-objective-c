@@ -39,7 +39,7 @@ public final class CoberturaSensor extends XmlReportSensor {
     private static final String NAME = "Cobertura sensor";
     public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
             + ".coverage.reportPattern";
-    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
+    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/cobertura.xml";
 
     @SuppressWarnings("WeakerAccess")
     public CoberturaSensor(@Nonnull Configuration configuration) {
