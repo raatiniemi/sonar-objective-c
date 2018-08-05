@@ -76,7 +76,7 @@ public class SurefireSensorTest {
 
     @Test
     public void execute() {
-        settings.setProperty("sonar.junit.reportsPath", resourcePath.toString());
+        settings.setProperty("sonar.objectivec.surefire.reportPath", resourcePath.toString());
         helpers.addToFileSystem(helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY));
         helpers.addToFileSystem(helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY));
 

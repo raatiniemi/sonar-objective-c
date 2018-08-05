@@ -23,6 +23,7 @@ import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
+import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class SurefireSensor extends XmlReportSensor {
     private static final String NAME = "Surefire sensor";
-    private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
+    private static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".surefire.reportPath";
     private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     @SuppressWarnings("WeakerAccess")
