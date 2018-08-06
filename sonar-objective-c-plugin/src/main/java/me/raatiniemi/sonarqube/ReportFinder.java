@@ -30,7 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class ReportFinder implements ReportPatternFinder {
+final class ReportFinder implements ReportPatternFinder {
     private final File reportDirectory;
 
     private ReportFinder(@Nonnull File reportDirectory) {
