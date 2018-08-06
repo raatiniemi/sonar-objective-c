@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
@@ -54,11 +55,17 @@ public class SurefireSensorTest {
     private SensorContextTester context;
     private FileSystemHelpers helpers;
 
+    private DefaultInputFile firstClassNameTestFile;
+    private DefaultInputFile secondClassNameTestFile;
+
     @Before
     public void setUp() {
         sensor = new SurefireSensor(settings.asConfig());
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
+
+        firstClassNameTestFile = helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY);
+        secondClassNameTestFile = helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY);
     }
 
     private void createReportFile(@Nonnull String relativePath) {
@@ -93,35 +100,35 @@ public class SurefireSensorTest {
 
     @Test
     public void execute_withDefaultReportPath() {
-        helpers.addToFileSystem(helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY));
-        helpers.addToFileSystem(helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY));
+        helpers.addToFileSystem(firstClassNameTestFile);
+        helpers.addToFileSystem(secondClassNameTestFile);
         createReportFile("sonar-reports/TEST-report.xml");
 
         sensor.execute(context);
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
     public void execute_withReportPath() {
         settings.setProperty("sonar.objectivec.surefire.reportPath", "TEST-*.xml");
-        helpers.addToFileSystem(helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY));
-        helpers.addToFileSystem(helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY));
+        helpers.addToFileSystem(firstClassNameTestFile);
+        helpers.addToFileSystem(secondClassNameTestFile);
         createReportFile("TEST-report.xml");
 
         sensor.execute(context);
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test
