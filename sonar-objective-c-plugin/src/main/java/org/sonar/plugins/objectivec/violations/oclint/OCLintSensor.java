@@ -17,8 +17,6 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import me.raatiniemi.sonarqube.ReportFinder;
-import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -34,8 +32,8 @@ import java.util.List;
 import java.util.Optional;
 
 public final class OCLintSensor extends XmlReportSensor {
-    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.report";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
+    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.reportPath";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/oclint.xml";
 
     private static final String NAME = "OCLint violation sensor";
 
@@ -52,25 +50,37 @@ public final class OCLintSensor extends XmlReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        List<Violation> violations = parseReportIn(context.fileSystem().baseDir());
+        List<Violation> violations = collectAndParseAvailableReports(context.fileSystem().baseDir());
 
         OCLintSensorPersistence persistence = OCLintSensorPersistence.create(context);
         persistence.saveMeasures(violations);
     }
 
     @Nonnull
-    private List<Violation> parseReportIn(@Nonnull File projectDirectory) {
+    private List<Violation> collectAndParseAvailableReports(@Nonnull File projectDirectory) {
         Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
         if (!documentBuilder.isPresent()) {
             return Collections.emptyList();
         }
 
         OCLintXmlReportParser parser = OCLintXmlReportParser.create(documentBuilder.get());
-        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
-        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+        return collectAvailableReports(projectDirectory)
+                .findFirst()
                 .map(parser::parse)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(Collections.emptyList());
+    }
+
+    @Nonnull
+    @Override
+    protected String getReportPathKey() {
+        return REPORT_PATH_KEY;
+    }
+
+    @Nonnull
+    @Override
+    protected String getDefaultReportPath() {
+        return DEFAULT_REPORT_PATH;
     }
 }

@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
@@ -31,12 +32,16 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(JUnit4.class)
 public class SurefireSensorTest {
@@ -50,11 +55,30 @@ public class SurefireSensorTest {
     private SensorContextTester context;
     private FileSystemHelpers helpers;
 
+    private DefaultInputFile firstClassNameTestFile;
+    private DefaultInputFile secondClassNameTestFile;
+
     @Before
     public void setUp() {
         sensor = new SurefireSensor(settings.asConfig());
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
+
+        firstClassNameTestFile = helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY);
+        secondClassNameTestFile = helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY);
+    }
+
+    private void createReportFile(@Nonnull String relativePath) {
+        try {
+            List<String> reportLines = Files.readAllLines(Paths.get(resourcePath.toString(), "TEST-multiple-test-cases.xml"));
+
+            Path destination = Paths.get(temporaryFolder.getRoot().getAbsolutePath(), relativePath);
+            Files.createDirectories(destination.getParent());
+            Files.createFile(destination);
+            Files.write(destination, reportLines);
+        } catch (IOException e) {
+            fail(String.format("Unable to create report file: %s", e.getMessage()));
+        }
     }
 
     @Nonnull
@@ -75,19 +99,36 @@ public class SurefireSensorTest {
     }
 
     @Test
-    public void execute() {
-        settings.setProperty("sonar.junit.reportsPath", resourcePath.toString());
-        helpers.addToFileSystem(helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY));
-        helpers.addToFileSystem(helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY));
+    public void execute_withDefaultReportPath() {
+        helpers.addToFileSystem(firstClassNameTestFile);
+        helpers.addToFileSystem(secondClassNameTestFile);
+        createReportFile("sonar-reports/TEST-report.xml");
 
         sensor.execute(context);
 
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(4), getMeasure("projectKey:FirstClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
-        assertEquals(Integer.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TESTS_KEY));
-        assertEquals(Integer.valueOf(0), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_FAILURES_KEY));
-        assertEquals(Long.valueOf(2), getMeasure("projectKey:SecondClassNameTest.m", CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+    }
+
+    @Test
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.surefire.reportPath", "TEST-*.xml");
+        helpers.addToFileSystem(firstClassNameTestFile);
+        helpers.addToFileSystem(secondClassNameTestFile);
+        createReportFile("TEST-report.xml");
+
+        sensor.execute(context);
+
+        assertEquals(Integer.valueOf(2), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(4), getMeasure(firstClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
+        assertEquals(Integer.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TESTS_KEY));
+        assertEquals(Integer.valueOf(0), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_FAILURES_KEY));
+        assertEquals(Long.valueOf(2), getMeasure(secondClassNameTestFile.key(), CoreMetrics.TEST_EXECUTION_TIME_KEY));
     }
 
     @Test

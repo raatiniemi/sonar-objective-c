@@ -30,6 +30,12 @@ Binary packages are available in the release section.
 ### 0.7.0
 * Remove support for FauxPas
 * Drop support for SonarQube versions prior to 7.1
+* Improve configuration key and default report path for Lizard
+* Improve configuration key and default report path for Cobertura
+* Improve configuration key and default report path for OCLint
+* Use distinct configuration key for Surefire reports
+* Allow Surefire default report path to be specified from web interface
+* Improve default reports path for Surefire
 
 ### 0.6.4
 * Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
