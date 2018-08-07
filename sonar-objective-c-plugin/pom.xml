@@ -25,12 +25,12 @@
     <parent>
         <groupId>me.raatiniemi.sonarqube</groupId>
         <artifactId>objective-c</artifactId>
-        <version>0.6.4</version>
+        <version>0.7.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>sonar-objective-c</artifactId>
-    <version>0.6.4</version>
+    <version>0.7.0</version>
 
     <packaging>sonar-plugin</packaging>
 </project>
