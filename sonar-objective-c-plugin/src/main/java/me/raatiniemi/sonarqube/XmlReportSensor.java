@@ -20,33 +20,23 @@ package me.raatiniemi.sonarqube;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.Sensor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public abstract class XmlReportSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(XmlReportSensor.class);
 
-    private final Settings settings;
+    private final Configuration configuration;
 
-    protected XmlReportSensor(@Nonnull Settings settings) {
-        this.settings = settings;
-    }
-
-    @Nonnull
-    protected final String getSetting(@Nonnull String key, @Nonnull String defaultValue) {
-        String value = settings.getString(key);
-
-        if (value == null) {
-            LOGGER.debug("No value specified for \"{}\" using default value", key);
-            return defaultValue;
-        }
-
-        return value;
+    protected XmlReportSensor(@Nonnull Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Nonnull
@@ -60,4 +50,19 @@ public abstract class XmlReportSensor implements Sensor {
             return Optional.empty();
         }
     }
+
+    @Nonnull
+    protected final Stream<File> collectAvailableReports(@Nonnull File projectDirectoryPath) {
+        Optional<String> value = configuration.get(getReportPathKey());
+        String reportPath = value.orElse(getDefaultReportPath());
+
+        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectoryPath);
+        return reportFinder.findReportsMatching(reportPath).stream();
+    }
+
+    @Nonnull
+    protected abstract String getReportPathKey();
+
+    @Nonnull
+    protected abstract String getDefaultReportPath();
 }

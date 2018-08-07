@@ -27,7 +27,7 @@ import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
-import org.sonar.api.config.MapSettings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -61,7 +61,7 @@ public class LizardSensorTest {
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
-        sensor = new LizardSensor(settings);
+        sensor = new LizardSensor(settings.asConfig());
 
         firstClassNameFile = helpers.createFile("TargetName/FirstClassNameTest.m", ObjectiveC.KEY);
         secondClassNameFile = helpers.createFile("TargetName/SecondClassNameTest.m", ObjectiveC.KEY);
@@ -101,10 +101,10 @@ public class LizardSensorTest {
     }
 
     @Test
-    public void execute_withDefaultReportPattern() {
+    public void execute_withDefaultReportPath() {
         helpers.addToFileSystem(firstClassNameFile);
         helpers.addToFileSystem(secondClassNameFile);
-        createReportFile("sonar-reports/lizard-report.xml");
+        createReportFile("sonar-reports/lizard.xml");
 
         sensor.execute(context);
 
@@ -115,8 +115,8 @@ public class LizardSensorTest {
     }
 
     @Test
-    public void execute_withReportPattern() {
-        settings.setProperty("sonar.objectivec.lizard.report", "lizard.xml");
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.lizard.reportPath", "lizard.xml");
         helpers.addToFileSystem(firstClassNameFile);
         helpers.addToFileSystem(secondClassNameFile);
         createReportFile("lizard.xml");

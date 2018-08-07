@@ -27,9 +27,7 @@ import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
-import org.sonar.api.config.MapSettings;
-import org.sonar.api.config.Settings;
-import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -40,9 +38,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class OCLintSensorTest {
@@ -50,7 +46,7 @@ public class OCLintSensorTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
-    private final Settings settings = new MapSettings();
+    private final MapSettings settings = new MapSettings();
 
     private SensorContextTester context;
     private FileSystemHelpers helpers;
@@ -62,7 +58,7 @@ public class OCLintSensorTest {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
 
-        sensor = new OCLintSensor(settings);
+        sensor = new OCLintSensor(settings.asConfig());
 
         ActiveRulesBuilder rules = new ActiveRulesBuilder();
         rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block"));
@@ -104,7 +100,7 @@ public class OCLintSensorTest {
     }
 
     @Test
-    public void execute_withDefaultReport() {
+    public void execute_withDefaultReportPath() {
         helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
         createReportFile("sonar-reports/oclint.xml");
 
@@ -116,8 +112,8 @@ public class OCLintSensorTest {
     }
 
     @Test
-    public void execute_withReport() {
-        settings.setProperty("sonar.objectivec.oclint.report", "oclint.xml");
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.oclint.reportPath", "oclint.xml");
         helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
         createReportFile("oclint.xml");
 

@@ -17,12 +17,10 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import me.raatiniemi.sonarqube.ReportFinder;
-import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -33,17 +31,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class CoberturaSensor extends XmlReportSensor {
     private static final String NAME = "Cobertura sensor";
-    public static final String REPORT_PATTERN_KEY = ObjectiveCPlugin.PROPERTY_PREFIX
-            + ".coverage.reportPattern";
-    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
+    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".cobertura.reportPath";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/cobertura.xml";
 
     @SuppressWarnings("WeakerAccess")
-    public CoberturaSensor(@Nonnull Settings settings) {
-        super(settings);
+    public CoberturaSensor(@Nonnull Configuration configuration) {
+        super(configuration);
     }
 
     @Override
@@ -77,11 +73,14 @@ public final class CoberturaSensor extends XmlReportSensor {
     }
 
     @Nonnull
-    private Stream<File> collectAvailableReports(@Nonnull File projectDirectory) {
-        ReportPatternFinder reportFinder = ReportFinder.create(projectDirectory);
+    @Override
+    protected String getReportPathKey() {
+        return REPORT_PATH_KEY;
+    }
 
-        return reportFinder
-                .findReportsMatching(getSetting(REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN))
-                .stream();
+    @Nonnull
+    @Override
+    protected String getDefaultReportPath() {
+        return DEFAULT_REPORT_PATH;
     }
 }

@@ -11,20 +11,14 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Design | NO | |
 | Documentation | YES | |
 | Duplications | YES | |
-| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules, and [Faux Pas](http://fauxpasapp.com/): 102 rules |
+| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules |
 | Size | YES | |
 | Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
 | Code coverage | YES | Uses [slather](https://github.com/venmo/slather) |
 
 ### Compatibility
 
-Releases available from this repository are compliant with SonarQube 5.6.x and above.
-
-### Faux Pas support
-
-[Faux Pas](http://fauxpasapp.com/) is a wonderful tool to analyse iOS or Mac applications source code, however it is not free. A 30 trial version is available [here](http://fauxpasapp.com/try/).
-
-The plugin runs fine even if Faux Pas is not installed (Faux Pas analysis will be skipped).
+Releases available from this repository are compliant with SonarQube 7.1, and above.
 
 ### Download
 
@@ -33,8 +27,20 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.7.0
+* Remove support for FauxPas
+* Drop support for SonarQube versions prior to 7.1
+* Improve configuration key and default report path for Lizard
+* Improve configuration key and default report path for Cobertura
+* Improve configuration key and default report path for OCLint
+* Use distinct configuration key for Surefire reports
+* Allow Surefire default report path to be specified from web interface
+* Improve default reports path for Surefire
+
 ### 0.6.4
 * Replace `run-sonar.sh` with preferred `fastlane` configuration with dependencies via `Gemfile`
+* Only include Objective-C language files from Lizard, Cobertura, Surefire, and OCLint
+* Include test coverage for project to SonarQube analysis
 
 ### 0.6.3 (detached from backelite project)
 - Detached from backelite project (no active maintainers)
@@ -59,7 +65,6 @@ Binary packages are available in the release section.
 - [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9). 
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
-- [Faux Pas](http://fauxpasapp.com/) command line tools installed (optional)
 
 ### Installation of xcpretty with JUnit reports fix
 

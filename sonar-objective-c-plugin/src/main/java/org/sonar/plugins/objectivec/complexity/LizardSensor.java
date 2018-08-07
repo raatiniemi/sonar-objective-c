@@ -17,14 +17,12 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import me.raatiniemi.sonarqube.ReportFinder;
-import me.raatiniemi.sonarqube.ReportPatternFinder;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
@@ -44,12 +42,12 @@ public class LizardSensor extends XmlReportSensor {
 
     private static final String NAME = "Lizard complexity sensor";
 
-    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.report";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
+    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.reportPath";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard.xml";
 
     @SuppressWarnings("WeakerAccess")
-    public LizardSensor(@Nonnull Settings settings) {
-        super(settings);
+    public LizardSensor(@Nonnull Configuration configuration) {
+        super(configuration);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class LizardSensor extends XmlReportSensor {
 
     @Override
     public void execute(@Nonnull SensorContext context) {
-        Set<LizardMeasure> measures = parseReportsIn(context.fileSystem().baseDir());
+        Set<LizardMeasure> measures = collectAndParseAvailableReports(context.fileSystem().baseDir());
         if (measures.isEmpty()) {
             return;
         }
@@ -71,18 +69,30 @@ public class LizardSensor extends XmlReportSensor {
     }
 
     @Nonnull
-    private Set<LizardMeasure> parseReportsIn(@Nonnull File reportDirectory) {
+    private Set<LizardMeasure> collectAndParseAvailableReports(@Nonnull File reportDirectory) {
         Optional<DocumentBuilder> documentBuilder = createDocumentBuilder();
         if (!documentBuilder.isPresent()) {
             return Collections.emptySet();
         }
 
         LizardXmlReportParser parser = LizardXmlReportParser.create(documentBuilder.get());
-        ReportPatternFinder reportFinder = ReportFinder.create(reportDirectory);
-        return reportFinder.findReportMatching(getSetting(REPORT_PATH_KEY, DEFAULT_REPORT_PATH))
+        return collectAvailableReports(reportDirectory)
+                .findFirst()
                 .map(parser::parse)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(Collections.emptySet());
+    }
+
+    @Nonnull
+    @Override
+    protected String getReportPathKey() {
+        return REPORT_PATH_KEY;
+    }
+
+    @Nonnull
+    @Override
+    protected String getDefaultReportPath() {
+        return DEFAULT_REPORT_PATH;
     }
 }

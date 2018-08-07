@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
-import org.sonar.api.config.MapSettings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
@@ -56,7 +56,7 @@ public class CoberturaSensorTest {
     public void setUp() {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
-        sensor = new CoberturaSensor(settings);
+        sensor = new CoberturaSensor(settings.asConfig());
 
         classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
     }
@@ -85,9 +85,9 @@ public class CoberturaSensorTest {
     }
 
     @Test
-    public void execute_withDefaultReportPattern() {
+    public void execute_withDefaultReportPath() {
         helpers.addToFileSystem(classNameFile);
-        createReportFile("sonar-reports/coverage.xml");
+        createReportFile("sonar-reports/cobertura.xml");
 
         sensor.execute(context);
 
@@ -95,8 +95,8 @@ public class CoberturaSensorTest {
     }
 
     @Test
-    public void execute_withReportPattern() {
-        settings.setProperty("sonar.objectivec.coverage.reportPattern", "cobertura.xml");
+    public void execute_withReportPath() {
+        settings.setProperty("sonar.objectivec.cobertura.reportPath", "cobertura.xml");
         helpers.addToFileSystem(classNameFile);
         createReportFile("cobertura.xml");
 
