@@ -24,6 +24,8 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -32,6 +34,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 final class OCLintSensorPersistence extends SensorPersistence<Violation> {
+    private static final Logger LOGGER = Loggers.get(OCLintSensorPersistence.class);
+
     private final FileSystem fileSystem;
 
     private OCLintSensorPersistence(@Nonnull final SensorContext context, @Nonnull final FileSystem fileSystem) {
@@ -57,6 +61,11 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
         value.ifPresent(inputFile -> {
             for (Violation violation : violations) {
                 RuleKey rule = RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, violation.getRule());
+                if (isRuleActive(rule)) {
+                    LOGGER.warn("\"{}\" is not an active rule", rule.toString());
+                    continue;
+                }
+
                 NewIssue newIssue = getContext().newIssue().forRule(rule);
 
                 NewIssueLocation location = newIssue.newLocation()
@@ -73,5 +82,9 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String path) {
         return buildInputFile(fileSystem.predicates().hasPath(path));
+    }
+
+    private boolean isRuleActive(@Nonnull RuleKey rule) {
+        return null == getContext().activeRules().find(rule);
     }
 }

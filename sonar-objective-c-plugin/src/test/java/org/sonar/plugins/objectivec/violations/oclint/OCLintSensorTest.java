@@ -24,6 +24,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
+import org.sonar.api.batch.rule.internal.DefaultActiveRules;
+import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
@@ -36,6 +38,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -60,10 +63,12 @@ public class OCLintSensorTest {
 
         sensor = new OCLintSensor(settings.asConfig());
 
-        ActiveRulesBuilder rules = new ActiveRulesBuilder();
-        rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block"));
-        rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "unused method parameter"));
-        context.setActiveRules(rules.build());
+        List<NewActiveRule> rules = new ArrayList<>();
+        ActiveRulesBuilder builder = new ActiveRulesBuilder();
+        rules.add(builder.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block")));
+        rules.add(builder.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "unused method parameter")));
+        rules.add(builder.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "ivar assignment outside accessors or init")));
+        context.setActiveRules(new DefaultActiveRules(rules));
     }
 
     private void createReportFile(@Nonnull String relativePath) {
