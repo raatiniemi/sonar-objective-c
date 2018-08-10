@@ -30,6 +30,7 @@ import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.utils.log.LogTester;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
@@ -42,6 +43,9 @@ import static org.junit.Assert.assertTrue;
 public class OCLintSensorPersistenceTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @Rule
+    public LogTester logTester = new LogTester();
 
     private SensorContextTester context;
     private FileSystemHelpers helpers;
@@ -82,6 +86,7 @@ public class OCLintSensorPersistenceTest {
         persistence.saveMeasures(Collections.emptyList());
 
         assertTrue(context.allIssues().isEmpty());
+        assertTrue(logTester.logs().isEmpty());
     }
 
     @Test
@@ -97,6 +102,7 @@ public class OCLintSensorPersistenceTest {
         persistence.saveMeasures(violations);
 
         assertTrue(context.allIssues().isEmpty());
+        assertTrue(logTester.logs().isEmpty());
     }
 
     @Test
@@ -113,6 +119,7 @@ public class OCLintSensorPersistenceTest {
         persistence.saveMeasures(violations);
 
         assertTrue(isIssuePresent("deep nested block"));
+        assertTrue(logTester.logs().isEmpty());
     }
 
     @Test
@@ -140,6 +147,26 @@ public class OCLintSensorPersistenceTest {
 
         assertTrue(isIssuePresent("deep nested block"));
         assertTrue(isIssuePresent("unused method parameter"));
+        assertTrue(logTester.logs().isEmpty());
+    }
+
+    @Test
+    public void saveMeasures_withUnknownRule() {
+        Set<Violation> violations = new LinkedHashSet<>();
+        violations.add(
+                Violation.builder()
+                        .setPath("TargetName/ClassName.m")
+                        .setStartLine(1)
+                        .setMessage("Message for unknown rule")
+                        .setRule("unknown rule")
+                        .build()
+        );
+        helpers.addToFileSystem(classNameFile);
+
+        persistence.saveMeasures(violations);
+
+        assertFalse(isIssuePresent("unknown rule"));
+        assertTrue(logTester.logs().contains("\"OCLint:unknown rule\" is not an active rule"));
     }
 
     @Test
@@ -158,5 +185,6 @@ public class OCLintSensorPersistenceTest {
         persistence.saveMeasures(violations);
 
         assertFalse(isIssuePresent("deep nested block"));
+        assertTrue(logTester.logs().isEmpty());
     }
 }
