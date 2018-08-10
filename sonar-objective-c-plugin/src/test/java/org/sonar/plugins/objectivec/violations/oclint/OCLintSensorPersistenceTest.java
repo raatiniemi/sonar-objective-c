@@ -25,15 +25,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
+import org.sonar.api.batch.rule.internal.DefaultActiveRules;
+import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,10 +58,11 @@ public class OCLintSensorPersistenceTest {
 
         classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
 
-        ActiveRulesBuilder rules = new ActiveRulesBuilder();
-        rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block"));
-        rules.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "unused method parameter"));
-        context.setActiveRules(rules.build());
+        List<NewActiveRule> rules = new ArrayList<>();
+        ActiveRulesBuilder builder = new ActiveRulesBuilder();
+        rules.add(builder.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "deep nested block")));
+        rules.add(builder.create(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, "unused method parameter")));
+        context.setActiveRules(new DefaultActiveRules(rules));
     }
 
     private boolean isIssuePresent(@Nonnull String ruleKey) {
