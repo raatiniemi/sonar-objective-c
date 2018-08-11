@@ -14,7 +14,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules |
 | Size | YES | |
 | Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
-| Code coverage | YES | Uses [slather](https://github.com/venmo/slather) |
+| Code coverage | YES | Uses [slather](https://github.com/SlatherOrg/slather) |
 
 ### Compatibility
 
