@@ -2,6 +2,7 @@
 .project
 .settings/
 target/
+out/
 
 # Exclude OS X folder attributes
 .DS_Store
@@ -17,7 +18,7 @@ target/
 ###
 
 .gradle
-/build/
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
