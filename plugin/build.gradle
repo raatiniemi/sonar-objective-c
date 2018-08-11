@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group 'me.raatiniemi.sonarqube'
+version '0.7.1-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
