@@ -27,6 +27,9 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.7.1
+* Migrate project to Gradle
+
 ### 0.7.0
 * Remove support for FauxPas
 * Drop support for SonarQube versions prior to 7.1
