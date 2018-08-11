@@ -63,7 +63,7 @@ Binary packages are available in the release section.
 
 - a Mac with Xcode
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9). 
+- [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed, version 0.13.1 is recommended.
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 - [fastlane](https://fastlane.tools/) (installed via [bundler](https://bundler.io/) and `bundle install`)
