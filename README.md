@@ -68,6 +68,7 @@ Binary packages are available in the release section.
 - [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9). 
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
+- [fastlane](https://fastlane.tools/) (installed via [bundler](https://bundler.io/) and `bundle install`)
 
 ### Installation of xcpretty with JUnit reports fix
 
