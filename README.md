@@ -13,7 +13,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Duplications | YES | |
 | Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules |
 | Size | YES | |
-| Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
+| Tests | YES | |
 | Code coverage | YES | Uses [slather](https://github.com/SlatherOrg/slather) |
 
 ### Compatibility
@@ -63,24 +63,10 @@ Binary packages are available in the release section.
 
 - a Mac with Xcode
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
-- [xctool](https://github.com/facebook/xctool) ([HomeBrew](http://brew.sh) installed and ```brew install xctool```). If you are using Xcode 6, make sure to update xctool (```brew upgrade xctool```) to a version > 0.2.2.
 - [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9). 
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 - [fastlane](https://fastlane.tools/) (installed via [bundler](https://bundler.io/) and `bundle install`)
-
-### Installation of xcpretty with JUnit reports fix
-
-At the time, xcpretty needs to be fixed to work with SonarQube. 
-
-To install the fixed version, follow those steps :
-
-	git clone https://github.com/Backelite/xcpretty.git
-	cd xcpretty
-	git checkout fix/duration_of_failed_tests_workaround
-	gem build xcpretty.gemspec
-	sudo gem install --both xcpretty-0.2.2.gem
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
