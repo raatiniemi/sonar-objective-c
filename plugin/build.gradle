@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'org.sonarqube' version '2.6.2'
+    id 'com.iadams.sonar-packaging' version '1.0-RC1'
 }
 
 group 'me.raatiniemi.sonarqube'
@@ -41,6 +42,24 @@ sonarqube {
 
         properties['sonar.junit.reportPaths'] = 'build/test-results/test'
         properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
+    }
+}
+
+sonarPackaging {
+    pluginKey = 'sonarobjectivec'
+    pluginClass = 'org.sonar.plugins.objectivec.ObjectiveCPlugin'
+    pluginName = 'ObjectiveC'
+    pluginDescription = 'Enables analysis of Objective-C projects into SonarQube.'
+    pluginLicense = 'GNU LGPL 3'
+    pluginUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
+    pluginSourceUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
+    pluginDevelopers = 'Tobias Raatiniemi'
+    pluginIssueTrackerUrl = 'http://mypluginwebsite.com/issues'
+    skipDependenciesPackaging = false
+    useChildFirstClassLoader = false
+    organization {
+        name = 'Raatiniemi'
+        url = 'https://raatiniemi.me'
     }
 }
 
