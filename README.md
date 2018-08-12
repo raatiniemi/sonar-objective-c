@@ -66,7 +66,6 @@ Binary packages are available in the release section.
 - [OCLint](http://oclint.org/) installed, version 0.13.1 is recommended.
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pypi.org/) installed and ```sudo pip install lizard```)
 - [fastlane](https://fastlane.tools/) (installed via [bundler](https://bundler.io/) and `bundle install`)
-- [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
