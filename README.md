@@ -60,6 +60,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### 0.7.1
 * Migrate project to Gradle
+* Improve documentation for installation
 
 ### 0.7.0
 * Remove support for FauxPas
