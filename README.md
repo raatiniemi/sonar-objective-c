@@ -12,7 +12,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Design | NO | |
 | Documentation | YES | |
 | Duplications | YES | |
-| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules |
+| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html) |
 | Size | YES | |
 | Tests | YES | |
 | Code coverage | YES | Uses [slather](https://github.com/SlatherOrg/slather) |
