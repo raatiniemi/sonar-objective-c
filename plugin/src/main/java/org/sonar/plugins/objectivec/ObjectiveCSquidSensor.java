@@ -54,22 +54,15 @@ import java.util.Locale;
 
 
 public class ObjectiveCSquidSensor implements Sensor {
-
-    private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
-    private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
-
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
     private final ResourcePerspectives resourcePerspectives;
     private final Checks<SquidCheck<ObjectiveCGrammar>> checks;
     private final FilePredicate mainFilePredicates;
 
-
-    private Project project;
     private SensorContext context;
-    private AstScanner<ObjectiveCGrammar> scanner;
 
-    public ObjectiveCSquidSensor(RulesProfile profile, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
+    public ObjectiveCSquidSensor(FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
 
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
@@ -85,7 +78,6 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     public void analyse(Project project, SensorContext context) {
-        this.project = project;
         this.context = context;
 
         List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.newArrayList(checks.all());
