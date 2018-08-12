@@ -1,9 +1,8 @@
-SonarQube Plugin for Objective-C
-================================
+# SonarQube Plugin for Objective-C
 
 This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
-### Features
+## Features
 
 | Feature | Supported | Details |
 |---|---|:---:|
@@ -16,7 +15,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Tests | YES | |
 | Code coverage | YES | Uses [slather](https://github.com/SlatherOrg/slather) |
 
-### Installation
+## Installation
 
 It's recommended to install all of the dependencies without root access for
 security reasons. Also, install necessary gems for each project, via `bundler`,
@@ -37,7 +36,7 @@ to reduce version conflicts, etc.
 *Both OCLint and Lizard are optional, however, if the dependency is not
 installed data will be missing from the generated analysis.*
 
-### Configure Bundler
+#### Configure Bundler
 
 The default behaviour for Bundler is to install gems in a system-wide directory,
 i.e. root access is required.
@@ -55,11 +54,11 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 * Modify the `sonar-project.properties` file to match your project setup
 * Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
 
-### Compatibility
+## Compatibility
 
 Releases available from this repository are compliant with SonarQube 7.1, and above.
 
-### Release history
+## Release history
 
 ### 0.7.1
 * Migrate project to Gradle
@@ -93,10 +92,10 @@ Releases available from this repository are compliant with SonarQube 7.1, and ab
 - Update Cobertura report parsing to use new API
 - Remove support for legacy code coverage
 
-### Contributing
+## Contributing
 
 Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
 
-### License
+## License
 
 SonarQube Plugin for Objective-C is released under the [GNU LGPL 3 license](http://www.gnu.org/licenses/lgpl.txt).
