@@ -54,22 +54,44 @@ Releases available from this repository are compliant with SonarQube 7.1, and ab
 - Update Cobertura report parsing to use new API
 - Remove support for legacy code coverage
 
+### Installation
+
+It's recommended to install all of the dependencies without root access for
+security reasons. Also, install necessary gems for each project, via `bundler`,
+to reduce version conflicts, etc.
+
 ### Prerequisites
 
-- a Mac with Xcode
-- [SonarQube](https://www.sonarqube.org/) and [SonarQube Scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [OCLint](http://oclint.org/) installed, version 0.13.1 is recommended ([install via OCLint homebrew](https://github.com/oclint/homebrew-formulae)).
-- [lizard](https://github.com/terryyin/lizard) ([PIP](https://pypi.org/) installed and ```sudo pip install lizard```)
-- [bundler](https://bundler.io/) (installed via  and `gem install --user-install bundler`)
+* A Mac with Xcode installed.
+* [HomeBrew](http://brew.sh)
+* [PyPi](https://pypi.org/)
+* [SonarQube](https://www.sonarqube.org/) (either local or remote installation)
+* [SonarQube Scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner)
+  (`brew install sonar-scanner`)
+* [OCLint](http://oclint.org/) (`brew cask install oclint`)
+* [Lizard](https://github.com/terryyin/lizard) (`pip install --user lizard`)
+* [Bundler](https://bundler.io/) (`gem install --user-install bundler`)
 
-### Installation (once for all your Objective-C projects)
-- Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Restart the SonarQube server.
+*Both OCLint and Lizard are optional, however, if the dependency is not
+installed data will be missing from the generated analysis.*
 
-### Configuration (once per project)
-- Copy [sonar-project.properties](sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
-- Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
-- Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
+### Configure Bundler
+
+The default behaviour for Bundler is to install gems in a system-wide directory,
+i.e. root access is required.
+
+In order to get Bundler to install dependencies without root access, it have to
+be configured with a new path, `bundle config --global path ~/.bundle/gems`.
+
+### Install plugin on server
+* Clone and build the project
+* Copy the `plugin/build/libs/*.jar` into the `$SONARQUBE_HOME/extensions/plugins` directory
+* Restart the SonarQube server
+
+### Project configuration
+* Copy [sonar-project.properties](sample/sonar-project.properties) into your project root folder
+* Modify the `sonar-project.properties` file to match your project setup
+* Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
 
 ### Contributing
 
