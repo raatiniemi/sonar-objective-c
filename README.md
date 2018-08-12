@@ -65,7 +65,7 @@ Binary packages are available in the release section.
 - [SonarQube](https://www.sonarqube.org/) and [SonarQube Scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
 - [OCLint](http://oclint.org/) installed, version 0.13.1 is recommended ([install via OCLint homebrew](https://github.com/oclint/homebrew-formulae)).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pypi.org/) installed and ```sudo pip install lizard```)
-- [fastlane](https://fastlane.tools/) (installed via [bundler](https://bundler.io/) and `bundle install`)
+- [bundler](https://bundler.io/) (installed via  and `gem install --user-install bundler`)
 
 ### Installation (once for all your Objective-C projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
