@@ -1,4 +1,4 @@
-image: maven:3.5.3-jdk-8-alpine
+image: gradle:4.8-jdk8
 
 stages:
   - build
@@ -7,20 +7,20 @@ stages:
 build:
   stage: build
   script:
-    - mvn clean install
+    - gradle :plugin:clean :plugin:assemble
   artifacts:
     paths:
-      - sonar-objective-c-plugin/target
+      - plugin/build
     expire_in: 1 day
 
 test:
   stage: test
   script:
-    - mvn test
+    - gradle :plugin:test
 
 analyse:
   stage: test
   script:
-    - mvn cobertura:cobertura -Dcobertura.report.format=xml sonar:sonar
+    - gradle :plugin:sonar
   only:
     - tags
