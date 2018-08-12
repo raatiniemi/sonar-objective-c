@@ -1,9 +1,10 @@
-SonarQube Plugin for Objective-C
-================================
+# SonarQube Plugin for Objective-C
 
 This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
-### Features
+*Releases available from this repository are compatible with SonarQube 7.1, and above.*
+
+## Features
 
 | Feature | Supported | Details |
 |---|---|:---:|
@@ -11,24 +12,55 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Design | NO | |
 | Documentation | YES | |
 | Duplications | YES | |
-| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html): 71 rules |
+| Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html) |
 | Size | YES | |
-| Tests | YES | Uses [xctool](https://github.com/facebook/xctool), will probably switch to xcodebuild + [xcpretty](https://github.com/supermarin/xcpretty) soon |
-| Code coverage | YES | Uses [slather](https://github.com/venmo/slather) |
+| Tests | YES | |
+| Code coverage | YES | Uses [slather](https://github.com/SlatherOrg/slather) |
 
-### Compatibility
+## Installation
 
-Releases available from this repository are compliant with SonarQube 7.1, and above.
+It's recommended to install all of the dependencies without root access for
+security reasons. Also, install necessary gems for each project, via `bundler`,
+to reduce version conflicts, etc.
 
-### Download
+### Prerequisites
 
-Binary packages are available in the release section.
+* A Mac with Xcode installed.
+* [HomeBrew](http://brew.sh)
+* [PyPi](https://pypi.org/)
+* [SonarQube](https://www.sonarqube.org/) (either local or remote installation)
+* [SonarQube Scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner)
+  (`brew install sonar-scanner`)
+* [OCLint](http://oclint.org/) (`brew cask install oclint`)
+* [Lizard](https://github.com/terryyin/lizard) (`pip install --user lizard`)
+* [Bundler](https://bundler.io/) (`gem install --user-install bundler`)
 
+*Both OCLint and Lizard are optional, however, if the dependency is not
+installed data will be missing from the generated analysis.*
 
-### Release history
+#### Configure Bundler
+
+The default behaviour for Bundler is to install gems in a system-wide directory,
+i.e. root access is required.
+
+In order to get Bundler to install dependencies without root access, it have to
+be configured with a new path, `bundle config --global path ~/.bundle/gems`.
+
+### Install plugin on server
+* Clone and build the project
+* Copy the `plugin/build/libs/*.jar` into the `$SONARQUBE_HOME/extensions/plugins` directory
+* Restart the SonarQube server
+
+### Project configuration
+* Copy [sonar-project.properties](sample/sonar-project.properties) into your project root folder
+* Modify the `sonar-project.properties` file to match your project setup
+* Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
+
+## Release history
 
 ### 0.7.1
 * Migrate project to Gradle
+* Improve documentation for installation
 
 ### 0.7.0
 * Remove support for FauxPas
@@ -46,54 +78,23 @@ Binary packages are available in the release section.
 * Include test coverage for project to SonarQube analysis
 
 ### 0.6.3 (detached from backelite project)
-- Detached from backelite project (no active maintainers)
-- Ensure compatibility with SonarQube 7.0
-- Update Lizard complexity report parsing to use new API
-- Remove use of deprecated metrics from Lizard complexity reports
-- Warn instead of throwing uncatched exception if Lizard complexity report XML
+* Detached from backelite project (no active maintainers)
+* Ensure compatibility with SonarQube 7.0
+* Update Lizard complexity report parsing to use new API
+* Remove use of deprecated metrics from Lizard complexity reports
+* Warn instead of throwing uncatched exception if Lizard complexity report XML
   file is not available
-- Ensure OCLint violation reports are properly parsed and sent to SonarQube
-- Update available rules for OCLint
-- Include description from OCLint rules
-- Update Surefire report parsing to use new API
-- Update Cobertura report parsing to use new API
-- Remove support for legacy code coverage
+* Ensure OCLint violation reports are properly parsed and sent to SonarQube
+* Update available rules for OCLint
+* Include description from OCLint rules
+* Update Surefire report parsing to use new API
+* Update Cobertura report parsing to use new API
+* Remove support for legacy code coverage
 
-### Prerequisites
-
-- a Mac with Xcode
-- [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
-- [xctool](https://github.com/facebook/xctool) ([HomeBrew](http://brew.sh) installed and ```brew install xctool```). If you are using Xcode 6, make sure to update xctool (```brew upgrade xctool```) to a version > 0.2.2.
-- [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9). 
-- [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4.4 since Xcode 9).
-- [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
-
-### Installation of xcpretty with JUnit reports fix
-
-At the time, xcpretty needs to be fixed to work with SonarQube. 
-
-To install the fixed version, follow those steps :
-
-	git clone https://github.com/Backelite/xcpretty.git
-	cd xcpretty
-	git checkout fix/duration_of_failed_tests_workaround
-	gem build xcpretty.gemspec
-	sudo gem install --both xcpretty-0.2.2.gem
-
-### Installation (once for all your Objective-C projects)
-- Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Restart the SonarQube server.
-
-### Configuration (once per project)
-- Copy [sonar-project.properties](sample/sonar-project.properties) in your Xcode project root folder (along your .xcodeproj file)
-- Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
-- Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
-
-### Contributing
+## Contributing
 
 Feel free to contribute to this plugin by issuing pull requests to this repository or to the [original one](https://github.com/Backelite/sonar-objective-c).
 
-### License
+## License
 
 SonarQube Plugin for Objective-C is released under the [GNU LGPL 3 license](http://www.gnu.org/licenses/lgpl.txt).
