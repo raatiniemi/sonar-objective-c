@@ -79,18 +79,18 @@ Releases available from this repository are compliant with SonarQube 7.1, and ab
 * Include test coverage for project to SonarQube analysis
 
 ### 0.6.3 (detached from backelite project)
-- Detached from backelite project (no active maintainers)
-- Ensure compatibility with SonarQube 7.0
-- Update Lizard complexity report parsing to use new API
-- Remove use of deprecated metrics from Lizard complexity reports
-- Warn instead of throwing uncatched exception if Lizard complexity report XML
+* Detached from backelite project (no active maintainers)
+* Ensure compatibility with SonarQube 7.0
+* Update Lizard complexity report parsing to use new API
+* Remove use of deprecated metrics from Lizard complexity reports
+* Warn instead of throwing uncatched exception if Lizard complexity report XML
   file is not available
-- Ensure OCLint violation reports are properly parsed and sent to SonarQube
-- Update available rules for OCLint
-- Include description from OCLint rules
-- Update Surefire report parsing to use new API
-- Update Cobertura report parsing to use new API
-- Remove support for legacy code coverage
+* Ensure OCLint violation reports are properly parsed and sent to SonarQube
+* Update available rules for OCLint
+* Include description from OCLint rules
+* Update Surefire report parsing to use new API
+* Update Cobertura report parsing to use new API
+* Remove support for legacy code coverage
 
 ## Contributing
 
