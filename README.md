@@ -2,6 +2,8 @@
 
 This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
+*Releases available from this repository are compatible with SonarQube 7.1, and above.*
+
 ## Features
 
 | Feature | Supported | Details |
@@ -53,10 +55,6 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 * Copy [sonar-project.properties](sample/sonar-project.properties) into your project root folder
 * Modify the `sonar-project.properties` file to match your project setup
 * Configure your project according to the [`Fastfile` example](sample/Fastfile) and [`Gemfile` example](sample/Gemfile)
-
-## Compatibility
-
-Releases available from this repository are compliant with SonarQube 7.1, and above.
 
 ## Release history
 
