@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'fastlane'
 
 # Dependency for generating cobertura test coverage report from Xcode, can be
-# removed if tests are not used.
+# removed if tests are not used. Version 2.4.6, or above is required.
 gem 'slather'
 
 # Dependency for generating lizard complexity report, can be removed if lizard
