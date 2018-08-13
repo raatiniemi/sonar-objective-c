@@ -18,7 +18,11 @@
 package org.sonar.plugins.objectivec;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.sonar.objectivec.ObjectiveCAstScanner;
+import com.sonar.objectivec.ObjectiveCConfiguration;
+import com.sonar.objectivec.api.ObjectiveCGrammar;
+import com.sonar.objectivec.api.ObjectiveCMetric;
+import com.sonar.objectivec.checks.CheckList;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -29,19 +33,12 @@ import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
-import com.sonar.objectivec.ObjectiveCAstScanner;
-import com.sonar.objectivec.ObjectiveCConfiguration;
-import com.sonar.objectivec.api.ObjectiveCGrammar;
-import com.sonar.objectivec.api.ObjectiveCMetric;
-import com.sonar.objectivec.checks.CheckList;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.AstScanner;
-import org.sonar.squidbridge.SquidAstVisitor;
 import org.sonar.squidbridge.api.CheckMessage;
 import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
@@ -49,7 +46,6 @@ import org.sonar.squidbridge.checks.SquidCheck;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -80,8 +76,7 @@ public class ObjectiveCSquidSensor implements Sensor {
     public void analyse(Project project, SensorContext context) {
         this.context = context;
 
-        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.newArrayList(checks.all());
-        AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
+        AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(createConfiguration());
 
 
         scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
