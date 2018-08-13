@@ -76,18 +76,14 @@ public class ObjectiveCSquidSensor implements Sensor {
     public void analyse(Project project, SensorContext context) {
         this.context = context;
 
-        AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(createConfiguration());
+        ObjectiveCConfiguration configuration = ObjectiveCConfiguration.create(context.fileSystem().encoding());
+        AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(configuration);
 
 
         scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
 
         Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
         save(squidSourceFiles);
-    }
-
-    private ObjectiveCConfiguration createConfiguration() {
-
-        return new ObjectiveCConfiguration(fileSystem.encoding());
     }
 
     private void save(Collection<SourceCode> squidSourceFiles) {

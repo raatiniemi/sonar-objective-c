@@ -34,6 +34,7 @@ import org.sonar.squidbridge.metrics.LinesVisitor;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 public class ObjectiveCAstScanner {
@@ -48,7 +49,7 @@ public class ObjectiveCAstScanner {
         if (!file.isFile()) {
             throw new IllegalArgumentException("File '" + file + "' not found.");
         }
-        AstScanner<ObjectiveCGrammar> scanner = create(new ObjectiveCConfiguration());
+        AstScanner<ObjectiveCGrammar> scanner = create(ObjectiveCConfiguration.create(Charset.defaultCharset()));
         scanner.scanFile(file);
         Collection<SourceCode> sources = scanner.getIndex().search(new QueryByType(SourceFile.class));
         if (sources.size() != 1) {
