@@ -22,48 +22,33 @@ import com.sonar.objectivec.ObjectiveCAstScanner;
 import com.sonar.objectivec.ObjectiveCConfiguration;
 import com.sonar.objectivec.api.ObjectiveCGrammar;
 import com.sonar.objectivec.api.ObjectiveCMetric;
-import com.sonar.objectivec.checks.CheckList;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.rule.CheckFactory;
-import org.sonar.api.batch.rule.Checks;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.AstScanner;
-import org.sonar.squidbridge.api.CheckMessage;
 import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
-import org.sonar.squidbridge.checks.SquidCheck;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import java.util.Collection;
-import java.util.Locale;
 
 
 public class ObjectiveCSquidSensor implements Sensor {
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
-    private final ResourcePerspectives resourcePerspectives;
-    private final Checks<SquidCheck<ObjectiveCGrammar>> checks;
     private final FilePredicate mainFilePredicates;
 
     private SensorContext context;
 
-    public ObjectiveCSquidSensor(FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
-
+    public ObjectiveCSquidSensor(FileSystem fileSystem, PathResolver pathResolver) {
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
-        this.resourcePerspectives = resourcePerspectives;
-        this.checks = checkFactory.<SquidCheck<ObjectiveCGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks(CheckList.getChecks());
         this.mainFilePredicates = fileSystem.predicates().and(fileSystem.predicates().hasLanguage(ObjectiveC.KEY), fileSystem.predicates().hasType(InputFile.Type.MAIN));
     }
 
@@ -95,7 +80,6 @@ public class ObjectiveCSquidSensor implements Sensor {
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasRelativePath(relativePath));
 
             saveMeasures(inputFile, squidFile);
-            saveIssues(inputFile, squidFile);
         }
     }
 
@@ -105,34 +89,6 @@ public class ObjectiveCSquidSensor implements Sensor {
         context.saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getDouble(ObjectiveCMetric.LINES_OF_CODE));
         context.saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getDouble(ObjectiveCMetric.STATEMENTS));
         context.saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(ObjectiveCMetric.COMMENT_LINES));
-    }
-
-    private void saveIssues(InputFile inputFile, SourceFile squidFile) {
-
-        Collection<CheckMessage> messages = squidFile.getCheckMessages();
-
-        Resource resource = context.getResource(inputFile);
-
-        if (messages != null && resource != null) {
-            for (CheckMessage message : messages) {
-                RuleKey ruleKey = checks.ruleKey((SquidCheck<ObjectiveCGrammar>) message.getCheck());
-                Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
-
-                if (issuable != null) {
-                    Issuable.IssueBuilder issueBuilder = issuable.newIssueBuilder()
-                            .ruleKey(ruleKey)
-                            .line(message.getLine())
-                            .message(message.getText(Locale.ENGLISH));
-
-                    if (message.getCost() != null) {
-                        issueBuilder.effortToFix(message.getCost());
-                    }
-
-                    issuable.addIssue(issueBuilder.build());
-                }
-
-            }
-        }
     }
 
     @Override
