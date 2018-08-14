@@ -46,6 +46,7 @@ public class ObjectiveCSquidSensor implements Sensor {
     private final PathResolver pathResolver;
     private SensorContext context;
 
+    @SuppressWarnings("WeakerAccess")
     public ObjectiveCSquidSensor(FileSystem fileSystem, PathResolver pathResolver) {
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
