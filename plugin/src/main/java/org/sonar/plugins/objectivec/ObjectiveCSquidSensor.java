@@ -42,15 +42,21 @@ import java.util.Collection;
 
 public class ObjectiveCSquidSensor implements Sensor {
     private final FileSystem fileSystem;
-    private final PathResolver pathResolver;
-    private final FilePredicate mainFilePredicates;
 
+    private final PathResolver pathResolver;
     private SensorContext context;
 
     public ObjectiveCSquidSensor(FileSystem fileSystem, PathResolver pathResolver) {
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
-        this.mainFilePredicates = fileSystem.predicates().and(fileSystem.predicates().hasLanguage(ObjectiveC.KEY), fileSystem.predicates().hasType(InputFile.Type.MAIN));
+    }
+
+    @Nonnull
+    private static FilePredicate createFilePredicate(@Nonnull FileSystem fs) {
+        return fs.predicates().and(
+                fs.predicates().hasLanguage(ObjectiveC.KEY),
+                fs.predicates().hasType(InputFile.Type.MAIN)
+        );
     }
 
     @Override
@@ -70,7 +76,7 @@ public class ObjectiveCSquidSensor implements Sensor {
         ObjectiveCConfiguration configuration = ObjectiveCConfiguration.create(context.fileSystem().encoding());
         AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(configuration);
 
-        scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
+        scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(createFilePredicate(fileSystem))));
 
         Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
         save(squidSourceFiles);
