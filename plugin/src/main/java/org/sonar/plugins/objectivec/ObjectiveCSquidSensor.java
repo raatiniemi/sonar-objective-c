@@ -22,13 +22,13 @@ import com.sonar.objectivec.ObjectiveCAstScanner;
 import com.sonar.objectivec.ObjectiveCConfiguration;
 import com.sonar.objectivec.api.ObjectiveCGrammar;
 import com.sonar.objectivec.api.ObjectiveCMetric;
-import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.AstScanner;
@@ -36,6 +36,7 @@ import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
 import org.sonar.squidbridge.indexer.QueryByType;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 
@@ -52,18 +53,22 @@ public class ObjectiveCSquidSensor implements Sensor {
         this.mainFilePredicates = fileSystem.predicates().and(fileSystem.predicates().hasLanguage(ObjectiveC.KEY), fileSystem.predicates().hasType(InputFile.Type.MAIN));
     }
 
-    public boolean shouldExecuteOnProject(Project project) {
-
-        return project.isRoot() && fileSystem.hasFiles(fileSystem.predicates().hasLanguage(ObjectiveC.KEY));
-
+    @Override
+    public void describe(@Nonnull SensorDescriptor descriptor) {
+        descriptor.name(getClass().getSimpleName());
+        descriptor.onlyOnLanguage(ObjectiveC.KEY);
     }
 
-    public void analyse(Project project, SensorContext context) {
+    @Override
+    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
+        analyse((SensorContext) context);
+    }
+
+    private void analyse(SensorContext context) {
         this.context = context;
 
         ObjectiveCConfiguration configuration = ObjectiveCConfiguration.create(context.fileSystem().encoding());
         AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(configuration);
-
 
         scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
 
@@ -72,7 +77,6 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     private void save(Collection<SourceCode> squidSourceFiles) {
-
         for (SourceCode squidSourceFile : squidSourceFiles) {
             SourceFile squidFile = (SourceFile) squidSourceFile;
 
@@ -90,10 +94,4 @@ public class ObjectiveCSquidSensor implements Sensor {
         context.saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getDouble(ObjectiveCMetric.STATEMENTS));
         context.saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(ObjectiveCMetric.COMMENT_LINES));
     }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
-
 }
