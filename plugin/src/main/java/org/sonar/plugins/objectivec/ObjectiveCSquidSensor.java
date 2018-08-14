@@ -22,13 +22,14 @@ import com.sonar.objectivec.ObjectiveCAstScanner;
 import com.sonar.objectivec.ObjectiveCConfiguration;
 import com.sonar.objectivec.api.ObjectiveCGrammar;
 import com.sonar.objectivec.api.ObjectiveCMetric;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.Metric;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.AstScanner;
@@ -37,6 +38,7 @@ import org.sonar.squidbridge.api.SourceFile;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.Collection;
 
 
@@ -67,8 +69,8 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     @Override
-    public void execute(@Nonnull org.sonar.api.batch.sensor.SensorContext context) {
-        analyse((SensorContext) context);
+    public void execute(@Nonnull SensorContext context) {
+        analyse(context);
     }
 
     private void analyse(SensorContext context) {
@@ -95,10 +97,19 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
-        context.saveMeasure(inputFile, CoreMetrics.FILES, squidFile.getDouble(ObjectiveCMetric.FILES));
-        context.saveMeasure(inputFile, CoreMetrics.LINES, squidFile.getDouble(ObjectiveCMetric.LINES));
-        context.saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getDouble(ObjectiveCMetric.LINES_OF_CODE));
-        context.saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getDouble(ObjectiveCMetric.STATEMENTS));
-        context.saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(ObjectiveCMetric.COMMENT_LINES));
+        saveMeasure(inputFile, CoreMetrics.FILES, squidFile.getInt(ObjectiveCMetric.FILES));
+        saveMeasure(inputFile, CoreMetrics.LINES, squidFile.getInt(ObjectiveCMetric.LINES));
+        saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getInt(ObjectiveCMetric.LINES_OF_CODE));
+        saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getInt(ObjectiveCMetric.STATEMENTS));
+        saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getInt(ObjectiveCMetric.COMMENT_LINES));
+    }
+
+    private void saveMeasure(@Nonnull InputFile inputFile, @Nonnull Metric metric, Serializable value) {
+        //noinspection unchecked
+        context.newMeasure()
+                .on(inputFile)
+                .forMetric(metric)
+                .withValue(value)
+                .save();
     }
 }
