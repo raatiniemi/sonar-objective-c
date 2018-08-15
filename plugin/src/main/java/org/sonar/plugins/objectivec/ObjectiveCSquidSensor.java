@@ -84,6 +84,7 @@ public class ObjectiveCSquidSensor implements Sensor {
         ObjectiveCConfiguration configuration = ObjectiveCConfiguration.create(context.fileSystem().encoding());
         AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(configuration);
 
+        //noinspection deprecation
         scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(createFilePredicate(fileSystem))));
 
         Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
