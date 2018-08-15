@@ -22,6 +22,8 @@ import com.sonar.objectivec.ObjectiveCAstScanner;
 import com.sonar.objectivec.ObjectiveCConfiguration;
 import com.sonar.objectivec.api.ObjectiveCGrammar;
 import com.sonar.objectivec.api.ObjectiveCMetric;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -38,11 +40,14 @@ import org.sonar.squidbridge.api.SourceFile;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 
 
 public class ObjectiveCSquidSensor implements Sensor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCSquidSensor.class);
+
     private final FileSystem fileSystem;
 
     private final PathResolver pathResolver;
@@ -89,7 +94,12 @@ public class ObjectiveCSquidSensor implements Sensor {
         for (SourceCode squidSourceFile : squidSourceFiles) {
             SourceFile squidFile = (SourceFile) squidSourceFile;
 
-            String relativePath = pathResolver.relativePath(fileSystem.baseDir(), new java.io.File(squidFile.getKey()));
+            String relativePath = pathResolver.relativePath(fileSystem.baseDir(), new File(squidFile.getKey()));
+            if (null == relativePath) {
+                LOGGER.warn("Unable to build relative path for: {}", squidFile.getKey());
+                continue;
+            }
+
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasRelativePath(relativePath));
 
             saveMeasures(inputFile, squidFile);
