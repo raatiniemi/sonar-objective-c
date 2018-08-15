@@ -97,8 +97,6 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
-        saveMeasure(inputFile, CoreMetrics.FILES, squidFile.getInt(ObjectiveCMetric.FILES));
-        saveMeasure(inputFile, CoreMetrics.LINES, squidFile.getInt(ObjectiveCMetric.LINES));
         saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getInt(ObjectiveCMetric.LINES_OF_CODE));
         saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getInt(ObjectiveCMetric.STATEMENTS));
         saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getInt(ObjectiveCMetric.COMMENT_LINES));
