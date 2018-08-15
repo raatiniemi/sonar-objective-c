@@ -52,9 +52,9 @@ sonarPackaging {
     pluginDescription = 'Enables analysis of Objective-C projects into SonarQube.'
     pluginLicense = 'GNU LGPL 3'
     pluginUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
-    pluginSourceUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
+    pluginSourceUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
     pluginDevelopers = 'Tobias Raatiniemi'
-    pluginIssueTrackerUrl = 'http://mypluginwebsite.com/issues'
+    pluginIssueTrackerUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
     skipDependenciesPackaging = false
     useChildFirstClassLoader = false
     organization {
