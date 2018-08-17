@@ -17,22 +17,22 @@
  */
 package com.sonar.objectivec.lexer;
 
+import com.sonar.objectivec.ObjectiveCConfiguration;
+import com.sonar.sslr.impl.Lexer;
+import com.sonar.sslr.impl.channel.BlackHoleChannel;
+
+import java.nio.charset.Charset;
+
 import static com.sonar.sslr.api.GenericTokenType.LITERAL;
 import static com.sonar.sslr.impl.channel.RegexpChannelBuilder.commentRegexp;
 import static com.sonar.sslr.impl.channel.RegexpChannelBuilder.regexp;
 
-import com.sonar.objectivec.ObjectiveCConfiguration;
-
-import com.sonar.sslr.impl.Lexer;
-import com.sonar.sslr.impl.channel.BlackHoleChannel;
-
 public class ObjectiveCLexer {
-
     private ObjectiveCLexer() {
     }
 
     public static Lexer create() {
-        return create(new ObjectiveCConfiguration());
+        return create(ObjectiveCConfiguration.create(Charset.defaultCharset()));
     }
 
     public static Lexer create(ObjectiveCConfiguration conf) {
@@ -52,5 +52,4 @@ public class ObjectiveCLexer {
 
                 .build();
     }
-
 }

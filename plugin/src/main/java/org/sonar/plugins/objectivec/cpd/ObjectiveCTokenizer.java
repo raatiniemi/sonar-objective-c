@@ -44,7 +44,7 @@ public class ObjectiveCTokenizer implements Tokenizer {
     }
 
     public void tokenize(@Nonnull SourceCode source, @Nonnull Tokens cpdTokens) throws IOException {
-        Lexer lexer = ObjectiveCLexer.create(new ObjectiveCConfiguration(charset));
+        Lexer lexer = ObjectiveCLexer.create(ObjectiveCConfiguration.create(charset));
         String fileName = source.getFileName();
         List<Token> tokens = lexer.lex(new File(fileName));
         for (Token token : tokens) {

@@ -20,16 +20,16 @@ package com.sonar.objectivec.parser;
 import com.sonar.objectivec.ObjectiveCConfiguration;
 import com.sonar.objectivec.api.ObjectiveCGrammar;
 import com.sonar.objectivec.lexer.ObjectiveCLexer;
-
 import com.sonar.sslr.impl.Parser;
 
-public class ObjectiveCParser {
+import java.nio.charset.Charset;
 
+public class ObjectiveCParser {
     private ObjectiveCParser() {
     }
 
     public static Parser<ObjectiveCGrammar> create() {
-        return create(new ObjectiveCConfiguration());
+        return create(ObjectiveCConfiguration.create(Charset.defaultCharset()));
     }
 
     public static Parser<ObjectiveCGrammar> create(ObjectiveCConfiguration conf) {
@@ -37,5 +37,4 @@ public class ObjectiveCParser {
                 .withLexer(ObjectiveCLexer.create(conf))
                 .build();
     }
-
 }

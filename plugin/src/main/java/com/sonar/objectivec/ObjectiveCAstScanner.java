@@ -17,15 +17,12 @@
  */
 package com.sonar.objectivec;
 
-import java.io.File;
-import java.util.Collection;
-
 import com.sonar.objectivec.api.ObjectiveCGrammar;
 import com.sonar.objectivec.api.ObjectiveCMetric;
 import com.sonar.objectivec.parser.ObjectiveCParser;
+import com.sonar.sslr.impl.Parser;
 import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.CommentAnalyser;
-import org.sonar.squidbridge.SquidAstVisitor;
 import org.sonar.squidbridge.SquidAstVisitorContextImpl;
 import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
@@ -35,9 +32,10 @@ import org.sonar.squidbridge.metrics.CommentsVisitor;
 import org.sonar.squidbridge.metrics.LinesOfCodeVisitor;
 import org.sonar.squidbridge.metrics.LinesVisitor;
 
-import com.sonar.sslr.impl.Parser;
-
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.Collection;
 
 public class ObjectiveCAstScanner {
 
@@ -47,11 +45,11 @@ public class ObjectiveCAstScanner {
     /**
      * Helper method for testing checks without having to deploy them on a Sonar instance.
      */
-    public static SourceFile scanSingleFile(File file, SquidAstVisitor<ObjectiveCGrammar>... visitors) {
+    public static SourceFile scanSingleFile(File file) {
         if (!file.isFile()) {
             throw new IllegalArgumentException("File '" + file + "' not found.");
         }
-        AstScanner<ObjectiveCGrammar> scanner = create(new ObjectiveCConfiguration(), visitors);
+        AstScanner<ObjectiveCGrammar> scanner = create(ObjectiveCConfiguration.create(Charset.defaultCharset()));
         scanner.scanFile(file);
         Collection<SourceCode> sources = scanner.getIndex().search(new QueryByType(SourceFile.class));
         if (sources.size() != 1) {
@@ -60,7 +58,7 @@ public class ObjectiveCAstScanner {
         return (SourceFile) sources.iterator().next();
     }
 
-    public static AstScanner<ObjectiveCGrammar> create(ObjectiveCConfiguration conf, SquidAstVisitor<ObjectiveCGrammar>... visitors) {
+    public static AstScanner<ObjectiveCGrammar> create(ObjectiveCConfiguration conf) {
         final SquidAstVisitorContextImpl<ObjectiveCGrammar> context = new SquidAstVisitorContextImpl<>(new SourceProject("Objective-C Project"));
         final Parser<ObjectiveCGrammar> parser = ObjectiveCParser.create(conf);
 
