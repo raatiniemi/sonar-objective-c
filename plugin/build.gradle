@@ -69,8 +69,8 @@ dependencies {
     compileOnly 'org.sonarsource.sonarqube:sonar-plugin-api:7.1'
     compileOnly 'org.slf4j:slf4j-api:1.7.21'
 
-    implementation 'org.sonarsource.sslr:sslr-core:1.22'
-    implementation ('org.sonarsource.sslr-squid-bridge:sslr-squid-bridge:2.6.1') {
+    compile 'org.sonarsource.sslr:sslr-core:1.22'
+    compile ('org.sonarsource.sslr-squid-bridge:sslr-squid-bridge:2.6.1') {
         exclude(module: 'sslr-core')
         exclude(module: 'sslr-xpath')
         exclude(module: 'sonar-plugin-api')
@@ -79,10 +79,10 @@ dependencies {
         exclude(module: 'jcl-over-slf4j')
     }
 
-    implementation 'commons-lang:commons-lang:2.6'
-    implementation 'commons-io:commons-io:2.5'
-    implementation 'com.google.guava:guava:17.0'
-    implementation 'ant:ant:1.6'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'commons-io:commons-io:2.5'
+    compile 'com.google.guava:guava:17.0'
+    compile 'ant:ant:1.6'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.1'
