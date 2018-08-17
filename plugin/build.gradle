@@ -45,6 +45,8 @@ sonarqube {
     }
 }
 
+pluginPackaging.dependsOn 'compileJava'
+
 sonarPackaging {
     pluginKey = 'sonarobjectivec'
     pluginClass = 'org.sonar.plugins.objectivec.ObjectiveCPlugin'
