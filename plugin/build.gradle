@@ -3,10 +3,10 @@ plugins {
     id 'jacoco'
     id 'org.sonarqube' version '2.6.2'
     id 'com.iadams.sonar-packaging' version '1.0-RC1'
+    id 'com.cinnober.gradle.semver-git' version '2.3.1'
 }
 
 group 'me.raatiniemi.sonarqube'
-version '0.7.1-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
