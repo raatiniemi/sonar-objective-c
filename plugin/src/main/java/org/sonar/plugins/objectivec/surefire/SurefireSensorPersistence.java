@@ -17,8 +17,6 @@
 package org.sonar.plugins.objectivec.surefire;
 
 import me.raatiniemi.sonarqube.SensorPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -32,8 +30,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensorPersistence.class);
-
     private final FileSystem fileSystem;
 
     private SurefireSensorPersistence(@Nonnull SensorContext context) {
@@ -52,12 +48,7 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
         for (TestReport testReport : measures) {
             for (TestSuite testSuite : testReport.getTestSuites()) {
                 Optional<InputFile> value = buildInputFile(testSuite.getClassName());
-                if (value.isPresent()) {
-                    saveMeasures(value.get(), testSuite);
-                    continue;
-                }
-
-                LOGGER.warn("No path for {}", testSuite.getClassName());
+                value.ifPresent(inputFile -> saveMeasures(inputFile, testSuite));
             }
         }
     }
@@ -66,10 +57,8 @@ final class SurefireSensorPersistence extends SensorPersistence<TestReport> {
     private Optional<InputFile> buildInputFile(@Nonnull String className) {
         String filename = buildFilename(className);
 
-        FilePredicate predicate = fileSystem.predicates()
-                .matchesPathPattern("**/" + filename);
-
-        return buildInputFile(predicate);
+        FilePredicate predicate = fileSystem.predicates().matchesPathPattern("**/" + filename);
+        return buildInputFile(predicate, className);
     }
 
     @Nonnull
