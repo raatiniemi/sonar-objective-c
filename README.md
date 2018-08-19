@@ -58,6 +58,12 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ## Release history
 
+### 0.7.2
+* Include dependencies when building plugin, was not included since converting to Gradle
+* Reduce technical dept in Squid sensor
+* Automate update of version when building release
+* Improve language filter to reduce warnings
+
 ### 0.7.1
 * Migrate project to Gradle
 * Ensure OCLint rule exist before creating issue
