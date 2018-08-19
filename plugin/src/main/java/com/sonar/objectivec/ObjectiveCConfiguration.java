@@ -17,19 +17,19 @@
  */
 package com.sonar.objectivec;
 
-import java.nio.charset.Charset;
-
 import org.sonar.squidbridge.api.SquidConfiguration;
 
-public class ObjectiveCConfiguration extends SquidConfiguration {
+import java.nio.charset.Charset;
 
+public class ObjectiveCConfiguration extends SquidConfiguration {
     private boolean ignoreHeaderComments;
 
-    public ObjectiveCConfiguration() {
+    private ObjectiveCConfiguration(Charset charset) {
+        super(charset);
     }
 
-    public ObjectiveCConfiguration(Charset charset) {
-        super(charset);
+    public static ObjectiveCConfiguration create(Charset charset) {
+        return new ObjectiveCConfiguration(charset);
     }
 
     public void setIgnoreHeaderComments(boolean ignoreHeaderComments) {
@@ -39,5 +39,4 @@ public class ObjectiveCConfiguration extends SquidConfiguration {
     public boolean getIgnoreHeaderComments() {
         return ignoreHeaderComments;
     }
-
 }

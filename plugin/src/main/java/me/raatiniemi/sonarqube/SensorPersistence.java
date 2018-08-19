@@ -16,6 +16,8 @@
  */
 package me.raatiniemi.sonarqube;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -25,13 +27,12 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public abstract class SensorPersistence<T> implements SensorMeasurePersistence<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SensorPersistence.class);
+
     private final SensorContext context;
-    private final FilePredicate languagePredicate;
 
     protected SensorPersistence(@Nonnull SensorContext context) {
         this.context = context;
-
-        languagePredicate = context.fileSystem().predicates().hasLanguage(ObjectiveC.KEY);
     }
 
     @Nonnull
@@ -40,11 +41,24 @@ public abstract class SensorPersistence<T> implements SensorMeasurePersistence<T
     }
 
     @Nonnull
-    protected Optional<InputFile> buildInputFile(@Nonnull FilePredicate filePredicate) {
-        FilePredicate predicates = context.fileSystem()
-                .predicates()
-                .and(languagePredicate, filePredicate);
+    protected Optional<InputFile> buildInputFile(@Nonnull FilePredicate filePredicate, @Nonnull String name) {
+        InputFile inputFile = context.fileSystem().inputFile(filePredicate);
+        if (null == inputFile) {
+            LOGGER.warn("No path available for {}", name);
+            return Optional.empty();
+        }
 
-        return Optional.ofNullable(context.fileSystem().inputFile(predicates));
+        String language = inputFile.language();
+        if (null == language) {
+            LOGGER.debug("No language is available for {}", name);
+            return Optional.empty();
+        }
+
+        if (!language.toLowerCase().contains(ObjectiveC.KEY)) {
+            LOGGER.debug("{} belong to language {}", name, language);
+            return Optional.empty();
+        }
+
+        return Optional.of(inputFile);
     }
 }
