@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        nextVersion = "patch"
+    }
+}
+
 plugins {
     id 'java'
     id 'jacoco'
