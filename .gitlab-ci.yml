@@ -21,6 +21,6 @@ test:
 analyse:
   stage: test
   script:
-    - gradle :plugin:sonar
+    - gradle :plugin:sonarqube
   only:
     - tags
