@@ -81,7 +81,7 @@ final class OCLintSensorPersistence extends SensorPersistence<Violation> {
 
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String path) {
-        return buildInputFile(fileSystem.predicates().hasPath(path));
+        return buildInputFile(fileSystem.predicates().hasPath(path), path);
     }
 
     private boolean isRuleActive(@Nonnull RuleKey rule) {

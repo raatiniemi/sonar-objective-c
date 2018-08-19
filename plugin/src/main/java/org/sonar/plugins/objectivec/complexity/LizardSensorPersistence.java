@@ -18,8 +18,6 @@
 package org.sonar.plugins.objectivec.complexity;
 
 import me.raatiniemi.sonarqube.SensorPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
@@ -35,8 +33,6 @@ import java.util.Optional;
  * This class is used to save the measures created by the lizardReportParser in the sonar database
  */
 final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensorPersistence.class);
-
     private final FileSystem fileSystem;
 
     private LizardSensorPersistence(@Nonnull SensorContext context) {
@@ -57,18 +53,13 @@ final class LizardSensorPersistence extends SensorPersistence<LizardMeasure> {
     public void saveMeasures(@Nonnull Collection<LizardMeasure> measures) {
         for (LizardMeasure measure : measures) {
             Optional<InputFile> value = buildInputFile(measure.getPath());
-            if (value.isPresent()) {
-                saveMeasures(value.get(), measure);
-                continue;
-            }
-
-            LOGGER.warn("File not included {}", measure.getPath());
+            value.ifPresent(inputFile -> saveMeasures(inputFile, measure));
         }
     }
 
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String path) {
-        return buildInputFile(fileSystem.predicates().hasPath(path));
+        return buildInputFile(fileSystem.predicates().hasPath(path), path);
     }
 
     private void saveMeasures(@Nonnull InputFile inputFile, @Nonnull LizardMeasure measure) {

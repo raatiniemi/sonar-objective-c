@@ -17,8 +17,6 @@
 package org.sonar.plugins.objectivec.coverage;
 
 import me.raatiniemi.sonarqube.SensorPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -31,7 +29,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackage> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensorPersistence.class);
     private static final Predicate<CoberturaLine> excludeWithZeroLineNumber = line -> line.getNumber() > 0;
 
     private final FileSystem fileSystem;
@@ -52,19 +49,14 @@ final class CoberturaSensorPersistence extends SensorPersistence<CoberturaPackag
         for (CoberturaPackage coberturaPackage : measures) {
             for (CoberturaClass coberturaClass : coberturaPackage.getClasses()) {
                 Optional<InputFile> value = buildInputFile(coberturaClass.getFilename());
-                if (value.isPresent()) {
-                    saveReportForClass(value.get(), coberturaClass);
-                    continue;
-                }
-
-                LOGGER.warn("No path for {}", coberturaClass.getFilename());
+                value.ifPresent(inputFile -> saveReportForClass(inputFile, coberturaClass));
             }
         }
     }
 
     @Nonnull
     private Optional<InputFile> buildInputFile(@Nonnull String filename) {
-        return buildInputFile(fileSystem.predicates().hasPath(filename));
+        return buildInputFile(fileSystem.predicates().hasPath(filename), filename);
     }
 
     private void saveReportForClass(@Nonnull InputFile inputFile, @Nonnull CoberturaClass coberturaClass) {
