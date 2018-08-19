@@ -1,5 +1,9 @@
 # SonarQube Plugin for Objective-C
 
+![quality gate](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=alert_status)
+![code test coverage](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=coverage)
+![technical dept](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=sqale_index)
+
 This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
 *Releases available from this repository are compatible with SonarQube 7.1, and above.*
@@ -60,6 +64,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### 0.7.3
 * Include resources when building plugin, was not included since converting to Gradle
+* Use [SonarCloud](https://sonarcloud.io) to analyse project
 
 ### 0.7.2
 * Include dependencies when building plugin, was not included since converting to Gradle
