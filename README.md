@@ -58,6 +58,9 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ## Release history
 
+### 0.7.3
+* Include resources when building plugin, was not included since converting to Gradle
+
 ### 0.7.2
 * Include dependencies when building plugin, was not included since converting to Gradle
 * Reduce technical dept in Squid sensor
