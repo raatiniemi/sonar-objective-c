@@ -64,6 +64,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### 0.7.3
 * Include resources when building plugin, was not included since converting to Gradle
+* Use [SonarCloud](https://sonarcloud.io) to analyse project
 
 ### 0.7.2
 * Include dependencies when building plugin, was not included since converting to Gradle
