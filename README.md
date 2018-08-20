@@ -1,9 +1,9 @@
 # SonarQube Plugin for Objective-C
 
 [![pipeline status](https://gitlab.com/raatiniemi/sonar-objective-c/badges/master/pipeline.svg)](https://gitlab.com/raatiniemi/sonar-objective-c/commits/master)
-![quality gate](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=alert_status)
-![code test coverage](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=coverage)
-![technical dept](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=sqale_index)
+[![quality gate](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=alert_status)](https://sonarcloud.io/dashboard?id=me.raatiniemi.sonarqube%3Aobjective-c)
+[![code test coverage](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=coverage)](https://sonarcloud.io/dashboard?id=me.raatiniemi.sonarqube%3Aobjective-c)
+[![technical dept](https://sonarcloud.io/api/project_badges/measure?project=me.raatiniemi.sonarqube%3Aobjective-c&metric=sqale_index)](https://sonarcloud.io/dashboard?id=me.raatiniemi.sonarqube%3Aobjective-c)
 
 This repository is a fork of the open source [SonarQube Plugin for Objective-C](https://github.com/Backelite/sonar-objective-c). It provides modifications and extra features needed for our internal use.
 
