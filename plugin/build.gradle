@@ -84,6 +84,7 @@ bintray {
         name = 'sonar-objective-c-plugin'
         userOrg = user
         licenses = ['LGPL-3.0']
+        labels = ['sonarqube', 'objective-c']
 
         websiteUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
         issueTrackerUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
