@@ -63,6 +63,9 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ## Release history
 
+### 0.7.4
+* [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/sonar-objective-c)
+
 ### 0.7.3
 * Include resources when building plugin, was not included since converting to Gradle
 * Use [SonarCloud](https://sonarcloud.io) to analyse project
