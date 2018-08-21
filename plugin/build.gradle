@@ -10,6 +10,7 @@ plugins {
     id 'org.sonarqube' version '2.6.2'
     id 'com.iadams.sonar-packaging' version '1.0-RC1'
     id 'com.cinnober.gradle.semver-git' version '2.3.1'
+    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 group 'me.raatiniemi.sonarqube'
@@ -69,6 +70,32 @@ sonarPackaging {
     organization {
         name = 'Raatiniemi'
         url = 'https://raatiniemi.me'
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    configurations = ['archives']
+
+    pkg {
+        repo = 'maven'
+        name = 'sonar-objective-c'
+        userOrg = user
+        licenses = ['LGPL-3.0']
+
+        websiteUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
+        issueTrackerUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
+        vcsUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c.git'
+
+        publicDownloadNumbers = true
+
+        version {
+            name = project.version
+            released = new Date()
+            vcsTag = project.version
+        }
     }
 }
 

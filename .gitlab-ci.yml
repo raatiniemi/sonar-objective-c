@@ -3,11 +3,12 @@ image: gradle:4.8-jdk8
 stages:
   - build
   - test
+  - deploy
 
 build:
   stage: build
   script:
-    - gradle :plugin:clean :plugin:assemble
+    - gradle :plugin:clean :plugin:pluginPackaging
   artifacts:
     paths:
       - plugin/build
@@ -17,10 +18,29 @@ test:
   stage: test
   script:
     - gradle :plugin:test
+  artifacts:
+    paths:
+      - plugin/build
+    expire_in: 1 day
 
 analyse:
   stage: test
   script:
     - gradle :plugin:sonarqube
+  artifacts:
+    paths:
+      - plugin/build
+    expire_in: 1 day
+  only:
+    - tags
+
+deploy:
+  stage: deploy
+  script:
+    - gradle :plugin:bintrayUpload
+  artifacts:
+    paths:
+      - plugin/build
+    expire_in: 1 day
   only:
     - tags
