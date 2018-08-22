@@ -23,6 +23,7 @@ Summary: Name: avoid branching statement as last in loop
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 avoid default arguments on virtual methods
@@ -53,6 +54,7 @@ foo->a();   // default of 3
 bar->a();   // compile time error!</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 avoid private static members
@@ -72,6 +74,7 @@ class Bar
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 base class destructor should be virtual or protected
@@ -94,6 +97,7 @@ class C : public Base
 <p>Sutter &amp; Alexandrescu (November 2004). <a class="reference external" href="http://gotw.ca/publications/c++cs.htm">“C++ Coding Standards: 101 Rules, Guidelines, and Best Practices”</a>. <em>Addison-Wesley Professional</em></p>
 
 Severity: 2
+Type: BUG
 Category: OCLint
 
 bitwise operator in conditional
@@ -114,6 +118,7 @@ Summary: Name: bitwise operator in conditional
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 broken nil check
@@ -135,6 +140,7 @@ Summary: Name: broken nil check
 }</pre>
 
 Severity: 3
+Type: VULNERABILITY
 Category: OCLint
 
 broken null check
@@ -156,6 +162,7 @@ Summary: Name: broken null check
 }</pre>
 
 Severity: 3
+Type: VULNERABILITY
 Category: OCLint
 
 broken oddness check
@@ -177,6 +184,7 @@ Summary: Name: broken oddness check
 }</pre>
 
 Severity: 3
+Type: BUG
 Category: OCLint
 
 calling prohibited method
@@ -199,6 +207,7 @@ Summary: Name: calling prohibited method
 @end</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 calling protected method
@@ -223,6 +232,7 @@ Summary: Name: calling protected method
 @end</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 collapsible if statements
@@ -244,6 +254,7 @@ Summary: Name: collapsible if statements
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 constant conditional operator
@@ -259,6 +270,7 @@ Summary: Name: constant conditional operator
 }</pre>
 
 Severity: 3
+Type: BUG
 Category: OCLint
 
 constant if expression
@@ -281,6 +293,7 @@ Summary: Name: constant if expression
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 dead code
@@ -302,6 +315,7 @@ Summary: Name: dead code
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 deep nested block
@@ -322,6 +336,7 @@ Summary: Name: deep nested block
 <dl><dt> NESTED_BLOCK_DEPTH</dt> <dd> The depth of a block or compound statement reporting threshold, default value is 5.</dd></dl>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 destructor of virtual class
@@ -339,6 +354,7 @@ class Child : public Base {
 };</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 double negative
@@ -355,6 +371,7 @@ Summary: Name: double negative
 }</pre>
 
 Severity: 3
+Type: BUG
 Category: OCLint
 
 empty catch statement
@@ -376,6 +393,7 @@ Summary: Name: empty catch statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty do/while statement
@@ -393,6 +411,7 @@ Summary: Name: empty do/while statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty else block
@@ -414,6 +433,7 @@ Summary: Name: empty else block
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty finally statement
@@ -440,6 +460,7 @@ Summary: Name: empty finally statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty for statement
@@ -461,6 +482,7 @@ Summary: Name: empty for statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty if statement
@@ -478,6 +500,7 @@ Summary: Name: empty if statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty switch statement
@@ -495,6 +518,7 @@ Summary: Name: empty switch statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty try statement
@@ -516,6 +540,7 @@ Summary: Name: empty try statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 empty while statement
@@ -533,6 +558,7 @@ Summary: Name: empty while statement
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 for loop should be while loop
@@ -551,6 +577,7 @@ Summary: Name: for loop should be while loop
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 goto statement
@@ -570,6 +597,7 @@ Summary: Name: goto statement
 <p>Edsger Dijkstra (March 1968). <a class="reference external" href="http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF">“Go To Statement Considered Harmful”</a>. <em>Communications of the ACM</em> (PDF) 11 (3): 147–148. doi:10.1145/362929.362947.</p>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 high cyclomatic complexity
@@ -615,6 +643,7 @@ Summary: Name: high cyclomatic complexity
 <p>McCabe (December 1976). <a class="reference external" href="http://www.literateprogramming.com/mccabe.pdf">“A Complexity Measure”</a>. <em>IEEE Transactions on Software Engineering: 308–320</em></p>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 high ncss method
@@ -639,6 +668,7 @@ Summary: Name: high ncss method
 <pre>__attribute__((annotate("oclint:suppress[high ncss method]")))</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 high npath complexity
@@ -661,6 +691,7 @@ Summary: Name: high npath complexity
 <p>Brian A. Nejmeh (1988). <a class="reference external" href="http://dl.acm.org/citation.cfm?id=42379">“NPATH: a measure of execution path complexity and its applications”</a>. <em>Communications of the ACM 31 (2) p. 188-200</em></p>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 ill-placed default label in switch statement
@@ -683,6 +714,7 @@ Summary: Name: ill-placed default label in switch statement
 }</pre>
 
 Severity: 2
+Type: BUG
 Category: OCLint
 
 inverted logic
@@ -708,6 +740,7 @@ Summary: Name: inverted logic
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 ivar assignment outside accessors or init
@@ -731,6 +764,7 @@ Summary: Name: ivar assignment outside accessors or init
 @end</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 jumbled incrementer
@@ -748,6 +782,7 @@ Summary: Name: jumbled incrementer
 }</pre>
 
 Severity: 3
+Type: BUG
 Category: OCLint
 
 long class
@@ -768,6 +803,7 @@ Summary: Name: long class
 <dl><dt> LONG_CLASS</dt> <dd> The class size reporting threshold, default value is 1000.</dd></dl>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 long line
@@ -785,6 +821,7 @@ Summary: Name: long line
 <dl><dt> LONG_LINE</dt> <dd> The long line reporting threshold, default value is 100.</dd></dl>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 long method
@@ -804,6 +841,7 @@ Summary: Name: long method
 <dl><dt> LONG_METHOD</dt> <dd> The long method reporting threshold, default value is 50.</dd></dl>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 long variable name
@@ -821,6 +859,7 @@ Summary: Name: long variable name
 <dl><dt> LONG_VARIABLE_NAME</dt> <dd> The long variable name reporting threshold, default value is 20.</dd></dl>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 misplaced nil check
@@ -842,6 +881,7 @@ Summary: Name: misplaced nil check
 }</pre>
 
 Severity: 3
+Type: VULNERABILITY
 Category: OCLint
 
 misplaced null check
@@ -863,6 +903,7 @@ Summary: Name: misplaced null check
 }</pre>
 
 Severity: 3
+Type: VULNERABILITY
 Category: OCLint
 
 missing abstract method implementation
@@ -891,6 +932,7 @@ Summary: Name: missing abstract method implementation
 @end</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 missing break in switch statement
@@ -913,6 +955,7 @@ Summary: Name: missing break in switch statement
 }</pre>
 
 Severity: 2
+Type: BUG
 Category: OCLint
 
 missing call to base method
@@ -938,6 +981,7 @@ Summary: Name: missing call to base method
 @end</pre>
 
 Severity: 1
+Type: BUG
 Category: OCLint
 
 missing default in switch statements
@@ -959,6 +1003,7 @@ Summary: Name: missing default in switch statements
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 missing hash method
@@ -981,6 +1026,7 @@ Summary: Name: missing hash method
 @end</pre>
 
 Severity: 1
+Type: BUG
 Category: OCLint
 
 multiple unary operator
@@ -996,6 +1042,7 @@ Summary: Name: multiple unary operator
 }</pre>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 non case label in switch statement
@@ -1018,6 +1065,7 @@ Summary: Name: non case label in switch statement
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 parameter reassignment
@@ -1036,6 +1084,7 @@ Summary: Name: parameter reassignment
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 prefer early exits and continue
@@ -1072,6 +1121,7 @@ int *doSomething(int a) {
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 redundant conditional operator
@@ -1092,6 +1142,7 @@ Summary: Name: redundant conditional operator
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 redundant if statement
@@ -1114,6 +1165,7 @@ Summary: Name: redundant if statement
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 redundant local variable
@@ -1130,6 +1182,7 @@ Summary: Name: redundant local variable
 }               // can be simplified to return a * 2;</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 redundant nil check
@@ -1147,6 +1200,7 @@ Summary: Name: redundant nil check
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 return from finally block
@@ -1173,6 +1227,7 @@ Summary: Name: return from finally block
 }</pre>
 
 Severity: 3
+Type: VULNERABILITY
 Category: OCLint
 
 short variable name
@@ -1190,6 +1245,7 @@ Summary: Name: short variable name
 <dl><dt> SHORT_VARIABLE_NAME</dt> <dd> The short variable name reporting threshold, default value is 3.</dd></dl>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 throw exception from finally block
@@ -1212,6 +1268,7 @@ Summary: Name: throw exception from finally block
 }</pre>
 
 Severity: 3
+Type: VULNERABILITY
 Category: OCLint
 
 too few branches in switch statement
@@ -1234,6 +1291,7 @@ Summary: Name: too few branches in switch statement
 <dl><dt> MINIMUM_CASES_IN_SWITCH</dt> <dd> The reporting threshold for count of case statements in a switch statement, default value is 3.</dd></dl>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 too many fields
@@ -1259,6 +1317,7 @@ Summary: Name: too many fields
 <dl><dt> TOO_MANY_FIELDS</dt> <dd> The reporting threshold for too many fields, default value is 20.</dd></dl>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 too many methods
@@ -1291,6 +1350,7 @@ Summary: Name: too many methods
 <dl><dt> TOO_MANY_METHODS</dt> <dd> The reporting threshold for too many methods, default value is 30.</dd></dl>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 too many parameters
@@ -1310,6 +1370,7 @@ Summary: Name: too many parameters
 <p>Fowler, Martin (1999). <em>Refactoring: Improving the design of existing code.</em> Addison Wesley.</p>
 
 Severity: 3
+Type: CODE_SMELL
 Category: OCLint
 
 unnecessary default statement in covered switch statement
@@ -1338,6 +1399,7 @@ void aMethod(eValues a)
 }</pre>
 
 Severity: 2
+Type: CODE_SMELL
 Category: OCLint
 
 unnecessary else statement
@@ -1361,6 +1423,7 @@ Summary: Name: unnecessary else statement
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 unnecessary null check for dealloc
@@ -1377,6 +1440,7 @@ Summary: Name: unnecessary null check for dealloc
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 unused local variable
@@ -1395,6 +1459,7 @@ Summary: Name: unused local variable
 <pre>__attribute__((annotate("oclint:suppress[unused local variable]")))</pre>
 
 Severity: 0
+Type: CODE_SMELL
 Category: OCLint
 
 unused method parameter
@@ -1412,6 +1477,7 @@ Summary: Name: unused method parameter
 <pre>__attribute__((annotate("oclint:suppress[unused method parameter]")))</pre>
 
 Severity: 0
+Type: CODE_SMELL
 Category: OCLint
 
 use boxed expression
@@ -1431,6 +1497,7 @@ Summary: Name: use boxed expression
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 use container literal
@@ -1450,6 +1517,7 @@ Summary: Name: use container literal
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 use number literal
@@ -1469,6 +1537,7 @@ Summary: Name: use number literal
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 use object subscripting
@@ -1488,6 +1557,7 @@ Summary: Name: use object subscripting
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
 useless parentheses
@@ -1508,5 +1578,6 @@ Summary: Name: useless parentheses
 }</pre>
 
 Severity: 1
+Type: CODE_SMELL
 Category: OCLint
 
