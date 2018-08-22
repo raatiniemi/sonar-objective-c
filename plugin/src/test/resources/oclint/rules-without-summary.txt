@@ -9,4 +9,5 @@ unused method parameter
 Summary:
 
 Severity: 0
+Type: CODE_SMELL
 Category: OCLint

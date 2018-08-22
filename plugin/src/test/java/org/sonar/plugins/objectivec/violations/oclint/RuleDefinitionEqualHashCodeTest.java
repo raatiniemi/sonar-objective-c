@@ -129,6 +129,18 @@ public class RuleDefinitionEqualHashCodeTest {
                                         .setDescription("description")
                                         .setSeverity("severity-2")
                                         .build()
+                        },
+                        {
+                                "With different type",
+                                Boolean.FALSE,
+                                ruleDefinition,
+                                RuleDefinition.builder()
+                                        .setKey("key")
+                                        .setName("name")
+                                        .setDescription("description")
+                                        .setSeverity("severity")
+                                        .setType("BUG")
+                                        .build()
                         }
                 }
         );

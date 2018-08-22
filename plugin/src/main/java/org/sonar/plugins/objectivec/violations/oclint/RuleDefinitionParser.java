@@ -50,6 +50,10 @@ final class RuleDefinitionParser {
         return line.matches("Severity:.*");
     }
 
+    private static boolean isType(@Nonnull String line) {
+        return line.matches("Type:.*");
+    }
+
     private RuleDefinitionParser() {
     }
 
@@ -102,6 +106,14 @@ final class RuleDefinitionParser {
             if (isSeverity(line)) {
                 final String severity = line.substring("Severity: ".length());
                 builder.setSeverity(RuleSeverity.valueOfInt(Integer.valueOf(severity)).name());
+                inDescription = false;
+                previousLine = line;
+                continue;
+            }
+
+            if (isType(line)) {
+                final String type = line.substring("Type: ".length());
+                builder.setType(type);
                 inDescription = false;
                 previousLine = line;
                 continue;
