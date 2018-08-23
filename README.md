@@ -16,7 +16,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Complexity | YES | Uses [Lizard](https://github.com/terryyin/lizard) |
 | Design | NO | |
 | Documentation | YES | |
-| Duplications | YES | |
+| Duplications | NO | |
 | Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html) |
 | Size | YES | |
 | Tests | YES | |
