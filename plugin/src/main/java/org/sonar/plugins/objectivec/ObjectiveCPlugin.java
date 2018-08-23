@@ -24,7 +24,6 @@ import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.objectivec.complexity.LizardSensor;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
-import org.sonar.plugins.objectivec.cpd.ObjectiveCCpdMapping;
 import org.sonar.plugins.objectivec.surefire.SurefireSensor;
 import org.sonar.plugins.objectivec.violations.ObjectiveCProfile;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
@@ -72,8 +71,6 @@ public class ObjectiveCPlugin extends SonarPlugin {
 
     public List getExtensions() {
         return ImmutableList.of(ObjectiveC.class,
-
-                ObjectiveCCpdMapping.class,
 
                 ObjectiveCSquidSensor.class,
                 ObjectiveCProfile.class,
