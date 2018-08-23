@@ -25,6 +25,16 @@ internal data class Rule(
         val severity: Int
 ) {
     val key = name.toLowerCase()
+    val type = {
+        val rule = Rules.valueOf(sanitizeKey())
+        rulesToTypes[rule] ?: Types.CODE_SMELL
+    }()
+
+    private fun sanitizeKey() = key.replace("-", "_")
+            .replace("/", "_")
+            .replace(" ", "_")
+            .toUpperCase()
+
 
     companion object {
         fun from(category: RuleCategory, html: Element): Rule {

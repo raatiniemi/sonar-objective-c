@@ -19,6 +19,7 @@ package org.sonar.plugins.objectivec.violations.oclint;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.rules.RuleType;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
@@ -77,6 +78,7 @@ public final class OCLintRulesDefinition implements RulesDefinition {
                     newRule.setName(ruleDefinition.getName());
                     newRule.setSeverity(ruleDefinition.getSeverity());
                     newRule.setHtmlDescription(ruleDefinition.getDescription());
+                    newRule.setType(RuleType.valueOf(ruleDefinition.getType()));
                 });
     }
 }

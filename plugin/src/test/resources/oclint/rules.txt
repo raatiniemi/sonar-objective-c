@@ -43,4 +43,5 @@ Summary: Name: bitwise operator in conditional
 }</pre>
 
 Severity: 3
+Type: BUG
 Category: OCLint

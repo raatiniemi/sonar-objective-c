@@ -27,12 +27,14 @@ final class RuleDefinition {
     private final String name;
     private final String description;
     private final String severity;
+    private final String type;
 
     private RuleDefinition(@Nonnull Builder builder) {
         key = builder.key;
         name = builder.name;
         description = builder.description.toString();
         severity = builder.severity;
+        type = builder.type;
     }
 
     @Nonnull
@@ -60,6 +62,11 @@ final class RuleDefinition {
         return severity;
     }
 
+    @Nonnull
+    String getType() {
+        return type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -74,12 +81,13 @@ final class RuleDefinition {
         return Objects.equals(key, ruleDefinition.key) &&
                 Objects.equals(name, ruleDefinition.name) &&
                 Objects.equals(description, ruleDefinition.description) &&
-                Objects.equals(severity, ruleDefinition.severity);
+                Objects.equals(severity, ruleDefinition.severity) &&
+                Objects.equals(type, ruleDefinition.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, name, description, severity);
+        return Objects.hash(key, name, description, severity, type);
     }
 
     @Nonnull
@@ -90,6 +98,7 @@ final class RuleDefinition {
                 ", name='" + name + '\'' +
                 ", description='" + escapeHtml(description) + '\'' +
                 ", severity='" + severity + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 
@@ -98,6 +107,7 @@ final class RuleDefinition {
         private String name = "";
         private StringBuilder description = new StringBuilder();
         private String severity = "";
+        private String type = "CODE_SMELL";
 
         private Builder() {
         }
@@ -131,6 +141,21 @@ final class RuleDefinition {
         @Nonnull
         Builder setSeverity(@Nonnull String severity) {
             this.severity = severity;
+
+            return this;
+        }
+
+        @Nonnull
+        Builder setType(@Nonnull String type) {
+            switch (type) {
+                case "BUG":
+                case "VULNERABILITY":
+                    this.type = type;
+                    break;
+
+                default:
+                    this.type = "CODE_SMELL";
+            }
 
             return this;
         }

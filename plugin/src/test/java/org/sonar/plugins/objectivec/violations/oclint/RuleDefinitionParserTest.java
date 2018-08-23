@@ -63,6 +63,7 @@ public class RuleDefinitionParserTest {
                                         "    }\n" +
                                         "}</pre>\n"
                         )
+                        .setType("CODE_SMELL")
                         .build()
         );
         expected.add(
@@ -85,6 +86,7 @@ public class RuleDefinitionParserTest {
                                         "    }\n" +
                                         "}</pre>\n"
                         )
+                        .setType("BUG")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules.txt");
@@ -105,6 +107,7 @@ public class RuleDefinitionParserTest {
                         .setName("Unused method parameter")
                         .setSeverity("INFO")
                         .setDescription("<p></p>\n")
+                        .setType("CODE_SMELL")
                         .build()
         );
         Path rulesPath = Paths.get(resourcePath.toString(), "rules-without-summary.txt");
