@@ -63,6 +63,9 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ## Release history
 
+### 0.7.5
+* Categorize OCLint rules to code smell, bug, and vulnerability
+
 ### 0.7.4
 * [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/sonar-objective-c)
 
