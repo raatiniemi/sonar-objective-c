@@ -140,7 +140,7 @@ Summary: Name: broken nil check
 }</pre>
 
 Severity: 3
-Type: VULNERABILITY
+Type: BUG
 Category: OCLint
 
 broken null check
@@ -881,7 +881,7 @@ Summary: Name: misplaced nil check
 }</pre>
 
 Severity: 3
-Type: VULNERABILITY
+Type: BUG
 Category: OCLint
 
 misplaced null check

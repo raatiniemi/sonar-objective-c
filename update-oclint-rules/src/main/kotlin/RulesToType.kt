@@ -18,7 +18,7 @@ internal val rulesToTypes = mapOf(
         // Basic
         Rules.BITWISE_OPERATOR_IN_CONDITIONAL to Types.CODE_SMELL,
         Rules.BROKEN_NULL_CHECK to Types.VULNERABILITY,
-        Rules.BROKEN_NIL_CHECK to Types.VULNERABILITY,
+        Rules.BROKEN_NIL_CHECK to Types.BUG,
         Rules.BROKEN_ODDNESS_CHECK to Types.BUG,
         Rules.COLLAPSIBLE_IF_STATEMENTS to Types.CODE_SMELL,
         Rules.CONSTANT_CONDITIONAL_OPERATOR to Types.BUG,
@@ -29,7 +29,7 @@ internal val rulesToTypes = mapOf(
         Rules.GOTO_STATEMENT to Types.CODE_SMELL,
         Rules.JUMBLED_INCREMENTER to Types.BUG,
         Rules.MISPLACED_NULL_CHECK to Types.VULNERABILITY,
-        Rules.MISPLACED_NIL_CHECK to Types.VULNERABILITY,
+        Rules.MISPLACED_NIL_CHECK to Types.BUG,
         Rules.MULTIPLE_UNARY_OPERATOR to Types.CODE_SMELL,
         Rules.RETURN_FROM_FINALLY_BLOCK to Types.VULNERABILITY,
         Rules.THROW_EXCEPTION_FROM_FINALLY_BLOCK to Types.VULNERABILITY,
