@@ -16,7 +16,7 @@ This repository is a fork of the open source [SonarQube Plugin for Objective-C](
 | Complexity | YES | Uses [Lizard](https://github.com/terryyin/lizard) |
 | Design | NO | |
 | Documentation | YES | |
-| Duplications | YES | |
+| Duplications | NO | |
 | Issues | YES | Uses [OCLint](http://docs.oclint.org/en/dev/intro/installation.html) |
 | Size | YES | |
 | Tests | YES | |
@@ -65,6 +65,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### 0.7.5
 * Categorize OCLint rules to code smell, bug, and vulnerability
+* Support SonarQube 7.3
 
 ### 0.7.4
 * [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/sonar-objective-c)
