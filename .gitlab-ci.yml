@@ -32,7 +32,7 @@ analyse:
       - plugin/build
     expire_in: 1 day
   only:
-    - tags
+    - master
 
 deploy:
   stage: deploy
