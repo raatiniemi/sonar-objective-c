@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id 'org.sonarqube' version '2.6.2'
     id 'com.iadams.sonar-packaging' version '1.0-RC1'
     id 'com.jfrog.bintray' version '1.8.4'
 }
@@ -18,33 +17,6 @@ repositories {
 
 jacoco {
     toolVersion = '0.8.1'
-}
-
-sonarqube {
-    properties {
-        properties['sonar.organization'] = System.getenv('SONAR_ORGANIZATION')
-        properties['sonar.host.url'] = System.getenv('SONAR_HOST_URL')
-        properties['sonar.login'] = System.getenv('SONAR_LOGIN')
-
-        properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
-        properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
-        properties['sonar.projectVersion'] = "$projectVersion"
-
-        properties['sonar.sourceEncoding'] = 'UTF-8'
-        properties['sonar.scm.provider'] = 'git'
-
-        properties['sonar.java.source'] = sourceCompatibility
-        properties['sonar.java.target'] = targetCompatibility
-
-        properties['sonar.sources'] = 'src/main'
-        properties['sonar.tests'] = 'src/test'
-
-        properties['sonar.java.binaries'] = 'build/classes/java/main'
-        properties['sonar.java.test.binaries'] = 'build/classes/java/test'
-
-        properties['sonar.junit.reportPaths'] = 'build/test-results/test'
-        properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
-    }
 }
 
 pluginPackaging.dependsOn 'assemble'

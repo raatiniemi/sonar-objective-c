@@ -26,6 +26,7 @@ buildscript {
 
     dependencies {
         classpath 'com.cinnober.gradle:semver-git:2.3.1'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
     }
 }
 
@@ -34,3 +35,5 @@ apply plugin: 'com.cinnober.gradle.semver-git'
 ext {
     projectVersion = project.version
 }
+
+apply from: 'sonarqube.gradle'
