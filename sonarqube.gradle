@@ -23,7 +23,10 @@ sonarqube {
         properties['sonar.host.url'] = System.getenv('SONAR_HOST_URL')
         properties['sonar.login'] = System.getenv('SONAR_LOGIN')
 
+        properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
+        properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
         properties['sonar.projectVersion'] = "$projectVersion"
+
         properties['sonar.sourceEncoding'] = 'UTF-8'
         properties['sonar.scm.provider'] = 'git'
     }
@@ -32,9 +35,6 @@ sonarqube {
 project(':plugin') {
     sonarqube {
         properties {
-            properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
-            properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
-
             properties['sonar.java.source'] = JavaVersion.VERSION_1_8
             properties['sonar.java.target'] = JavaVersion.VERSION_1_8
 
