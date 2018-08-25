@@ -1,19 +1,13 @@
-buildscript {
-    ext {
-        nextVersion = "patch"
-    }
-}
-
 plugins {
     id 'java'
     id 'jacoco'
     id 'org.sonarqube' version '2.6.2'
     id 'com.iadams.sonar-packaging' version '1.0-RC1'
-    id 'com.cinnober.gradle.semver-git' version '2.3.1'
     id 'com.jfrog.bintray' version '1.8.4'
 }
 
 group 'me.raatiniemi.sonarqube'
+version projectVersion
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -34,7 +28,7 @@ sonarqube {
 
         properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
         properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
-        properties['sonar.projectVersion'] = version
+        properties['sonar.projectVersion'] = "$projectVersion"
 
         properties['sonar.sourceEncoding'] = 'UTF-8'
         properties['sonar.scm.provider'] = 'git'
