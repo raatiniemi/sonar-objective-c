@@ -49,3 +49,21 @@ project(':plugin') {
         }
     }
 }
+
+project(':update-oclint-rules') {
+    sonarqube {
+        properties {
+            properties['sonar.java.source'] = JavaVersion.VERSION_1_8
+            properties['sonar.java.target'] = JavaVersion.VERSION_1_8
+
+            properties['sonar.sources'] = 'src/main'
+            properties['sonar.tests'] = 'src/test'
+
+            properties['sonar.java.binaries'] = 'build/classes/kotlin/main'
+            properties['sonar.java.test.binaries'] = 'build/classes/kotlin/test'
+
+            properties['sonar.junit.reportPaths'] = 'build/test-results/test'
+            properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
+        }
+    }
+}
