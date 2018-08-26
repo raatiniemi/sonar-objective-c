@@ -27,7 +27,6 @@ import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class CoberturaSensorTest {
         helpers = FileSystemHelpers.create(context);
         sensor = new CoberturaSensor(settings.asConfig());
 
-        classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
+        classNameFile = helpers.createFile("TargetName/ClassName.m", "objc");
     }
 
     private void createReportFile(@Nonnull String relativePath) {
@@ -81,7 +80,7 @@ public class CoberturaSensorTest {
         sensor.describe(descriptor);
 
         assertEquals("Cobertura sensor", descriptor.name());
-        assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+        assertTrue(descriptor.languages().contains("objc"));
     }
 
     @Test

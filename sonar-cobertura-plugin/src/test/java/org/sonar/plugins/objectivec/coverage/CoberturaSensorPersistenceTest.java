@@ -26,7 +26,6 @@ import org.junit.runners.JUnit4;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.utils.log.LogTester;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,9 +56,9 @@ public class CoberturaSensorPersistenceTest {
         helpers = FileSystemHelpers.create(context);
         persistence = CoberturaSensorPersistence.create(context);
 
-        classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
-        secondClassNameFile = helpers.createFile("TargetName/SecondClassName.m", ObjectiveC.KEY);
-        anotherTargetClassNameFile = helpers.createFile("AnotherTargetName/ClassName.m", ObjectiveC.KEY);
+        classNameFile = helpers.createFile("TargetName/ClassName.m", "objc");
+        secondClassNameFile = helpers.createFile("TargetName/SecondClassName.m", "objc");
+        anotherTargetClassNameFile = helpers.createFile("AnotherTargetName/ClassName.m", "objc");
     }
 
     @Test
