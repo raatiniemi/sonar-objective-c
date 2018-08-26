@@ -21,6 +21,7 @@ dependencies {
     compile project(':sonar-lizard-plugin')
     compile project(':sonar-cobertura-plugin')
     compile project(':sonar-surefire-plugin')
+    compile project(':sonar-oclint-plugin')
     compile 'org.sonarsource.sslr:sslr-core:1.22'
     compile ('org.sonarsource.sslr-squid-bridge:sslr-squid-bridge:2.6.1') {
         exclude(module: 'sslr-core')
