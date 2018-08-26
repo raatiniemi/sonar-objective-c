@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'com.iadams.sonar-packaging' version '1.0-RC1'
 }
 
 group 'me.raatiniemi.sonarqube'
@@ -12,26 +11,6 @@ targetCompatibility = targetCompatibilityVersion
 repositories {
     mavenLocal()
     mavenCentral()
-}
-
-pluginPackaging.dependsOn 'assemble'
-
-sonarPackaging {
-    pluginKey = 'sonarobjectivec'
-    pluginClass = 'org.sonar.plugins.objectivec.ObjectiveCPlugin'
-    pluginName = 'ObjectiveC'
-    pluginDescription = 'Enables analysis of Objective-C projects into SonarQube.'
-    pluginLicense = 'GNU LGPL 3'
-    pluginUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
-    pluginSourceUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
-    pluginDevelopers = 'Tobias Raatiniemi'
-    pluginIssueTrackerUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
-    skipDependenciesPackaging = false
-    useChildFirstClassLoader = false
-    organization {
-        name = 'Raatiniemi'
-        url = 'https://raatiniemi.me'
-    }
 }
 
 dependencies {
