@@ -51,14 +51,6 @@ import java.util.List;
                 project = true
         ),
         @Property(
-                key = LizardSensor.REPORT_PATH_KEY,
-                defaultValue = LizardSensor.DEFAULT_REPORT_PATH,
-                name = "Path to Lizard complexity report",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
-        ),
-        @Property(
                 key = SurefireSensor.REPORT_PATH_KEY,
                 defaultValue = SurefireSensor.DEFAULT_REPORT_PATH,
                 name = "Path to Surefire test report(s)",

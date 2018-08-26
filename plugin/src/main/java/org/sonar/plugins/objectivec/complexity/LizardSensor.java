@@ -20,6 +20,8 @@ package org.sonar.plugins.objectivec.complexity;
 import me.raatiniemi.sonarqube.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.Properties;
+import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
@@ -37,13 +39,23 @@ import java.util.Set;
  * This sensor searches for the report generated from the tool Lizard
  * in order to save complexity metrics.
  */
+@Properties(
+        @Property(
+                key = LizardSensor.REPORT_PATH_KEY,
+                defaultValue = LizardSensor.DEFAULT_REPORT_PATH,
+                name = "Path to Lizard complexity report",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true
+        )
+)
 public class LizardSensor extends XmlReportSensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
 
     private static final String NAME = "Lizard complexity sensor";
 
-    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.reportPath";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard.xml";
+    static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".lizard.reportPath";
+    static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard.xml";
 
     @SuppressWarnings("WeakerAccess")
     public LizardSensor(@Nonnull Configuration configuration) {
