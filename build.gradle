@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2018 Tobias Raatiniemi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+buildscript {
+    ext {
+        nextVersion = 'patch'
+    }
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath 'com.cinnober.gradle:semver-git:2.3.1'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'gradle.plugin.com.iadams.plugins:gradle-sonar-packaging-plugin:1.0-RC1'
+    }
+}
+
+apply plugin: 'com.cinnober.gradle.semver-git'
+
+ext {
+    projectVersion = project.version
+
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+}
+
+apply from: 'jacoco.gradle'
+apply from: 'sonarqube.gradle'
+apply from: 'package.gradle'
+apply from: 'bintray.gradle'

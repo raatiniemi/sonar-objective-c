@@ -1,103 +1,16 @@
-buildscript {
-    ext {
-        nextVersion = "patch"
-    }
-}
-
 plugins {
     id 'java'
-    id 'jacoco'
-    id 'org.sonarqube' version '2.6.2'
-    id 'com.iadams.sonar-packaging' version '1.0-RC1'
-    id 'com.cinnober.gradle.semver-git' version '2.3.1'
-    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 group 'me.raatiniemi.sonarqube'
+version projectVersion
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = sourceCompatibilityVersion
+targetCompatibility = targetCompatibilityVersion
 
 repositories {
     mavenLocal()
     mavenCentral()
-}
-
-jacoco {
-    toolVersion = '0.8.1'
-}
-
-sonarqube {
-    properties {
-        properties['sonar.organization'] = System.getenv('SONAR_ORGANIZATION')
-        properties['sonar.host.url'] = System.getenv('SONAR_HOST_URL')
-        properties['sonar.login'] = System.getenv('SONAR_LOGIN')
-
-        properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
-        properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
-        properties['sonar.projectVersion'] = version
-
-        properties['sonar.sourceEncoding'] = 'UTF-8'
-        properties['sonar.scm.provider'] = 'git'
-
-        properties['sonar.java.source'] = sourceCompatibility
-        properties['sonar.java.target'] = targetCompatibility
-
-        properties['sonar.sources'] = 'src/main'
-        properties['sonar.tests'] = 'src/test'
-
-        properties['sonar.java.binaries'] = 'build/classes/java/main'
-        properties['sonar.java.test.binaries'] = 'build/classes/java/test'
-
-        properties['sonar.junit.reportPaths'] = 'build/test-results/test'
-        properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
-    }
-}
-
-pluginPackaging.dependsOn 'assemble'
-
-sonarPackaging {
-    pluginKey = 'sonarobjectivec'
-    pluginClass = 'org.sonar.plugins.objectivec.ObjectiveCPlugin'
-    pluginName = 'ObjectiveC'
-    pluginDescription = 'Enables analysis of Objective-C projects into SonarQube.'
-    pluginLicense = 'GNU LGPL 3'
-    pluginUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
-    pluginSourceUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
-    pluginDevelopers = 'Tobias Raatiniemi'
-    pluginIssueTrackerUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
-    skipDependenciesPackaging = false
-    useChildFirstClassLoader = false
-    organization {
-        name = 'Raatiniemi'
-        url = 'https://raatiniemi.me'
-    }
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-
-    configurations = ['archives']
-
-    pkg {
-        repo = 'maven'
-        name = 'sonar-objective-c-plugin'
-        userOrg = user
-        licenses = ['LGPL-3.0']
-        labels = ['sonarqube', 'objective-c']
-
-        websiteUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c'
-        issueTrackerUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c/issues'
-        vcsUrl = 'https://gitlab.com/raatiniemi/sonar-objective-c.git'
-
-        publicDownloadNumbers = true
-
-        version {
-            name = project.version
-            released = new Date()
-            vcsTag = project.version
-        }
-    }
 }
 
 dependencies {

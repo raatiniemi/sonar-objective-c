@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2018 Tobias Raatiniemi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+    properties {
+        properties['sonar.organization'] = System.getenv('SONAR_ORGANIZATION')
+        properties['sonar.host.url'] = System.getenv('SONAR_HOST_URL')
+        properties['sonar.login'] = System.getenv('SONAR_LOGIN')
+
+        properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
+        properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
+        properties['sonar.projectVersion'] = "$projectVersion"
+
+        properties['sonar.sourceEncoding'] = 'UTF-8'
+        properties['sonar.scm.provider'] = 'git'
+    }
+}
+
+project(':plugin') {
+    sonarqube {
+        properties {
+            properties['sonar.java.source'] = sourceCompatibilityVersion
+            properties['sonar.java.target'] = targetCompatibilityVersion
+
+            properties['sonar.sources'] = 'src/main'
+            properties['sonar.tests'] = 'src/test'
+
+            properties['sonar.java.binaries'] = 'build/classes/java/main'
+            properties['sonar.java.test.binaries'] = 'build/classes/java/test'
+
+            properties['sonar.junit.reportPaths'] = 'build/test-results/test'
+            properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
+        }
+    }
+}
+
+project(':update-oclint-rules') {
+    sonarqube {
+        properties {
+            properties['sonar.java.source'] = sourceCompatibilityVersion
+            properties['sonar.java.target'] = targetCompatibilityVersion
+
+            properties['sonar.sources'] = 'src/main'
+            properties['sonar.tests'] = 'src/test'
+
+            properties['sonar.java.binaries'] = 'build/classes/kotlin/main'
+            properties['sonar.java.test.binaries'] = 'build/classes/kotlin/test'
+
+            properties['sonar.junit.reportPaths'] = 'build/test-results/test'
+            properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
+        }
+    }
+}
