@@ -29,7 +29,6 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -64,8 +63,8 @@ public class SurefireSensorTest {
         context = SensorContextTester.create(temporaryFolder.getRoot());
         helpers = FileSystemHelpers.create(context);
 
-        firstClassNameTestFile = helpers.createFile("FirstClassNameTest.m", ObjectiveC.KEY);
-        secondClassNameTestFile = helpers.createFile("SecondClassNameTest.m", ObjectiveC.KEY);
+        firstClassNameTestFile = helpers.createFile("FirstClassNameTest.m", "objc");
+        secondClassNameTestFile = helpers.createFile("SecondClassNameTest.m", "objc");
     }
 
     private void createReportFile(@Nonnull String relativePath) {
@@ -95,7 +94,7 @@ public class SurefireSensorTest {
         sensor.describe(descriptor);
 
         assertEquals("Surefire sensor", descriptor.name());
-        assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+        assertTrue(descriptor.languages().contains("objc"));
     }
 
     @Test

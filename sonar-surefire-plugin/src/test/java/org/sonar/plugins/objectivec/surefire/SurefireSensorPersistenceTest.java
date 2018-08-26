@@ -27,7 +27,6 @@ import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,9 +57,9 @@ public class SurefireSensorPersistenceTest {
         helpers = FileSystemHelpers.create(context);
         persistence = SurefireSensorPersistence.create(context);
 
-        classNameTestFile = helpers.createTestFile("TestTarget/ClassNameTest.m", ObjectiveC.KEY);
-        firstClassNameTestFile = helpers.createTestFile("TestTarget/FirstClassNameTest.m", ObjectiveC.KEY);
-        secondClassNameTestFile = helpers.createTestFile("TestTarget/SecondClassNameTest.m", ObjectiveC.KEY);
+        classNameTestFile = helpers.createTestFile("TestTarget/ClassNameTest.m", "objc");
+        firstClassNameTestFile = helpers.createTestFile("TestTarget/FirstClassNameTest.m", "objc");
+        secondClassNameTestFile = helpers.createTestFile("TestTarget/SecondClassNameTest.m", "objc");
     }
 
     @Nullable
@@ -172,7 +171,7 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.success("BaseClassName_CategoryNameTests", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("BaseClassName_CategoryNameTests", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        DefaultInputFile categoryNameTestFile = helpers.createTestFile("TestTarget/BaseClassName+CategoryNameTests.m", ObjectiveC.KEY);
+        DefaultInputFile categoryNameTestFile = helpers.createTestFile("TestTarget/BaseClassName+CategoryNameTests.m", "objc");
         helpers.addToFileSystem(categoryNameTestFile);
 
         persistence.saveMeasures(Collections.singletonList(testReport));
@@ -187,7 +186,7 @@ public class SurefireSensorPersistenceTest {
         TestCase testCase = TestCase.success("ClassNameTest", "testMethodName", 0.002);
         TestSuite testSuite = TestSuite.create("ClassNameTest", Collections.singletonList(testCase));
         TestReport testReport = TestReport.create("TestTarget.xctest", Collections.singletonList(testSuite));
-        helpers.addToFileSystem(helpers.createTestFile("ClassNameTest.m", ObjectiveC.KEY));
+        helpers.addToFileSystem(helpers.createTestFile("ClassNameTest.m", "objc"));
 
         persistence.saveMeasures(Collections.singletonList(testReport));
 
