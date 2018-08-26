@@ -19,4 +19,6 @@ dependencies {
     compile 'ant:ant:1.6'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.1'
+    testImplementation 'org.slf4j:slf4j-api:1.7.21'
 }
