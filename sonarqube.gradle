@@ -35,8 +35,8 @@ sonarqube {
 project(':plugin') {
     sonarqube {
         properties {
-            properties['sonar.java.source'] = JavaVersion.VERSION_1_8
-            properties['sonar.java.target'] = JavaVersion.VERSION_1_8
+            properties['sonar.java.source'] = sourceCompatibilityVersion
+            properties['sonar.java.target'] = targetCompatibilityVersion
 
             properties['sonar.sources'] = 'src/main'
             properties['sonar.tests'] = 'src/test'
@@ -53,8 +53,8 @@ project(':plugin') {
 project(':update-oclint-rules') {
     sonarqube {
         properties {
-            properties['sonar.java.source'] = JavaVersion.VERSION_1_8
-            properties['sonar.java.target'] = JavaVersion.VERSION_1_8
+            properties['sonar.java.source'] = sourceCompatibilityVersion
+            properties['sonar.java.target'] = targetCompatibilityVersion
 
             properties['sonar.sources'] = 'src/main'
             properties['sonar.tests'] = 'src/test'

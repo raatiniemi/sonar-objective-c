@@ -34,6 +34,9 @@ apply plugin: 'com.cinnober.gradle.semver-git'
 
 ext {
     projectVersion = project.version
+
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
 }
 
 apply from: 'sonarqube.gradle'
