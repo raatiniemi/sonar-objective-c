@@ -15,7 +15,6 @@ cache:
     - .gradle
     - build
     - plugin/build
-    - update-oclint-rules/build
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
