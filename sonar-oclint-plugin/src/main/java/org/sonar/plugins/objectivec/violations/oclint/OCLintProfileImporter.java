@@ -16,15 +16,14 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import java.io.Reader;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileImporter;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
+
+import java.io.Reader;
 
 public final class OCLintProfileImporter extends ProfileImporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintProfileImporter.class);
@@ -35,7 +34,7 @@ public final class OCLintProfileImporter extends ProfileImporter {
     public OCLintProfileImporter(final XMLProfileParser xmlProfileParser) {
         super(OCLintRulesDefinition.REPOSITORY_KEY, OCLintRulesDefinition.REPOSITORY_NAME);
 
-        setSupportedLanguages(ObjectiveC.KEY);
+        setSupportedLanguages("objc");
         profileParser = xmlProfileParser;
     }
 

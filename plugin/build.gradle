@@ -23,18 +23,6 @@ dependencies {
     compile project(':sonar-surefire-plugin')
     compile project(':sonar-oclint-plugin')
     compile 'org.sonarsource.sslr:sslr-core:1.22'
-    compile ('org.sonarsource.sslr-squid-bridge:sslr-squid-bridge:2.6.1') {
-        exclude(module: 'sslr-core')
-        exclude(module: 'sslr-xpath')
-        exclude(module: 'sonar-plugin-api')
-        exclude(module: 'picocontainer')
-        exclude(module: 'slf4j-api')
-        exclude(module: 'jcl-over-slf4j')
-    }
-
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'commons-io:commons-io:2.5'
-    compile 'com.google.guava:guava:17.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.1'

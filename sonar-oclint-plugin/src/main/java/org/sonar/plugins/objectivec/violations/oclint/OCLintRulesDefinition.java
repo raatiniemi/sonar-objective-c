@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.rules.RuleType;
 import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 import javax.annotation.Nonnull;
@@ -58,7 +57,7 @@ public final class OCLintRulesDefinition implements RulesDefinition {
 
     @Nonnull
     NewRepository createRepository(@Nonnull Context context) {
-        return context.createRepository(REPOSITORY_KEY, ObjectiveC.KEY)
+        return context.createRepository(REPOSITORY_KEY, "objc")
                 .setName(REPOSITORY_NAME);
     }
 

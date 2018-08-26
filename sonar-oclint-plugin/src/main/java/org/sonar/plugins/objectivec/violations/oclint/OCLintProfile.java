@@ -16,18 +16,16 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
+import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.utils.ValidationMessages;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
-import com.google.common.io.Closeables;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 public final class OCLintProfile extends ProfileDefinition {
     public static final String PROFILE_PATH = "/org/sonar/plugins/oclint/profile-oclint.xml";
@@ -50,7 +48,7 @@ public final class OCLintProfile extends ProfileDefinition {
 
             final RulesProfile profile = profileImporter.importProfile(config, messages);
             profile.setName(OCLintRulesDefinition.REPOSITORY_NAME);
-            profile.setLanguage(ObjectiveC.KEY);
+            profile.setLanguage("objc");
 
             return profile;
         } finally {

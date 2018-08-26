@@ -31,7 +31,6 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -101,12 +100,12 @@ public class OCLintSensorTest {
         sensor.describe(descriptor);
 
         assertEquals("OCLint violation sensor", descriptor.name());
-        assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+        assertTrue(descriptor.languages().contains("objc"));
     }
 
     @Test
     public void execute_withDefaultReportPath() {
-        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
+        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", "objc"));
         createReportFile("sonar-reports/oclint.xml");
 
         sensor.execute(context);
@@ -119,7 +118,7 @@ public class OCLintSensorTest {
     @Test
     public void execute_withReportPath() {
         settings.setProperty("sonar.objectivec.oclint.reportPath", "oclint.xml");
-        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", ObjectiveC.KEY));
+        helpers.addToFileSystem(helpers.createFile("RASqlite/RASqlite.m", "objc"));
         createReportFile("oclint.xml");
 
         sensor.execute(context);

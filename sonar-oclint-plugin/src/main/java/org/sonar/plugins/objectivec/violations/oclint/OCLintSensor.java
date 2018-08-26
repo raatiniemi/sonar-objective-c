@@ -23,7 +23,6 @@ import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
@@ -56,7 +55,7 @@ public final class OCLintSensor extends XmlReportSensor {
     @Override
     public void describe(@Nonnull SensorDescriptor descriptor) {
         descriptor.name(NAME);
-        descriptor.onlyOnLanguage(ObjectiveC.KEY);
+        descriptor.onlyOnLanguage("objc");
     }
 
     @Override

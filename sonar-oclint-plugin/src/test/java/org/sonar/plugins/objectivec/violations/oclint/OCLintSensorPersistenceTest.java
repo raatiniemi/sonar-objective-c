@@ -31,7 +31,6 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.LogTester;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -60,7 +59,7 @@ public class OCLintSensorPersistenceTest {
 
         persistence = OCLintSensorPersistence.create(context);
 
-        classNameFile = helpers.createFile("TargetName/ClassName.m", ObjectiveC.KEY);
+        classNameFile = helpers.createFile("TargetName/ClassName.m", "objc");
 
         List<NewActiveRule> rules = new ArrayList<>();
         ActiveRulesBuilder builder = new ActiveRulesBuilder();
