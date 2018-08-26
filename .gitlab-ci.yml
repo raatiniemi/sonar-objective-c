@@ -8,10 +8,22 @@ stages:
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
+cache:
+  key: "$CI_COMMIT_REF_NAME"
+  policy: push
+  paths:
+    - .gradle
+    - build
+    - plugin/build
+    - update-oclint-rules/build
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
 build:
   stage: build
   script:
-    - gradle clean pluginPackaging
+    - gradle clean --build-cache pluginPackaging
   artifacts:
     paths:
       - plugin/build
