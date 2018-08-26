@@ -51,15 +51,8 @@ public class ObjectiveCPlugin implements Plugin {
         context.addExtensions(Collections.unmodifiableCollection(extensions));
     }
 
-    // Global Objective C constants
-    public static final String FALSE = "false";
-
     public static final String FILE_SUFFIXES_KEY = "sonar.objectivec.file.suffixes";
     public static final String FILE_SUFFIXES_DEFVALUE = "h,m,mm";
 
     public static final String PROPERTY_PREFIX = "sonar.objectivec";
-
-    public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
-    public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
-
 }
