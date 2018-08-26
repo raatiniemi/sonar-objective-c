@@ -18,6 +18,8 @@
 package org.sonar.plugins.objectivec.coverage;
 
 import me.raatiniemi.sonarqube.XmlReportSensor;
+import org.sonar.api.Properties;
+import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
@@ -32,10 +34,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Properties(
+        @Property(
+                key = CoberturaSensor.REPORT_PATH_KEY,
+                defaultValue = CoberturaSensor.DEFAULT_REPORT_PATH,
+                name = "Path to Cobertura test coverage report(s)",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true
+        )
+)
 public final class CoberturaSensor extends XmlReportSensor {
     private static final String NAME = "Cobertura sensor";
-    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".cobertura.reportPath";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/cobertura.xml";
+    static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".cobertura.reportPath";
+    static final String DEFAULT_REPORT_PATH = "sonar-reports/cobertura.xml";
 
     @SuppressWarnings("WeakerAccess")
     public CoberturaSensor(@Nonnull Configuration configuration) {
