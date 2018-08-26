@@ -41,14 +41,6 @@ import java.util.List;
                 description = "Relative to projects' root.",
                 global = false,
                 project = true
-        ),
-        @Property(
-                key = SurefireSensor.REPORT_PATH_KEY,
-                defaultValue = SurefireSensor.DEFAULT_REPORT_PATH,
-                name = "Path to Surefire test report(s)",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
         )
 })
 public class ObjectiveCPlugin extends SonarPlugin {
