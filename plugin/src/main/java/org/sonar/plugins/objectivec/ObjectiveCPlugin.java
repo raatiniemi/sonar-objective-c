@@ -17,8 +17,7 @@
  */
 package org.sonar.plugins.objectivec;
 
-import com.google.common.collect.ImmutableList;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.Plugin;
 import org.sonar.plugins.objectivec.complexity.LizardSensor;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
@@ -29,25 +28,27 @@ import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintRulesDefinition;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class ObjectiveCPlugin extends SonarPlugin {
+public class ObjectiveCPlugin implements Plugin {
+    @Override
+    public void define(@Nonnull Context context) {
+        List<Class> extensions = new ArrayList<>();
+        extensions.add(ObjectiveC.class);
+        extensions.add(ObjectiveCSquidSensor.class);
+        extensions.add(ObjectiveCProfile.class);
+        extensions.add(SurefireSensor.class);
+        extensions.add(CoberturaSensor.class);
+        extensions.add(OCLintRulesDefinition.class);
+        extensions.add(OCLintSensor.class);
+        extensions.add(OCLintProfile.class);
+        extensions.add(OCLintProfileImporter.class);
+        extensions.add(LizardSensor.class);
 
-    public List getExtensions() {
-        return ImmutableList.of(ObjectiveC.class,
-
-                ObjectiveCSquidSensor.class,
-                ObjectiveCProfile.class,
-                SurefireSensor.class,
-                CoberturaSensor.class,
-
-                OCLintRulesDefinition.class,
-                OCLintSensor.class,
-                OCLintProfile.class,
-                OCLintProfileImporter.class,
-
-                LizardSensor.class
-                );
+        context.addExtensions(Collections.unmodifiableCollection(extensions));
     }
 
     // Global Objective C constants
