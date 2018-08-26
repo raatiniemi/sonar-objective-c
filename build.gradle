@@ -27,6 +27,7 @@ buildscript {
     dependencies {
         classpath 'com.cinnober.gradle:semver-git:2.3.1'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
@@ -41,3 +42,4 @@ ext {
 
 apply from: 'jacoco.gradle'
 apply from: 'sonarqube.gradle'
+apply from: 'bintray.gradle'
