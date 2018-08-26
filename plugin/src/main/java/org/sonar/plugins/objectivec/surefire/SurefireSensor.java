@@ -23,7 +23,6 @@ import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
-import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
@@ -46,7 +45,7 @@ import java.util.stream.Collectors;
         )
 )
 public class SurefireSensor extends XmlReportSensor {
-    static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".surefire.reportPath";
+    static final String REPORT_PATH_KEY = "sonar.objectivec.surefire.reportPath";
     static final String DEFAULT_REPORT_PATH = "sonar-reports/TEST-*.xml";
 
     private static final String NAME = "Surefire sensor";

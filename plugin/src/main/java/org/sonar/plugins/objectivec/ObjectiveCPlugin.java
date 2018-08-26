@@ -53,6 +53,4 @@ public class ObjectiveCPlugin implements Plugin {
 
     public static final String FILE_SUFFIXES_KEY = "sonar.objectivec.file.suffixes";
     public static final String FILE_SUFFIXES_DEFVALUE = "h,m,mm";
-
-    public static final String PROPERTY_PREFIX = "sonar.objectivec";
 }
