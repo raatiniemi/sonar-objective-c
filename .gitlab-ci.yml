@@ -8,7 +8,7 @@ stages:
 build:
   stage: build
   script:
-    - gradle :plugin:clean :plugin:pluginPackaging
+    - gradle clean pluginPackaging
   artifacts:
     paths:
       - plugin/build
@@ -17,7 +17,7 @@ build:
 test:
   stage: test
   script:
-    - gradle :plugin:test
+    - gradle test
   artifacts:
     paths:
       - plugin/build
@@ -37,7 +37,7 @@ analyse:
 deploy:
   stage: deploy
   script:
-    - gradle :plugin:bintrayUpload
+    - gradle bintrayUpload
   artifacts:
     paths:
       - plugin/build
