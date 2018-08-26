@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+version projectVersion
+
+sourceCompatibility = sourceCompatibilityVersion
+targetCompatibility = targetCompatibilityVersion
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}

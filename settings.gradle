@@ -1,2 +1,3 @@
 include ':plugin', ':update-oclint-rules'
 include 'sonar-plugin-core'
+include 'sonar-lizard-plugin'
