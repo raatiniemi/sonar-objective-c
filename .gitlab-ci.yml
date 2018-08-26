@@ -33,19 +33,11 @@ test:
   stage: test
   script:
     - gradle test
-  artifacts:
-    paths:
-      - plugin/build
-    expire_in: 1 day
 
 analyse:
   stage: test
   script:
     - gradle sonarqube
-  artifacts:
-    paths:
-      - plugin/build
-    expire_in: 1 day
   only:
     - master
 
@@ -53,9 +45,5 @@ deploy:
   stage: deploy
   script:
     - gradle bintrayUpload
-  artifacts:
-    paths:
-      - plugin/build
-    expire_in: 1 day
   only:
     - tags
