@@ -12,5 +12,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly project(':sonar-plugin-core')
+
     testImplementation 'junit:junit:4.12'
 }
