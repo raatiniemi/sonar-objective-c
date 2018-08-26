@@ -29,7 +29,6 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.measure.Measure;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,8 +62,8 @@ public class LizardSensorTest {
         helpers = FileSystemHelpers.create(context);
         sensor = new LizardSensor(settings.asConfig());
 
-        firstClassNameFile = helpers.createFile("TargetName/FirstClassNameTest.m", ObjectiveC.KEY);
-        secondClassNameFile = helpers.createFile("TargetName/SecondClassNameTest.m", ObjectiveC.KEY);
+        firstClassNameFile = helpers.createFile("TargetName/FirstClassNameTest.m", "objc");
+        secondClassNameFile = helpers.createFile("TargetName/SecondClassNameTest.m", "objc");
     }
 
     private void createReportFile(@Nonnull String relativePath) {
@@ -97,7 +96,7 @@ public class LizardSensorTest {
         sensor.describe(descriptor);
 
         assertEquals("Lizard complexity sensor", descriptor.name());
-        assertTrue(descriptor.languages().contains(ObjectiveC.KEY));
+        assertTrue(descriptor.languages().contains("objc"));
     }
 
     @Test
