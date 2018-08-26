@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public abstract class SensorPersistence<T> implements SensorMeasurePersistence<T
             return Optional.empty();
         }
 
-        if (!language.toLowerCase().contains(ObjectiveC.KEY)) {
+        if (!language.toLowerCase().contains("objc")) {
             LOGGER.debug("{} belong to language {}", name, language);
             return Optional.empty();
         }

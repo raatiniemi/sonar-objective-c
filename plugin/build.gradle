@@ -31,7 +31,6 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'commons-io:commons-io:2.5'
     compile 'com.google.guava:guava:17.0'
-    compile 'ant:ant:1.6'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.1'
