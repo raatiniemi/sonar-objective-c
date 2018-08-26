@@ -18,8 +18,6 @@
 package org.sonar.plugins.objectivec;
 
 import com.google.common.collect.ImmutableList;
-import org.sonar.api.Properties;
-import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.objectivec.complexity.LizardSensor;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
@@ -33,16 +31,6 @@ import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
 
 import java.util.List;
 
-@Properties({
-        @Property(
-                key = OCLintSensor.REPORT_PATH_KEY,
-                defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
-                name = "Path to OCLint violation report",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
-        )
-})
 public class ObjectiveCPlugin extends SonarPlugin {
 
     public List getExtensions() {

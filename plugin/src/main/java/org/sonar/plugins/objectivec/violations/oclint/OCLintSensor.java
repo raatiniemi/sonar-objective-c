@@ -18,6 +18,8 @@
 package org.sonar.plugins.objectivec.violations.oclint;
 
 import me.raatiniemi.sonarqube.XmlReportSensor;
+import org.sonar.api.Properties;
+import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
@@ -31,9 +33,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Properties(
+        @Property(
+                key = OCLintSensor.REPORT_PATH_KEY,
+                defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
+                name = "Path to OCLint violation report",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true
+        )
+)
 public final class OCLintSensor extends XmlReportSensor {
-    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.reportPath";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/oclint.xml";
+    static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".oclint.reportPath";
+    static final String DEFAULT_REPORT_PATH = "sonar-reports/oclint.xml";
 
     private static final String NAME = "OCLint violation sensor";
 
