@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'jacoco'
     id 'com.iadams.sonar-packaging' version '1.0-RC1'
     id 'com.jfrog.bintray' version '1.8.4'
 }
@@ -14,10 +13,6 @@ targetCompatibility = targetCompatibilityVersion
 repositories {
     mavenLocal()
     mavenCentral()
-}
-
-jacoco {
-    toolVersion = '0.8.1'
 }
 
 pluginPackaging.dependsOn 'assemble'

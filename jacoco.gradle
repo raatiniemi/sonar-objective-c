@@ -15,29 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-buildscript {
-    ext {
-        nextVersion = 'patch'
-    }
+allprojects {
+    apply plugin: 'jacoco'
 
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.cinnober.gradle:semver-git:2.3.1'
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
+    jacoco {
+        toolVersion = '0.8.1'
     }
 }
-
-apply plugin: 'com.cinnober.gradle.semver-git'
-
-ext {
-    projectVersion = project.version
-
-    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
-    targetCompatibilityVersion = JavaVersion.VERSION_1_8
-}
-
-apply from: 'jacoco.gradle'
-apply from: 'sonarqube.gradle'
