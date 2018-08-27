@@ -65,6 +65,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### 0.7.5
 * Categorize OCLint rules to code smell, bug, and vulnerability
+* Move Cobertura, Lizard, OCLint, and surefire into separate modules
 * Support SonarQube 7.3
 
 ### 0.7.4

@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,10 +17,7 @@
  */
 package org.sonar.plugins.objectivec;
 
-import com.google.common.collect.ImmutableList;
-import org.sonar.api.Properties;
-import org.sonar.api.Property;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.Plugin;
 import org.sonar.plugins.objectivec.complexity.LizardSensor;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
@@ -31,70 +28,29 @@ import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintRulesDefinition;
 import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@Properties({
-        @Property(
-                key = CoberturaSensor.REPORT_PATH_KEY,
-                defaultValue = CoberturaSensor.DEFAULT_REPORT_PATH,
-                name = "Path to Cobertura test coverage report(s)",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
-        ),
-        @Property(
-                key = OCLintSensor.REPORT_PATH_KEY,
-                defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
-                name = "Path to OCLint violation report",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
-        ),
-        @Property(
-                key = LizardSensor.REPORT_PATH_KEY,
-                defaultValue = LizardSensor.DEFAULT_REPORT_PATH,
-                name = "Path to Lizard complexity report",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
-        ),
-        @Property(
-                key = SurefireSensor.REPORT_PATH_KEY,
-                defaultValue = SurefireSensor.DEFAULT_REPORT_PATH,
-                name = "Path to Surefire test report(s)",
-                description = "Relative to projects' root.",
-                global = false,
-                project = true
-        )
-})
-public class ObjectiveCPlugin extends SonarPlugin {
+public class ObjectiveCPlugin implements Plugin {
+    @Override
+    public void define(@Nonnull Context context) {
+        List<Class> extensions = new ArrayList<>();
+        extensions.add(ObjectiveC.class);
+        extensions.add(ObjectiveCSquidSensor.class);
+        extensions.add(ObjectiveCProfile.class);
+        extensions.add(SurefireSensor.class);
+        extensions.add(CoberturaSensor.class);
+        extensions.add(OCLintRulesDefinition.class);
+        extensions.add(OCLintSensor.class);
+        extensions.add(OCLintProfile.class);
+        extensions.add(OCLintProfileImporter.class);
+        extensions.add(LizardSensor.class);
 
-    public List getExtensions() {
-        return ImmutableList.of(ObjectiveC.class,
-
-                ObjectiveCSquidSensor.class,
-                ObjectiveCProfile.class,
-                SurefireSensor.class,
-                CoberturaSensor.class,
-
-                OCLintRulesDefinition.class,
-                OCLintSensor.class,
-                OCLintProfile.class,
-                OCLintProfileImporter.class,
-
-                LizardSensor.class
-                );
+        context.addExtensions(Collections.unmodifiableCollection(extensions));
     }
-
-    // Global Objective C constants
-    public static final String FALSE = "false";
 
     public static final String FILE_SUFFIXES_KEY = "sonar.objectivec.file.suffixes";
     public static final String FILE_SUFFIXES_DEFVALUE = "h,m,mm";
-
-    public static final String PROPERTY_PREFIX = "sonar.objectivec";
-
-    public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
-    public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
-
 }
