@@ -31,6 +31,7 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.LogTester;
+import org.sonar.api.utils.log.LoggerLevel;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -101,7 +102,7 @@ public class OCLintSensorPersistenceTest {
         persistence.saveMeasures(violations);
 
         assertTrue(context.allIssues().isEmpty());
-        assertTrue(logTester.logs().isEmpty());
+        assertTrue(logTester.logs(LoggerLevel.WARN).contains("No path available for TargetName/ClassName.m"));
     }
 
     @Test
@@ -184,6 +185,6 @@ public class OCLintSensorPersistenceTest {
         persistence.saveMeasures(violations);
 
         assertFalse(isIssuePresent("deep nested block"));
-        assertTrue(logTester.logs().isEmpty());
+        assertTrue(logTester.logs(LoggerLevel.DEBUG).contains("TargetName/ClassName.swift belong to language swift"));
     }
 }

@@ -33,6 +33,16 @@ final class SampleReport {
         return new SampleReport(filename, value);
     }
 
+    @Nonnull
+    String getFilename() {
+        return filename;
+    }
+
+    @Nonnull
+    String getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

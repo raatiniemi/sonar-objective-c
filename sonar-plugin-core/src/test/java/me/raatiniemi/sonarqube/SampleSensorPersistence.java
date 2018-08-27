@@ -17,12 +17,17 @@
 
 package me.raatiniemi.sonarqube;
 
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.Metric;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Optional;
 
-public class SampleSensorPersistence extends SensorPersistence<String> {
+public class SampleSensorPersistence extends SensorPersistence<SampleReport> {
     private SampleSensorPersistence(@Nonnull SensorContext context) {
         super(context);
     }
@@ -33,6 +38,20 @@ public class SampleSensorPersistence extends SensorPersistence<String> {
     }
 
     @Override
-    public void saveMeasures(@Nonnull Collection<String> measures) {
+    public void saveMeasures(@Nonnull Collection<SampleReport> measures) {
+        for (SampleReport measure : measures) {
+            FilePredicate filePredicate = getContext().fileSystem().predicates().hasPath(measure.getFilename());
+            Optional<InputFile> inputFile = buildInputFile(filePredicate, measure.getFilename());
+            if (!inputFile.isPresent()) {
+                continue;
+            }
+
+            //noinspection unchecked
+            getContext().newMeasure()
+                    .on(inputFile.get())
+                    .forMetric((Metric) CoreMetrics.COMPLEXITY)
+                    .withValue(Integer.parseInt(measure.getValue()))
+                    .save();
+        }
     }
 }
