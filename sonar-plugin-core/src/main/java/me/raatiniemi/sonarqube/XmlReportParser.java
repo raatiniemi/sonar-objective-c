@@ -16,8 +16,8 @@
  */
 package me.raatiniemi.sonarqube;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class XmlReportParser<T> implements ReportParser<T> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlReportParser.class);
+    private static final Logger LOGGER = Loggers.get(XmlReportParser.class);
 
     private final DocumentBuilder documentBuilder;
 

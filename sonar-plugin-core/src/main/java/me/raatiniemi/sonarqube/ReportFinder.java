@@ -73,7 +73,7 @@ final class ReportFinder implements ReportPatternFinder {
         scanner.scan();
 
         String[] basenameForFiles = scanner.getIncludedFiles();
-        if (basenameForFiles == null || basenameForFiles.length == 0) {
+        if (basenameForFiles.length == 0) {
             return Stream.empty();
         }
 
