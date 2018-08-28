@@ -69,7 +69,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 * Support SonarQube 7.3
 
 ### 0.7.4
-* [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/sonar-objective-c)
+* [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/sonar-objective-c-plugin)
 
 ### 0.7.3
 * Include resources when building plugin, was not included since converting to Gradle
