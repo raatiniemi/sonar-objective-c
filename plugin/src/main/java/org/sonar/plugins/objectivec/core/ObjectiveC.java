@@ -37,6 +37,7 @@ public class ObjectiveC extends AbstractLanguage {
         this.configuration = configuration;
     }
 
+    @Nonnull
     @Override
     public String[] getFileSuffixes() {
         String[] suffixes = filterEmptyStrings(configuration.getStringArray(ObjectiveCPlugin.FILE_SUFFIXES_KEY));
