@@ -31,6 +31,7 @@ public class ObjectiveC extends AbstractLanguage {
 
     private Configuration configuration;
 
+    @SuppressWarnings("WeakerAccess")
     public ObjectiveC(@Nonnull Configuration configuration) {
         super(KEY, "Objective-C");
 
