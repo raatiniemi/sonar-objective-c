@@ -17,14 +17,13 @@
  */
 package org.sonar.plugins.objectivec.core;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.stream.Stream;
 
 public class ObjectiveC extends AbstractLanguage {
     public static final String KEY = "objc";
@@ -47,13 +46,10 @@ public class ObjectiveC extends AbstractLanguage {
     }
 
     @Nonnull
-    private String[] filterEmptyStrings(String[] stringArray) {
-        List<String> nonEmptyStrings = Lists.newArrayList();
-        for (String string : stringArray) {
-          if (StringUtils.isNotBlank(string.trim())) {
-            nonEmptyStrings.add(string.trim());
-          }
-        }
-        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
-      }
+    private String[] filterEmptyStrings(String[] suffixes) {
+        return Stream.of(suffixes)
+                .map(String::trim)
+                .filter(StringUtils::isNotBlank)
+                .toArray(String[]::new);
+    }
 }
