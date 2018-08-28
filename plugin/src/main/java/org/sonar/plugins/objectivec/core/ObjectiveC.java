@@ -54,4 +54,14 @@ public class ObjectiveC extends AbstractLanguage {
                 .filter(StringUtils::isNotBlank)
                 .toArray(String[]::new);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
