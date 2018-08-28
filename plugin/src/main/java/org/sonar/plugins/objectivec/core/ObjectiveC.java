@@ -40,12 +40,13 @@ public class ObjectiveC extends AbstractLanguage {
 
     public String[] getFileSuffixes() {
         String[] suffixes = filterEmptyStrings(configuration.getStringArray(ObjectiveCPlugin.FILE_SUFFIXES_KEY));
-        if (suffixes == null || suffixes.length == 0) {
+        if (suffixes.length == 0) {
             suffixes = StringUtils.split(ObjectiveCPlugin.FILE_SUFFIXES_DEFVALUE, ",");
         }
         return suffixes;
     }
 
+    @Nonnull
     private String[] filterEmptyStrings(String[] stringArray) {
         List<String> nonEmptyStrings = Lists.newArrayList();
         for (String string : stringArray) {
