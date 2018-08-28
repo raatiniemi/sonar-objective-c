@@ -1,6 +1,6 @@
-/**
- * backelite-sonar-objective-c-plugin - Enables analysis of Objective-C projects into SonarQube.
+/*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,41 +17,51 @@
  */
 package org.sonar.plugins.objectivec.core;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.stream.Stream;
 
 public class ObjectiveC extends AbstractLanguage {
     public static final String KEY = "objc";
 
     private Configuration configuration;
 
+    @SuppressWarnings("WeakerAccess")
     public ObjectiveC(@Nonnull Configuration configuration) {
         super(KEY, "Objective-C");
 
         this.configuration = configuration;
     }
 
+    @Nonnull
+    @Override
     public String[] getFileSuffixes() {
         String[] suffixes = filterEmptyStrings(configuration.getStringArray(ObjectiveCPlugin.FILE_SUFFIXES_KEY));
-        if (suffixes == null || suffixes.length == 0) {
+        if (suffixes.length == 0) {
             suffixes = StringUtils.split(ObjectiveCPlugin.FILE_SUFFIXES_DEFVALUE, ",");
         }
         return suffixes;
     }
 
-    private String[] filterEmptyStrings(String[] stringArray) {
-        List<String> nonEmptyStrings = Lists.newArrayList();
-        for (String string : stringArray) {
-          if (StringUtils.isNotBlank(string.trim())) {
-            nonEmptyStrings.add(string.trim());
-          }
-        }
-        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
-      }
+    @Nonnull
+    private String[] filterEmptyStrings(String[] suffixes) {
+        return Stream.of(suffixes)
+                .map(String::trim)
+                .filter(StringUtils::isNotBlank)
+                .toArray(String[]::new);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
