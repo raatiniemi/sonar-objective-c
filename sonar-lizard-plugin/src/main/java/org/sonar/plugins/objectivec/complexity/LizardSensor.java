@@ -17,7 +17,7 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import me.raatiniemi.sonarqube.XmlReportSensor;
+import me.raatiniemi.sonar.core.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.Properties;

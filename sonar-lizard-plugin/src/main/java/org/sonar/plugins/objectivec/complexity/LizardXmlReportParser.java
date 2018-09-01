@@ -17,7 +17,7 @@
  */
 package org.sonar.plugins.objectivec.complexity;
 
-import me.raatiniemi.sonarqube.XmlReportParser;
+import me.raatiniemi.sonar.core.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

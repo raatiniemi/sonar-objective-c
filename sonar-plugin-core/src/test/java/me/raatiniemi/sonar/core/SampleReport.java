@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.raatiniemi.sonarqube;
+package me.raatiniemi.sonar.core;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

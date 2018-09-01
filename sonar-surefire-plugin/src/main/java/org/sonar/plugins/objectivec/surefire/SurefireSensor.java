@@ -17,7 +17,7 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
-import me.raatiniemi.sonarqube.XmlReportSensor;
+import me.raatiniemi.sonar.core.XmlReportSensor;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;

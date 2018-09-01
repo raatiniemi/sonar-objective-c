@@ -14,18 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.raatiniemi.sonarqube;
+package me.raatiniemi.sonar.core;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Optional;
+import java.util.Set;
 
 /**
- * Parse report files and return the result.
- *
- * @param <T> Type of the report result.
+ * Collect report files matching defined pattern.
  */
-public interface ReportParser<T> {
+interface ReportPatternFinder {
+    /**
+     * Find multiple report files matching pattern.
+     *
+     * @param pattern Pattern to use for matching report files.
+     * @return Report files matching specified pattern.
+     */
     @Nonnull
-    Optional<T> parse(@Nonnull File reportFile);
+    Set<File> findReportsMatching(@Nonnull String pattern);
+
+    /**
+     * Find first report file matching pattern.
+     *
+     * @param pattern Pattern to use for matching report files.
+     * @return Report file matching specified pattern.
+     */
+    @Nonnull
+    Optional<File> findReportMatching(@Nonnull String pattern);
 }

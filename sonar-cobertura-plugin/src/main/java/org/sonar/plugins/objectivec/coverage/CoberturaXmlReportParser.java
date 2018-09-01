@@ -16,7 +16,7 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import me.raatiniemi.sonarqube.XmlReportParser;
+import me.raatiniemi.sonar.core.XmlReportParser;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,7 +16,7 @@
  */
 package org.sonar.plugins.objectivec.surefire;
 
-import me.raatiniemi.sonarqube.XmlReportParser;
+import me.raatiniemi.sonar.core.XmlReportParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

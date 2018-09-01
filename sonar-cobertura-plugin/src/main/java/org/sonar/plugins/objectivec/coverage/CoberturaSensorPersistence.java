@@ -16,7 +16,7 @@
  */
 package org.sonar.plugins.objectivec.coverage;
 
-import me.raatiniemi.sonarqube.SensorPersistence;
+import me.raatiniemi.sonar.core.SensorPersistence;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;

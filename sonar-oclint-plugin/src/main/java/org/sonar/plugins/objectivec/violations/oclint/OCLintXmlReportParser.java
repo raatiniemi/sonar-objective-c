@@ -16,7 +16,7 @@
  */
 package org.sonar.plugins.objectivec.violations.oclint;
 
-import me.raatiniemi.sonarqube.XmlReportParser;
+import me.raatiniemi.sonar.core.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
