@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.objectivec.coverage;
+package me.raatiniemi.sonar.cobertura;
 
 import me.raatiniemi.sonar.core.FileSystemHelpers;
 import org.junit.Before;

@@ -14,32 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.objectivec.coverage;
+package me.raatiniemi.sonar.cobertura;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
-final class CoberturaClass {
-    private final String filename;
-    private final Set<CoberturaLine> lines;
+final class CoberturaPackage {
+    private final String name;
+    private final Set<CoberturaClass> classes;
 
-    private CoberturaClass(@Nonnull String filename, @Nonnull List<CoberturaLine> lines) {
-        this.filename = filename;
-        this.lines = new LinkedHashSet<>(lines);
-    }
-
-    static CoberturaClass from(@Nonnull String filename, @Nonnull List<CoberturaLine> lines) {
-        return new CoberturaClass(filename, lines);
+    private CoberturaPackage(@Nonnull String name, @Nonnull Set<CoberturaClass> classes) {
+        this.name = name;
+        this.classes = classes;
     }
 
     @Nonnull
-    String getFilename() {
-        return filename;
+    static CoberturaPackage from(@Nonnull String name, @Nonnull List<CoberturaClass> classes) {
+        return new CoberturaPackage(name, new LinkedHashSet<>(classes));
     }
 
     @Nonnull
-    Collection<CoberturaLine> getLines() {
-        return Collections.unmodifiableCollection(lines);
+    Collection<CoberturaClass> getClasses() {
+        return Collections.unmodifiableCollection(classes);
     }
 
     @Override
@@ -48,25 +44,25 @@ final class CoberturaClass {
             return true;
         }
 
-        if (!(o instanceof CoberturaClass)) {
+        if (!(o instanceof CoberturaPackage)) {
             return false;
         }
 
-        CoberturaClass other = (CoberturaClass) o;
-        return Objects.equals(filename, other.filename) &&
-                Objects.equals(lines, other.lines);
+        CoberturaPackage that = (CoberturaPackage) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(classes, that.classes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(filename, lines);
+        return Objects.hash(name, classes);
     }
 
     @Override
     public String toString() {
-        return "CoberturaClass{" +
-                "filename='" + filename + '\'' +
-                ", lines=" + lines +
+        return "CoberturaPackage{" +
+                "name='" + name + '\'' +
+                ", classes=" + classes +
                 '}';
     }
 }

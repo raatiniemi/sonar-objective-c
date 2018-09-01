@@ -20,7 +20,7 @@ package org.sonar.plugins.objectivec;
 import org.sonar.api.Plugin;
 import me.raatiniemi.sonar.lizard.LizardSensor;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
-import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
+import me.raatiniemi.sonar.cobertura.CoberturaSensor;
 import org.sonar.plugins.objectivec.surefire.SurefireSensor;
 import org.sonar.plugins.objectivec.violations.ObjectiveCProfile;
 import me.raatiniemi.sonar.oclint.OCLintProfile;
