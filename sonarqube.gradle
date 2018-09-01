@@ -23,7 +23,7 @@ sonarqube {
         properties['sonar.host.url'] = System.getenv('SONAR_HOST_URL')
         properties['sonar.login'] = System.getenv('SONAR_LOGIN')
 
-        properties['sonar.projectKey'] = 'me.raatiniemi.sonarqube:objective-c'
+        properties['sonar.projectKey'] = 'me.raatiniemi.sonar:objectivec'
         properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
         properties['sonar.projectVersion'] = "$projectVersion"
 
@@ -35,6 +35,8 @@ sonarqube {
 project(':sonar-plugin-core') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar:core'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 
@@ -53,6 +55,8 @@ project(':sonar-plugin-core') {
 project(':sonar-lizard-plugin') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar:lizard'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 
@@ -71,6 +75,8 @@ project(':sonar-lizard-plugin') {
 project(':sonar-cobertura-plugin') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar:cobertura'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 
@@ -89,6 +95,8 @@ project(':sonar-cobertura-plugin') {
 project(':sonar-surefire-plugin') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar:surefire'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 
@@ -107,6 +115,8 @@ project(':sonar-surefire-plugin') {
 project(':sonar-oclint-plugin') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar:oclint'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 
@@ -125,6 +135,8 @@ project(':sonar-oclint-plugin') {
 project(':plugin') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar.objectivec:plugin'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 
@@ -143,6 +155,8 @@ project(':plugin') {
 project(':update-oclint-rules') {
     sonarqube {
         properties {
+            properties['sonar.projectKey'] = 'me.raatiniemi.sonar.oclint:rules'
+
             properties['sonar.java.source'] = sourceCompatibilityVersion
             properties['sonar.java.target'] = targetCompatibilityVersion
 

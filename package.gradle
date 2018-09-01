@@ -22,7 +22,7 @@ project(':plugin') {
 
     sonarPackaging {
         pluginKey = 'sonarobjectivec'
-        pluginClass = 'org.sonar.plugins.objectivec.ObjectiveCPlugin'
+        pluginClass = 'me.raatiniemi.sonar.objectivec.ObjectiveCPlugin'
         pluginName = 'ObjectiveC'
         pluginDescription = 'Enables analysis of Objective-C projects into SonarQube.'
         pluginLicense = 'GNU LGPL 3'

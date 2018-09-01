@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'me.raatiniemi.sonarqube'
+group 'me.raatiniemi.sonar'
 version projectVersion
 
 sourceCompatibility = sourceCompatibilityVersion
