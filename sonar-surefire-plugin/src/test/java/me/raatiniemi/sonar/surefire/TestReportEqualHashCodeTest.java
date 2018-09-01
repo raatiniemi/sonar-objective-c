@@ -1,4 +1,4 @@
-package org.sonar.plugins.objectivec.surefire;
+package me.raatiniemi.sonar.surefire;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
