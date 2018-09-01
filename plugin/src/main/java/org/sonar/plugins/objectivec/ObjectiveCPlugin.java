@@ -23,10 +23,10 @@ import org.sonar.plugins.objectivec.core.ObjectiveC;
 import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
 import org.sonar.plugins.objectivec.surefire.SurefireSensor;
 import org.sonar.plugins.objectivec.violations.ObjectiveCProfile;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintRulesDefinition;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
+import me.raatiniemi.sonar.oclint.OCLintProfile;
+import me.raatiniemi.sonar.oclint.OCLintProfileImporter;
+import me.raatiniemi.sonar.oclint.OCLintRulesDefinition;
+import me.raatiniemi.sonar.oclint.OCLintSensor;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

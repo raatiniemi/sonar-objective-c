@@ -25,8 +25,8 @@ import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
-import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
+import me.raatiniemi.sonar.oclint.OCLintProfile;
+import me.raatiniemi.sonar.oclint.OCLintProfileImporter;
 
 import java.io.InputStreamReader;
 import java.io.Reader;

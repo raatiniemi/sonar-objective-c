@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.objectivec.violations.oclint;
+package me.raatiniemi.sonar.oclint;
 
 import me.raatiniemi.sonar.core.XmlReportSensor;
 import org.sonar.api.Properties;

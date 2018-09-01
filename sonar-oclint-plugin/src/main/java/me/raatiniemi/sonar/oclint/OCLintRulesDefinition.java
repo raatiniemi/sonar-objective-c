@@ -1,5 +1,6 @@
 /*
  * Copyright © 2012 OCTO Technology, Backelite (${email})
+ * Copyright (c) 2018 Tobias Raatiniemi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.objectivec.violations.oclint;
+package me.raatiniemi.sonar.oclint;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public final class OCLintRulesDefinition implements RulesDefinition {
     static final String REPOSITORY_NAME = REPOSITORY_KEY;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
-    private static final String RULES_FILE = "/org/sonar/plugins/oclint/rules.txt";
+    private static final String RULES_FILE = "/me/raatiniemi/sonar/oclint/rules.txt";
 
     private static final RuleDefinitionParser parser = RuleDefinitionParser.create();
 
@@ -50,7 +51,7 @@ public final class OCLintRulesDefinition implements RulesDefinition {
             LOGGER.error("Failed to load OCLint rules", e);
         }
 
-        SqaleXmlLoader.load(repository, "/com/sonar/sqale/oclint-model.xml");
+        SqaleXmlLoader.load(repository, "/me/raatiniemi/sonar/oclint/sqale/oclint-model.xml");
 
         repository.done();
     }

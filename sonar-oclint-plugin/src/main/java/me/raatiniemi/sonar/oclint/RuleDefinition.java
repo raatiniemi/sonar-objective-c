@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.sonar.plugins.objectivec.violations.oclint;
+package me.raatiniemi.sonar.oclint;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
