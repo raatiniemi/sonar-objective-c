@@ -1,4 +1,4 @@
-package org.sonar.plugins.objectivec.complexity;
+package me.raatiniemi.sonar.lizard;
 
 import me.raatiniemi.sonar.core.FileSystemHelpers;
 import org.junit.Before;
