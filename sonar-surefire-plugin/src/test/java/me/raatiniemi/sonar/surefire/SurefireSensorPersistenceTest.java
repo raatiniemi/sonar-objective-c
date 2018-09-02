@@ -16,7 +16,7 @@
  */
 package me.raatiniemi.sonar.surefire;
 
-import me.raatiniemi.sonar.core.FileSystemHelpers;
+import me.raatiniemi.sonar.core.internal.FileSystemHelpers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
