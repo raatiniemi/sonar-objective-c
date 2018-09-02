@@ -52,7 +52,7 @@ In order to get Bundler to install dependencies without root access, it have to
 be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### Install plugin on server
-* Download the [release from bintray](https://bintray.com/raatiniemi/sonar-objective-c-plugin)
+* Download the [release from bintray](https://bintray.com/raatiniemi/maven/sonar-objective-c-plugin)
 * Copy the `jar` into the `$SONARQUBE_HOME/extensions/plugins` directory
 * Restart the SonarQube server
 
@@ -70,7 +70,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 * Move module code into new packages to ensure consistency
 
 ### 0.7.4
-* [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/sonar-objective-c-plugin)
+* [Publish packaged plugin release to bintray](https://bintray.com/raatiniemi/maven/sonar-objective-c-plugin)
 
 ### 0.7.3
 * Include resources when building plugin, was not included since converting to Gradle
