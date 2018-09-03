@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.raatiniemi.sonar.core;
+package me.raatiniemi.sonar.core.xml;
 
+import me.raatiniemi.sonar.core.ReportFinder;
+import me.raatiniemi.sonar.core.ReportPatternFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.sensor.Sensor;

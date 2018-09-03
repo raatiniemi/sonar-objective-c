@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.raatiniemi.sonar.core;
+package me.raatiniemi.sonar.core.xml;
 
+import me.raatiniemi.sonar.core.ReportParser;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.w3c.dom.Document;

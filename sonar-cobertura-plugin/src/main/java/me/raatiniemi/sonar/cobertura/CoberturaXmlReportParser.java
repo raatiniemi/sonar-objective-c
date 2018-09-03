@@ -16,7 +16,7 @@
  */
 package me.raatiniemi.sonar.cobertura;
 
-import me.raatiniemi.sonar.core.XmlReportParser;
+import me.raatiniemi.sonar.core.xml.XmlReportParser;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

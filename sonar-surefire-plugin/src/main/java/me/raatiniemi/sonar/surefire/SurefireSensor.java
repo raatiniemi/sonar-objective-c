@@ -17,7 +17,7 @@
  */
 package me.raatiniemi.sonar.surefire;
 
-import me.raatiniemi.sonar.core.XmlReportSensor;
+import me.raatiniemi.sonar.core.xml.XmlReportSensor;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.batch.sensor.SensorContext;

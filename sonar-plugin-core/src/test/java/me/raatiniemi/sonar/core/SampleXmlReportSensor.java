@@ -17,6 +17,7 @@
 
 package me.raatiniemi.sonar.core;
 
+import me.raatiniemi.sonar.core.xml.XmlReportSensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;

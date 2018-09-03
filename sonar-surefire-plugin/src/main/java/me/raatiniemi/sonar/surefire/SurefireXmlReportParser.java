@@ -16,7 +16,7 @@
  */
 package me.raatiniemi.sonar.surefire;
 
-import me.raatiniemi.sonar.core.XmlReportParser;
+import me.raatiniemi.sonar.core.xml.XmlReportParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

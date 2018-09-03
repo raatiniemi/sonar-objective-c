@@ -16,7 +16,7 @@
  */
 package me.raatiniemi.sonar.oclint;
 
-import me.raatiniemi.sonar.core.XmlReportParser;
+import me.raatiniemi.sonar.core.xml.XmlReportParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

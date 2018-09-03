@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Collect report files matching defined pattern.
  */
-interface ReportPatternFinder {
+public interface ReportPatternFinder {
     /**
      * Find multiple report files matching pattern.
      *

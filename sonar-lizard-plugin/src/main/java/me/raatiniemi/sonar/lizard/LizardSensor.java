@@ -17,7 +17,7 @@
  */
 package me.raatiniemi.sonar.lizard;
 
-import me.raatiniemi.sonar.core.XmlReportSensor;
+import me.raatiniemi.sonar.core.xml.XmlReportSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.Properties;
