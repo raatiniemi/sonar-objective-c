@@ -32,26 +32,6 @@ sonarqube {
     }
 }
 
-project(':sonar-plugin-core') {
-    sonarqube {
-        properties {
-            properties['sonar.projectKey'] = 'me.raatiniemi.sonar:core'
-
-            properties['sonar.java.source'] = sourceCompatibilityVersion
-            properties['sonar.java.target'] = targetCompatibilityVersion
-
-            properties['sonar.sources'] = 'src/main'
-            properties['sonar.tests'] = 'src/test'
-
-            properties['sonar.java.binaries'] = 'build/classes/java/main'
-            properties['sonar.java.test.binaries'] = 'build/classes/java/test'
-
-            properties['sonar.junit.reportPaths'] = 'build/test-results/test'
-            properties['sonar.jacoco.reportPaths'] = fileTree(dir: 'build', includes: ['**/*.exec'])
-        }
-    }
-}
-
 project(':sonar-lizard-plugin') {
     sonarqube {
         properties {
