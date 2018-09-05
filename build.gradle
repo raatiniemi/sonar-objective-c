@@ -44,6 +44,14 @@ ext {
     targetCompatibilityVersion = JavaVersion.VERSION_1_8
 }
 
+allprojects {
+    repositories {
+        maven {
+            url  "https://dl.bintray.com/raatiniemi/maven"
+        }
+    }
+}
+
 apply from: 'jacoco.gradle'
 apply from: 'sonarqube.gradle'
 apply from: 'package.gradle'
