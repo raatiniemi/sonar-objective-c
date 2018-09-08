@@ -63,19 +63,12 @@ public class OCLintXmlReportParserTest {
     @Test
     public void parse_withDocumentWithEmptyStartLine() {
         Path documentPath = Paths.get(resourcePath.toString(), "oclint-with-empty-start-line.xml");
-        Violation expected = Violation.builder()
-                .setPath("RASqlite/RASqlite.m")
-                .setStartLine(1)
-                .setRule("ivar assignment outside accessors or init")
-                .setMessage("")
-                .build();
+        List<Violation> expected = buildExpectedViolationsForSample();
 
         Optional<List<Violation>> actual = parser.parse(documentPath.toFile());
 
         assertTrue(actual.isPresent());
-        List<Violation> violations = actual.get();
-        assertEquals(1, violations.size());
-        assertEquals(expected, violations.get(0));
+        assertEquals(expected, actual.get());
         assertTrue(logTester.logs(LoggerLevel.WARN).contains("Found empty start line in report for path: RASqlite/RASqlite.m"));
     }
 

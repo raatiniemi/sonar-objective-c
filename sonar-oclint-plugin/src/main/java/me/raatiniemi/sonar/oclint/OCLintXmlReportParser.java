@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
     private static final Logger LOGGER = Loggers.get(OCLintSensorPersistence.class);
@@ -39,24 +38,12 @@ final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
     private static final String RULE = "rule";
     private static final String MESSAGE = "message";
 
-    private static final Function<Element, Stream<Violation>> buildViolationFromElement = element -> {
-        try {
-            return Stream.of(buildViolation(element));
-        } catch (NumberFormatException e) {
-            LOGGER.warn("Found empty start line in report for path: {}", parsePath(element));
-            return Stream.empty();
-        }
-    };
-
-    @Nonnull
-    private static Violation buildViolation(@Nonnull Element element) {
-        return Violation.builder()
-                .setPath(parsePath(element))
-                .setStartLine(parseStartLine(element))
-                .setRule(parseRule(element))
-                .setMessage(parseMessage(element))
-                .build();
-    }
+    private static final Function<Element, Violation> buildViolation = element -> Violation.builder()
+            .setPath(parsePath(element))
+            .setStartLine(parseStartLine(element))
+            .setRule(parseRule(element))
+            .setMessage(parseMessage(element))
+            .build();
 
     @Nonnull
     private static String parsePath(@Nonnull Element element) {
@@ -64,7 +51,12 @@ final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
     }
 
     private static int parseStartLine(@Nonnull Element element) {
-        return Integer.parseInt(element.getAttribute(START_LINE));
+        try {
+            return Integer.parseInt(element.getAttribute(START_LINE));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Found empty start line in report for path: {}", parsePath(element));
+            return 1;
+        }
     }
 
     @Nonnull
@@ -96,7 +88,7 @@ final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
     protected List<Violation> parse(@Nonnull final Document document) {
         return getViolationElements(document)
                 .stream()
-                .flatMap(buildViolationFromElement)
+                .map(buildViolation)
                 .collect(Collectors.toList());
     }
 }

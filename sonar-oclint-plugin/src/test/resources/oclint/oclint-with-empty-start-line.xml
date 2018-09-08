@@ -23,12 +23,14 @@
         <property name="files with violations">6</property>
         <property name="number of priority 1 violations">0</property>
         <property name="number of priority 2 violations">1</property>
-        <property name="number of priority 3 violations">1</property>
+        <property name="number of priority 3 violations">2</property>
     </summary>
     <violations>
         <violation path="RASqlite/RASqlite.m" startline="" startcolumn="28" endline="1" endcolumn="5" rule="deep nested block" category="size" priority="3" message="Block depth of 6 exceeds limit of 5">
         </violation>
         <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="17" endline="1" endcolumn="17" rule="ivar assignment outside accessors or init" category="convention" priority="2" message="">
+        </violation>
+        <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="59" endline="1" endcolumn="65" rule="unused method parameter" category="unused" priority="3" message="The parameter 'commit' is unused.">
         </violation>
     </violations>
     <clangstaticanalyzer>
