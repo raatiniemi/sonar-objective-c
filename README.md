@@ -63,6 +63,10 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ## Release history
 
+### 0.7.6
+* Extract [core module to separate project](https://gitlab.com/raatiniemi/sonar-plugin-core)
+* Use default value for empty startline in OCLint reports
+
 ### 0.7.5
 * Categorize OCLint rules to code smell, bug, and vulnerability
 * Move Cobertura, Lizard, OCLint, and surefire into separate modules
