@@ -17,6 +17,8 @@
 package me.raatiniemi.sonar.oclint;
 
 import me.raatiniemi.sonar.core.xml.XmlReportParser;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -28,6 +30,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
+    private static final Logger LOGGER = Loggers.get(OCLintSensorPersistence.class);
+
     private static final String VIOLATION = "violation";
     private static final String PATH = "path";
     private static final String START_LINE = "startline";
@@ -47,7 +51,12 @@ final class OCLintXmlReportParser extends XmlReportParser<List<Violation>> {
     }
 
     private static int parseStartLine(@Nonnull Element element) {
-        return Integer.parseInt(element.getAttribute(START_LINE));
+        try {
+            return Integer.parseInt(element.getAttribute(START_LINE));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Found empty start line in report for path: {}", parsePath(element));
+            return 1;
+        }
     }
 
     @Nonnull

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2018 Tobias Raatiniemi
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<oclint version="0.13" url="http://oclint.org">
+    <datetime>2018-02-10T08:50:19Z</datetime>
+    <summary>
+        <property name="number of files">9</property>
+        <property name="files with violations">6</property>
+        <property name="number of priority 1 violations">0</property>
+        <property name="number of priority 2 violations">1</property>
+        <property name="number of priority 3 violations">2</property>
+    </summary>
+    <violations>
+        <violation path="RASqlite/RASqlite.m" startline="" startcolumn="28" endline="1" endcolumn="5" rule="deep nested block" category="size" priority="3" message="Block depth of 6 exceeds limit of 5">
+        </violation>
+        <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="17" endline="1" endcolumn="17" rule="ivar assignment outside accessors or init" category="convention" priority="2" message="">
+        </violation>
+        <violation path="RASqlite/RASqlite.m" startline="1" startcolumn="59" endline="1" endcolumn="65" rule="unused method parameter" category="unused" priority="3" message="The parameter 'commit' is unused.">
+        </violation>
+    </violations>
+    <clangstaticanalyzer>
+    </clangstaticanalyzer>
+</oclint>
