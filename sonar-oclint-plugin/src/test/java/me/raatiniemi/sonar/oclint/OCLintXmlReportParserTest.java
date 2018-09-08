@@ -17,9 +17,12 @@
 package me.raatiniemi.sonar.oclint;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.sonar.api.utils.log.LogTester;
+import org.sonar.api.utils.log.LoggerLevel;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,6 +37,9 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class OCLintXmlReportParserTest {
+    @Rule
+    public LogTester logTester = new LogTester();
+
     private final Path resourcePath = Paths.get("src", "test", "resources", "oclint");
 
     private OCLintXmlReportParser parser;
@@ -52,6 +58,25 @@ public class OCLintXmlReportParserTest {
 
         assertTrue(actual.isPresent());
         assertTrue(actual.get().isEmpty());
+    }
+
+    @Test
+    public void parse_withDocumentWithEmptyStartLine() {
+        Path documentPath = Paths.get(resourcePath.toString(), "oclint-with-empty-start-line.xml");
+        Violation expected = Violation.builder()
+                .setPath("RASqlite/RASqlite.m")
+                .setStartLine(1)
+                .setRule("ivar assignment outside accessors or init")
+                .setMessage("")
+                .build();
+
+        Optional<List<Violation>> actual = parser.parse(documentPath.toFile());
+
+        assertTrue(actual.isPresent());
+        List<Violation> violations = actual.get();
+        assertEquals(1, violations.size());
+        assertEquals(expected, violations.get(0));
+        assertTrue(logTester.logs(LoggerLevel.WARN).contains("Found empty start line in report for path: RASqlite/RASqlite.m"));
     }
 
     @Test
