@@ -24,7 +24,7 @@ sonarqube {
         properties['sonar.login'] = System.getenv('SONAR_LOGIN')
 
         properties['sonar.projectKey'] = 'me.raatiniemi.sonar:objectivec'
-        properties['sonar.projectName'] = 'Objective-C Sonar Plugin'
+        properties['sonar.projectName'] = 'sonar-objective-c-plugin'
         properties['sonar.projectVersion'] = "$projectVersion"
 
         properties['sonar.sourceEncoding'] = 'UTF-8'
