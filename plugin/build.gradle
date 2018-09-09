@@ -18,7 +18,7 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:1.7.21'
 
     compile 'me.raatiniemi.sonar:core:0.0.1'
-    compile project(':sonar-lizard-plugin')
+    compile 'me.raatiniemi.sonar:lizard:0.0.1'
     compile project(':sonar-cobertura-plugin')
     compile project(':sonar-surefire-plugin')
     compile project(':sonar-oclint-plugin')
