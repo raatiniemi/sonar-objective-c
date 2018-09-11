@@ -1,4 +1,3 @@
 include ':plugin', ':update-oclint-rules'
 include 'sonar-cobertura-plugin'
-include 'sonar-surefire-plugin'
 include 'sonar-oclint-plugin'
