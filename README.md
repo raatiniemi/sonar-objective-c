@@ -66,6 +66,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 ### 0.7.6
 * Extract [core module to separate project](https://gitlab.com/raatiniemi/sonar-plugin-core)
 * Extract [lizard module to separate project](https://gitlab.com/raatiniemi/sonar-lizard-plugin)
+* Extract [surfire module to separate project](https://gitlab.com/raatiniemi/sonar-surefire-plugin)
 * Use default value for empty startline in OCLint reports
 
 ### 0.7.5
