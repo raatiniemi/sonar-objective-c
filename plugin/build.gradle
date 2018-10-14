@@ -19,7 +19,7 @@ dependencies {
 
     compile 'me.raatiniemi.sonar:core:0.0.1'
     compile 'me.raatiniemi.sonar:lizard:0.0.1'
-    compile project(':sonar-cobertura-plugin')
+    compile 'me.raatiniemi.sonar:cobertura:0.0.1'
     compile 'me.raatiniemi.sonar:surefire:0.0.1'
     compile 'me.raatiniemi.sonar:oclint:0.0.3'
     compile 'org.sonarsource.sslr:sslr-core:1.22'
