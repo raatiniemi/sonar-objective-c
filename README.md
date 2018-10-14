@@ -65,6 +65,7 @@ be configured with a new path, `bundle config --global path ~/.bundle/gems`.
 
 ### 0.7.7
 * Extract [oclint module to separate project](https://gitlab.com/raatiniemi/sonar-oclint-plugin)
+* Extract [cobertura module to separate project](https://gitlab.com/raatiniemi/sonar-cobertura-plugin)
 
 ### 0.7.6
 * Extract [core module to separate project](https://gitlab.com/raatiniemi/sonar-plugin-core)
