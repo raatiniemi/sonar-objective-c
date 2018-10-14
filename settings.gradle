@@ -1,3 +1,2 @@
-include ':plugin', ':update-oclint-rules'
+include ':plugin'
 include 'sonar-cobertura-plugin'
-include 'sonar-oclint-plugin'
