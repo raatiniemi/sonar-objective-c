@@ -28,6 +28,7 @@ import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
 
+import javax.annotation.Nonnull;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -36,7 +37,7 @@ public class ObjectiveCProfile extends ProfileDefinition {
 
     private final OCLintProfileImporter ocLintProfileImporter;
 
-    public ObjectiveCProfile(final OCLintProfileImporter ocLintProfileImporter) {
+    public ObjectiveCProfile(@Nonnull OCLintProfileImporter ocLintProfileImporter) {
         this.ocLintProfileImporter = ocLintProfileImporter;
     }
 
