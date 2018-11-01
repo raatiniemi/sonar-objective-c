@@ -18,15 +18,15 @@
 package me.raatiniemi.sonar.objectivec.violations;
 
 import com.google.common.io.Closeables;
+import me.raatiniemi.sonar.objectivec.core.ObjectiveC;
+import me.raatiniemi.sonar.oclint.OCLintProfile;
+import me.raatiniemi.sonar.oclint.OCLintProfileImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
-import me.raatiniemi.sonar.objectivec.core.ObjectiveC;
-import me.raatiniemi.sonar.oclint.OCLintProfile;
-import me.raatiniemi.sonar.oclint.OCLintProfileImporter;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
