@@ -45,7 +45,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 
-public class ObjectiveCSquidSensor implements Sensor {
+class ObjectiveCSquidSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCSquidSensor.class);
 
     private final FileSystem fileSystem;

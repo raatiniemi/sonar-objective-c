@@ -93,7 +93,7 @@ public enum ObjectiveCPunctuator implements TokenType {
 
     private final String value;
 
-    private ObjectiveCPunctuator(String word) {
+    ObjectiveCPunctuator(String word) {
         this.value = word;
     }
 

@@ -31,7 +31,7 @@ public class ObjectiveCGrammar extends Grammar {
     public Rule booleanLiteral;
     public Rule stringLiteral;
 
-    public Rule program;
+    protected Rule program;
 
     public Rule sourceElements;
     public Rule sourceElement;

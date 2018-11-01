@@ -23,7 +23,7 @@ import static com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.o2n;
 
 import me.raatiniemi.sonar.objectivec.language.api.ObjectiveCGrammar;
 
-public class ObjectiveCGrammarImpl extends ObjectiveCGrammar {
+class ObjectiveCGrammarImpl extends ObjectiveCGrammar {
 
     public ObjectiveCGrammarImpl() {
 
