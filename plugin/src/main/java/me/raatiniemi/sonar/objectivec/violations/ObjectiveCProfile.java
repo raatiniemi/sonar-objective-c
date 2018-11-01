@@ -21,19 +21,19 @@ import com.google.common.io.Closeables;
 import me.raatiniemi.sonar.objectivec.core.ObjectiveC;
 import me.raatiniemi.sonar.oclint.OCLintProfile;
 import me.raatiniemi.sonar.oclint.OCLintProfileImporter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 import javax.annotation.Nonnull;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
 public class ObjectiveCProfile extends ProfileDefinition {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCProfile.class);
+    private static final Logger LOGGER = Loggers.get(ObjectiveCProfile.class);
 
     private final OCLintProfileImporter ocLintProfileImporter;
 
