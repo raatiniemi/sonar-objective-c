@@ -32,7 +32,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 public class ObjectiveCProfile extends ProfileDefinition {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCProfile.class);
 
     private final OCLintProfileImporter ocLintProfileImporter;
@@ -43,8 +42,6 @@ public class ObjectiveCProfile extends ProfileDefinition {
 
     @Override
     public RulesProfile createProfile(ValidationMessages messages) {
-
-
         LOGGER.info("Creating Objective-C Profile");
 
         Reader config = null;
@@ -60,9 +57,7 @@ public class ObjectiveCProfile extends ProfileDefinition {
 
             return profile;
         } finally {
-
             Closeables.closeQuietly(config);
         }
     }
-
 }
